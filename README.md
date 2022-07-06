@@ -3,7 +3,7 @@
 ### Basic dependencies
 
 * Install docker-compose from [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/) and docker-engine from [https://docs.docker.com/engine/install/](https://docs.docker.com/engine/install/)
-* Clone the repository: `git clone url`
+* Clone the repository: `git clone https://github.com/SIF-AQUACULTURE/aquaculture-backend.git`
 * `cd aquaculture-backend`
 * Create `.env` file with following content:
 
