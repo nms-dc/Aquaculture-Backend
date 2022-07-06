@@ -24,10 +24,26 @@ sys.path.append(os.path.join(BASE_DIR, 'backend/apps/'))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_3$qb6f5v1d=ax39y6ti4)mqzzga0hml(*^8lda2ri$wzxssh*'
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+# Env
+ENV = os.getenv("ENV")
+IS_DEV = ENV == "dev"
+IS_STAGE = ENV == "stage"
+IS_PROD = ENV == "prod"
+
+# Email
+DEFAULT_FROM_EMAIL = 'BackWater Resources Pvt Ltd <noreply@backwaterglobal.com>'
+
+if IS_DEV:
+    DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'localhost:8000')
+    PROTOCOl_NAME = 'http'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if IS_DEV or IS_STAGE:
+    DEBUG = True
+
+WWW_ROOT = f"{PROTOCOl_NAME}://{DOMAIN_NAME}"
 
 ALLOWED_HOSTS = ['*']
 
@@ -36,8 +52,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     ]
 }
-
-
 
 # Application definition
 
@@ -164,7 +178,6 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:8000',
     'http://0.0.0.0:8000',
-    'http://0.0.0.0:8080',
 ]
 
 CORS_ALLOW_METHODS = [
