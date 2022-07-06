@@ -5,7 +5,7 @@ from invoke import task
 @task
 def pep8(ctx):
     msg = "PEP8 Check PASSED"
-    cmd = "docker-compose exec backend pycodestyle backend/backend/apps --max-line-length=140 --exclude='*/migrations/'"
+    cmd = "docker-compose exec backend pycodestyle backend/apps --max-line-length=140 --exclude='*/migrations/'"
     ctx.run(cmd, pty=True)
     print(msg)
 
