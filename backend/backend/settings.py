@@ -66,8 +66,18 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'django_filters',
+    'accounts',
     'common',
-    'farms'
+    'company',
+    'cycle',
+    'farms',
+    'feeds',
+    'harvests',
+    'measurements',
+    'notifications',
+    'ponds',
+    'seeds',
+    'species'
 ]
 
 MIDDLEWARE = [
