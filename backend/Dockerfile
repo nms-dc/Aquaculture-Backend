@@ -21,7 +21,7 @@ ADD ./requirements/base.txt /tmp
 RUN pip3 install --no-cache-dir --upgrade pip &&\
     pip3 install --no-cache-dir -r /tmp/base.txt
 
-EXPOSE 8000
+EXPOSE 4000
 
 FROM base AS dev
 

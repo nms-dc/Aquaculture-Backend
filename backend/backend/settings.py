@@ -36,7 +36,7 @@ IS_PROD = ENV == "prod"
 DEFAULT_FROM_EMAIL = 'BackWater Resources Pvt Ltd <noreply@backwaterglobal.com>'
 
 if IS_DEV:
-    DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'localhost:8000')
+    DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'localhost:4000')
     PROTOCOl_NAME = 'http'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -188,8 +188,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8000',
-    'http://0.0.0.0:8000',
+    'http://localhost:4000',
+    'http://0.0.0.0:4000',
 ]
 
 CORS_ALLOW_METHODS = [
