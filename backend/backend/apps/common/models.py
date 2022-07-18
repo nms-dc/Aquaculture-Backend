@@ -6,7 +6,7 @@ class Countries(models.Model):
     alpha_2_code = models.IntegerField(default=0)
     alpha_3_code = models.IntegerField(default=0)
     createdAt = models.OneToOneField('accounts.Currencies',on_delete=models.CASCADE)# both side declared as one
-    updatedAt = models.OneToOneField('accounts.Currencies',on_delete=models.CASCADE)
+    updatedAt = models.DateField(auto_now= True)
     country_name = models.CharField(max_length=24, default = None)
     #this models has foreign Key reference from state  model but dont know where it comes
     #this models has one to one reference from Farms  model but dont know where it comes

@@ -9,7 +9,7 @@ class PondType(models.Model):
     desc = models.CharField(max_length=24, default = None)
 
 class PondImage(models.Model):
-    image = models.ImageField(upload_to = '/uploads', height_field = None, width_field = None)
+    image = models.ImageField(upload_to = 'uploads', height_field = None, width_field = None)
     user = models.CharField(max_length=24, default = None)
 
 
@@ -22,8 +22,8 @@ class Ponds(models.Model):
     pond_breadth = models.FloatField(null=True)
     pond_area  = models.FloatField(null=True)
     pond_capacity = models.FloatField(null=True)
-    lat = models.ManyToManyField('User', related_name='User')
-    lng = models.ManyToManyField('User', related_name='User')
+    lat = models.ManyToManyField('accounts.User', related_name='User')
+    lng = models.FloatField(null=True)
     description = models.CharField(max_length=24, default = None)
     current_aquaculture_growing_id = models.IntegerField(default=0)
     createdAt = models.DateField(auto_now = True)

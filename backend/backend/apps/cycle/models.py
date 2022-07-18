@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class CyclePondImage(models.Model):
-    image = models.ImageField(upload_to = '/uploads', height_field = None, width_field = None)
+    image = models.ImageField(upload_to = 'uploads', height_field = None, width_field = None)
     user = models.CharField(max_length=24, default = None)
 
     def __str__(self):
@@ -26,7 +26,7 @@ class Cycle(models.Model):
     company_id = models.IntegerField(default=0)
     createdAt = models.DateField(auto_now= True)
     sold_amount = models.FloatField(null=True)
-    currency_id = models.OneToOneField('harvests.Harvests',on_delete=models.CASCADE)
+    currency_id = models.DateField(auto_now= True)
     #this model has foreign key reference from Measurement historeis dont know the field
     #this model has one to one field with harvest model but not sure about the fields
 

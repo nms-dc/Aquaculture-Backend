@@ -21,7 +21,7 @@ class Harvests(models.Model):
     user_long = models.FloatField(null=True)
     user_lat = models.FloatField(null=True)
     created_by_user_id = models.DateField(auto_now= True)
-    pictures = models.ImageField(upload_to = '/uploads', height_field = None, width_field = None)
+    pictures = models.ImageField(upload_to = 'uploads', height_field = None, width_field = None)
     temperature = models.FloatField(null=True)
     vehicle_condition = models.CharField(max_length=24, default = None)
     vehicle_number = models.CharField(max_length=24, default = None)

@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class SeedImage(models.Model):
-    image = models.ImageField(upload_to = '/uploads', height_field = None, width_field = None)
+    image = models.ImageField(upload_to = 'uploads', height_field = None, width_field = None)
     user = models.CharField(max_length=24, default = None)
 
 class Seeds(models.Model):

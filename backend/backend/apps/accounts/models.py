@@ -79,7 +79,7 @@ class User(AbstractBaseUser):
 class Currencies(models.Model):
 
     createdAt = models.OneToOneField('common.Countries',on_delete=models.CASCADE)
-    updatedAt = models.OneToOneField('common.Countries',on_delete=models.CASCADE)
+    updatedAt = models.DateField(auto_now= True)
     country_id = models.FloatField(null=True)
     fraction_unit = models.FloatField(null=True)
     fraction_number = models.IntegerField(default=0)
@@ -107,7 +107,7 @@ class UserRole(models.Model):
 
         return self.user_type
 
-
+'''
 class User(models.Model):
 
     username = models.CharField(max_length=24, default = None)
@@ -149,4 +149,4 @@ class User(models.Model):
 
         return self.username
 
-        
+        '''

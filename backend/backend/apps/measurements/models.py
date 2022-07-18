@@ -19,7 +19,7 @@ class Measurements(models.Model):
 
 class MeasurementHistories(models.Model):
     createdAt = models.DateField(auto_now= True)
-    id = models.IntegerField(default=0)
+    #id = models.IntegerField(default=0)
     updatedAt = models.DateField(auto_now= True)
     categories =  models.CharField(max_length=24, default = None)
     pond_id = models.IntegerField(default=0)

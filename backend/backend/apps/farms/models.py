@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class FarmImage(models.Model):
-    image = models.ImageField(upload_to = '/uploads', height_field = None, width_field = None)
+    image = models.ImageField(upload_to = 'uploads', height_field = None, width_field = None)
     user = models.CharField(max_length=24, default = None)
 
 class FarmCertification(models.Model):
@@ -10,7 +10,7 @@ class FarmCertification(models.Model):
     certificate_name = models.CharField(max_length=24, default = None)
     certificate_number = models.IntegerField(default=0)
     add_information = models.TextField(max_length=224, default = None)
-    image = models.ImageField(upload_to = '/uploads')
+    image = models.ImageField(upload_to = 'uploads')
 
 
 
