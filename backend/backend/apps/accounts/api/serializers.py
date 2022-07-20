@@ -8,6 +8,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
 
     class Meta:
+        
         model = User
         fields = ['email', 'date_of_birth', 'password', 'password2']
         extra_kwargs = {
@@ -15,6 +16,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         }
 
     def save(self):
+        
+        #if you want to save both fields use this method
         user = User(
             email=self.validated_data['email'],
             date_of_birth=self.validated_data['date_of_birth'],
@@ -27,3 +30,20 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+
+class UserSinginserializer(serializers.ModelSerializer):
+    class Meta:
+
+        model = User
+        fields = ['username', 'password']
+
+class UserSignupSerializer(serializers.ModelSerializer):
+
+    class Meta:
+
+        model = User
+        fields = ['first_name','last_name','email','password','number']
+
+    
