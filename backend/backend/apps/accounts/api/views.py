@@ -16,7 +16,7 @@ def user_registration_view(request):
             user = serialize.save()
             data['response'] = "Successfully registered a new user."
             data['email'] = user.email
-            data['date_of_birth'] = user.date_of_birth
+            data['phone_no'] = user.phone_no
         else:
             data = serialize.errors
         return Response(data)

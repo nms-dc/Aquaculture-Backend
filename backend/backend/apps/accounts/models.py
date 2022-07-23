@@ -1,36 +1,53 @@
 from django.db import models
+import datetime
+import re
+from django.core import validators
+from django.utils import timezone
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
 
+def create_username(email: str) -> str:
+    split_email = email.split('@')
+    if len(split_email) < 2:
+        raise ValueError('Cannot get username from email')
+    username = split_email[0]
+    users_username_count = User.objects.filter(username=username).count()
+    username = username if users_username_count < 1 else f'{username}{users_username_count}'
+    return username
+
+
 class UserManager(BaseUserManager):
-    def create_user(self, email, date_of_birth, password=None):
+    def create_user(self, email, username, password=None, **extra_fields):
         """
         Creates and saves a User with the given email, date of
         birth and password.
         """
         if not email:
             raise ValueError('Users must have an email address')
+        if not username:
+            username = create_username(email)
 
         user = self.model(
             email=self.normalize_email(email),
-            date_of_birth=date_of_birth,
+            **extra_fields
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, date_of_birth, password=None):
+    def create_superuser(self, email, username=None, password=None, **extra_fields):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
             email,
+            username,
             password=password,
-            date_of_birth=date_of_birth,
+            **extra_fields
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -43,17 +60,28 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    date_of_birth = models.DateField()
+    first_name = models.CharField(max_length=255, default="Aqua")
+    last_name = models.CharField(max_length=255, default="User")
+    phone_no = models.CharField(max_length=20, unique=True, blank=True)
+    username = models.CharField(
+        'username', max_length=30, unique=False, default="",
+        validators=[
+            validators.RegexValidator(
+                re.compile(r'^[\w.@+-]+$'), 'put valid username', 'username is invalid')
+        ]
+    )
+    # date_of_birth = models.DateField()
+    date_joined = models.DateTimeField('date joined', default=timezone.now)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['date_of_birth']
+    REQUIRED_FIELDS = ['phone_no']
 
     def __str__(self):
-        return self.email
+        return self.first_name
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
