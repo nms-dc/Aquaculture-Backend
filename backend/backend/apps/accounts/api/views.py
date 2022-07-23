@@ -47,9 +47,15 @@ class signInview(APIView):
 #this one for data normal response executes
     def post(self,request):
         serialize = UserSignInSerializers(data = request.data)
-        
+        print('serialize', serialize)
+        print('reqest', request.data)
+
+
         if serialize.is_valid():
+            print('hereeee')
             pk = serialize.data['username']
+            print('pk', pk)
+
             if User.objects.filter(email = pk).exists():
                 data = User.objects.get(email = pk)
                 res = profileSerializers(data)
@@ -84,11 +90,13 @@ class profileView(APIView):
 
     def post(self,request):
         serialize = profileSerializers(data = request.data)
+        print('serialize', serialize)
         
         if serialize.is_valid():
             pk = serialize.data['email']
             if User.objects.filter(email = pk).exists():
                 data = User.objects.get(email = pk)
+                print('data',data)
                 res = profileSerializers(data)
                 return Response(res.data)
             else:
