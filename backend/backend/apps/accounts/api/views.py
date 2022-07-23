@@ -2,14 +2,17 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import viewsets
-from rest_framework.views import APIView
+from rest_framework.views import APIView  
+from rest_framework import status
+from rest_framework import generics
 
 
-from accounts.api.serializers import  UserSignupSerializer, UserSinginserializer
+from accounts.api.serializers import UserRegistrationSerializer, UserSignupSerializer,\
+                    UserSignInSerializers,profileSerializers
 from accounts.models import User
 
 
-@api_view(['post','get' ])
+@api_view(['post', ])
 def user_registration_view(request):
 
     if request.method == 'POST':
@@ -23,145 +26,127 @@ def user_registration_view(request):
         else:
             data = serialize.errors
         return Response(data)
+
+
+class signInview(APIView):
+
+
+    #code that gets all the user data executes
+
+    '''
+    this docstring you can see on the response web page
+    we have to insert the data then it will take  username as email then it will compare it to all
+    the existing records email id then if some thing matches it will return true or else
+    not authorised email message it will return'''
+    '''
+    def get(self, request):
+        user = User.objects.all()
+        serialize = profileInSerializers(user, many = True)
+        return Response(serialize.data[0]['email'])'''#accessing a particular fields from serialized data
+
+#this one for data normal response executes
+    def post(self,request):
+        serialize = UserSignInSerializers(data = request.data)
+        
+        if serialize.is_valid():
+            pk = serialize.data['username']
+            if User.objects.filter(email = pk).exists():
+                data = User.objects.get(email = pk)
+                res = profileSerializers(data)
+                return Response(res.data)
+            else:
+                return Response('this %s mail is not authorised'%(pk))
+
+
+class signUpview(APIView):  
+    def post(self,request):
+        serialize = UserSignupSerializer(data = request.data)
+        
+        #if serialize.is_valid():
+            #serialize.save()
+   
+        return Response(serialize.data)
+
+class profileView(APIView):
     
+    """this docstring you can see on the response web page
+    we have to insert the data then it will take  username as email then it will compare it to all
+    the existing records email id then if some thing matches it will return true or else
+    not authorised email message it will return"""
 
-#approach-1
-
-class signInView(APIView):
-    def get(self,request):
-        signIn = User.objects.all()
-        serializer = UserSinginserializer(signIn, many = True)
-        return Response(serializer.data)
-
-    def post(self,request):
-        serializer = UserSinginserializer(data = request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)        
-
-
-
-class signUpView(APIView):
-    def get(self,request):
-        signIn = User.objects.all()
-        serializer = UserSignupSerializer(signIn, many = True)
-        return Response(serializer.data)
+    
+    #code that gets all the user data executes verify already data is ther or not
+    
+    ''' def get(self, request):
+        user = User.objects.all()
+        serialize = profileSerializers(user, many = True)
+        return Response(serialize.data)'''
 
     def post(self,request):
-        serializer = UserSignupSerializer(data = request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)        
+        serialize = profileSerializers(data = request.data)
+        
+        if serialize.is_valid():
+            pk = serialize.data['email']
+            if User.objects.filter(email = pk).exists():
+                data = User.objects.get(email = pk)
+                res = profileSerializers(data)
+                return Response(res.data)
+            else:
+                return Response('this %s mail is not authorised'%(pk))
+        
+#this one for normal response executes
+'''
+    def post(self,request):
+        serialize = profileInSerializers(data = request.data)
+        data = User.objects.all()
+        if serialize.is_valid():
+            return Response(serialize.data)          
 
 '''
-#type error while creating the object
-#approach -2
 
-@api_view(['POST','GET'])
-def signInView(request):
-    if request.method ==  'POST':
-        serializer = UserSinginserializer(data = request.data)
+
+
+
+
+    
+'''
+
+
+class signInview(generics.ListAPIView):
+    serializer_class = UserSignInSerializers
+
+    def get_queryset(self):
+
+        name = self.request.username 
+        return User.objects.filter(email = name)   
+
+
+@api_view(['post', ])
+def signInview(request):
+
+        email = request.POST['username']
+
+        if User.objects.filter(email = email).exists():
+            return True
         
-        if serializer.is_valid():
-            serializer.save()
+        serialize = UserSignInSerializers(data=request.data)
+        data = {}
+        if serialize.is_valid():
+            user = serialize.save()
+            
+            data['email'] = user.username
+            
+        else:
+            data = serialize.errors
+        return Response(data)  
 
 
-            return Response(serializer.data)
-        return Response(serializer.errors)
-
-@api_view(['POST','GET'])
-def signUpView(request):
-    if request.method ==  'POST':
+class signUpview(APIView):
+    
+     def post(self,request):
         serializer = UserSignupSerializer(data = request.data)
-        
+
         if serializer.is_valid():
             serializer.save()
-
             return Response(serializer.data)
-        return Response(serializer.errors)
-
-#no error but not returning any data
-#approch -5
-class signInView(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSinginserializer
-
-    def get(self):
-        instance = self.get_object()
-        return instance.active_profile
-
-
-class signUpView(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSignupSerializer
-
-
-
-#approach-4
-##type error while creating the object
-
-@api_view(['post', ])
-def signInView(request):
-
-    if request.method == 'POST':
-        serialize = UserSinginserializer(data = request.data)
-        data = {}
-
-        if serialize.is_valid():
-            serialize.save()
-            data['response'] = 'Success'
-        else:
-            data['response'] = 'Failure'
-        return Response(data)
-
-@api_view(['post', ])
-def signUpView(request):
-
-    if request.method == 'POST':
-        serialize = UserSignupSerializer(data = request.data)
-        data = {}
-
-        if serialize.is_valid():
-            serialize.save()
-            data['response'] = 'Success'
-        else:
-            data['response'] = 'Failure'
-        return Response('faile')
-
-
-
-#approach-3    
-#type error while creating the object
-class signInView(APIView):
-
-    def post(self, request, format=None):
-        # snippet = self.get_object(pk)    
-        serializer = UserSinginserializer(data=request.data)
-              
-        if serializer.is_valid():
-            serializer.save()
-            data = {'response': 'Success'} #new user
-        else:
-            data = {'response': 'Failure'}    
-
-        return Response(data)
-
-
-
-class signUpView(APIView):
-
-    def post(self, request,pk, *args,**kwargs):
-        snippet = self.kwargs.get(pk)    
-        serializer = UserSignupSerializer(snippet,data = request.data, many=True)
-        res = {}
-        if serializer.is_valid():
-            serializer.save()
-            res = {'response': 'Success'}
-
-        else:
-            res = {'response': 'Failure'}
-        return Response(res)        '''
+        return Response(serializer.errors) '''
