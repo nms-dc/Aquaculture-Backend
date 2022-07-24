@@ -53,6 +53,7 @@ class UserManager(BaseUserManager):
             **extra_fields
         )
         user.is_admin = True
+        user.is_verified = True
         user.save(using=self._db)
         return user
 
@@ -77,6 +78,7 @@ class User(AbstractBaseUser):
     date_joined = models.DateTimeField('date joined', default=timezone.now)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -101,3 +103,9 @@ class User(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
+
+    @property
+    def is_verified_user(self):
+        "Is the user a verified user?"
+        # Simplest possible answer: All admins are staff but not normal user
+        return self.is_verified
