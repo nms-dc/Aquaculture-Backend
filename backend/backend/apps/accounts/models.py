@@ -14,7 +14,7 @@ def create_username(email: str) -> str:
         raise ValueError('Cannot get username from email')
     username = split_email[0]
     users_username_count = User.objects.filter(username=username).count()
-    username = username if users_username_count < 1 else f'{username}{users_username_count}'
+    username = f'@{username}' if users_username_count < 1 else f'@{username}{users_username_count}'
     return username
 
 
@@ -67,6 +67,13 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=255, default="Aqua")
     last_name = models.CharField(max_length=255, default="User")
     phone_no = models.CharField(max_length=20, unique=True, blank=True)
+    company_name = models.CharField(max_length=200, default='')
+    sic_gst_code = models.CharField(max_length=200, default='')
+    pan_no = models.CharField(max_length=200, default='')
+    address_one = models.TextField(default='')
+    address_two = models.TextField(default='')
+    pincode = models.IntegerField(default=0)
+    website = models.URLField(max_length=200, default='')
     username = models.CharField(
         'username', max_length=30, unique=False, default="",
         validators=[
@@ -74,8 +81,8 @@ class User(AbstractBaseUser):
                 re.compile(r'^[\w.@+-]+$'), 'put valid username', 'username is invalid')
         ]
     )
-    # date_of_birth = models.DateField()
     date_joined = models.DateTimeField('date joined', default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)

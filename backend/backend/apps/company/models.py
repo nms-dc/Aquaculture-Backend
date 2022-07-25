@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 
 class Company(models.Model):
     company_name = models.CharField(max_length=200, default='')
@@ -8,4 +7,8 @@ class Company(models.Model):
     pan_no = models.CharField(max_length=200, default='')
     address_one = models.TextField(default='')
     address_two = models.TextField(default='')
+    pincode = models.IntegerField(default=0)
+    website = models.URLField(max_length=200, default='')
 
+    def __str__(self):
+        return self.company_name
