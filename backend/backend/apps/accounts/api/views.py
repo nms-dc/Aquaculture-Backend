@@ -1,9 +1,10 @@
 from rest_framework import status
+import copy
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
-from accounts.models import User
+from accounts.models import User, create_username
 
 
 from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
@@ -55,9 +56,14 @@ def user_profile_view(request):
     if request.method == 'GET':
         token = request.headers.get('Aqua-Auth-Token', None)
         if token:
-            user = User.objects.get(email=token)
-            user_info = UserProfileInfoSerializer(instance=user).data
-            return Response(user_info)
+            try:
+                user = User.objects.get(email=token)
+                user_info = UserProfileInfoSerializer(instance=user).data
+                return Response(user_info)
+            except User.DoesNotExist:
+                error = {}
+                error['message'] = 'User Does Not Exists'
+                return Response(error, status=status.HTTP_404_NOT_FOUND)
         else:
             error = {}
             error['message'] = 'Authentication not provided'
@@ -68,7 +74,10 @@ def user_profile_view(request):
         if token:
             try:
                 user = User.objects.get(email=token)
-                user_info = UserProfileInfoSerializer(instance=user, data=request.data)
+                data = copy.deepcopy(request.data)
+                data.pop("username")
+                data['username'] = create_username(data['email'])
+                user_info = UserProfileInfoSerializer(instance=user, data=data)
                 if user_info.is_valid():
                     user_info.save()
                 return Response(user_info.data)
