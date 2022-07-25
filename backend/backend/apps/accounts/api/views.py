@@ -1,10 +1,17 @@
 from rest_framework import status
 from rest_framework.response import Response
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.decorators import api_view
+from django.http import HttpResponse
+from accounts.models import User
 
 
-from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer
+from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponse("logout successful")
 
 
 @api_view(['post', ])
@@ -12,9 +19,10 @@ def user_login_view(request):
 
     if request.method == 'POST':
         data = request.data
-        user = authenticate(email=data['email'], password=data['password'])
+        user = authenticate(request, email=data['email'], password=data['password'])
         user_data = {}
         if user is not None:
+            login(request, user)
             user_data = UserBasicInfoSerializer(instance=user).data
             return Response(user_data)
         else:
@@ -39,3 +47,34 @@ def user_registration_view(request):
         else:
             data = serialize.errors
         return Response(data)
+
+
+@api_view(['post', 'get', ])
+def user_profile_view(request):
+
+    if request.method == 'GET':
+        token = request.headers.get('Aqua-Auth-Token', None)
+        if token:
+            user = User.objects.get(email=token)
+            user_info = UserProfileInfoSerializer(instance=user).data
+            return Response(user_info)
+        else:
+            error = {}
+            error['message'] = 'Authentication not provided'
+            return Response(error, status=status.HTTP_401_UNAUTHORIZED)
+    if request.method == 'POST':
+        token = request.headers.get('Aqua-Auth-Token', None)
+        data = {}
+        if token:
+            try:
+                user = User.objects.get(email=token)
+                user_info = UserProfileInfoSerializer(instance=user, data=request.data)
+                if user_info.is_valid():
+                    user_info.save()
+                return Response(user_info.data)
+            except User.DoesNotExist:
+                data['message'] = 'User Does Not Exists'
+                return Response(data, status=status.HTTP_404_NOT_FOUND)
+        else:
+            data['message'] = 'Authentication not provided'
+            return Response(data, status=status.HTTP_401_UNAUTHORIZED)

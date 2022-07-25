@@ -38,3 +38,16 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email', 'phone_no', 'first_name', 'last_name', 'username']
+
+
+class UserProfileInfoSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField(read_only=True)
+    is_verified = serializers.BooleanField(read_only=True)
+
+    def get_image(self, instance):
+        return instance.image.url if instance.image else None
+
+    class Meta:
+        model = User
+        fields = ['email', 'phone_no', 'first_name', 'last_name', 'username', 'image', 'company_name',
+                  'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'website', 'is_verified']

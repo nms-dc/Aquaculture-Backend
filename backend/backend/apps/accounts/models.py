@@ -18,6 +18,10 @@ def create_username(email: str) -> str:
     return username
 
 
+def user_picture(instance, filename):
+    return f'user_image/{datetime.datetime.now()}_{filename}'
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
         """
@@ -67,6 +71,7 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=255, default="Aqua")
     last_name = models.CharField(max_length=255, default="User")
     phone_no = models.CharField(max_length=20, unique=True, blank=True)
+    image = models.ImageField(upload_to=user_picture, null=True)
     company_name = models.CharField(max_length=200, default='')
     sic_gst_code = models.CharField(max_length=200, default='')
     pan_no = models.CharField(max_length=200, default='')
