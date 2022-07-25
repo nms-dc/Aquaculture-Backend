@@ -41,11 +41,7 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
 
 
 class UserProfileInfoSerializer(serializers.ModelSerializer):
-    # image = serializers.SerializerMethodField()
     is_verified = serializers.BooleanField(read_only=True)
-
-    # def get_image(self, instance):
-    #     return instance.image.url if instance.image else None
 
     class Meta:
         model = User
