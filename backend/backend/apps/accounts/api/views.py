@@ -45,6 +45,7 @@ def user_registration_view(request):
             data['first_name'] = user.first_name
             data['last_name'] = user.last_name
             data['username'] = user.username
+            data['is_verified'] = user.is_verified
         else:
             data = serialize.errors
         return Response(data)
