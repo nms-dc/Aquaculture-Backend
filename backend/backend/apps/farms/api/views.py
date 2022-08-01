@@ -10,7 +10,7 @@ from farms.api.serializers import farmSerializer
 
 
 
-
+#post method
 @api_view(['post', ])
 def farmview(request):
 

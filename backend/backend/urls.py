@@ -22,3 +22,4 @@ urlpatterns = [
     path('api/v1/farms/', include('farms.api.urls', 'farms_api')),
     path('admin/', admin.site.urls),
 ]
+#pond is pending

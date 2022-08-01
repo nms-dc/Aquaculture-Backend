@@ -6,5 +6,4 @@ app_name = "farms"
 
 urlpatterns = [
     path('farmregist', farmview, name="farm/register"),
-    
 ]
