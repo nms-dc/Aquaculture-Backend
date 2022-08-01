@@ -38,7 +38,7 @@ class Farms(models.Model):
     farm_status = models.CharField(max_length=24, default = None)
     
 
-    #this model has many to many reference with user model
+    #this model has many to many reference with user modely
 
 
     def __str__(self):
