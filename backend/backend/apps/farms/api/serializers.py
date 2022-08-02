@@ -18,7 +18,7 @@ class FarmCertificationSerializer(serializers.ModelSerializer):
 
 
 class farmSerializer(serializers.ModelSerializer):
-    #image = FarmImageSerializer(read_only= True)
+    image = FarmImageSerializer(many= True)
     certificate = FarmCertificationSerializer(many= True)
 
     class Meta:
@@ -27,8 +27,8 @@ class farmSerializer(serializers.ModelSerializer):
         
     
     def create(self, validated_data):
-        certify = validated_data.pop(certificate)
+        certify = validated_data.pop('certificate')
         Farm_instance = Farms.objects.create(**validated_data)
-        for data in certity:
+        for data in certify:
             FarmCertification.objects.create(user=Farm_instance,**data)
         return Farm_instance
