@@ -7,20 +7,20 @@ from accounts.models import User, create_username
 from rest_framework import viewsets
 
 from farms.models import Farms, FarmCertification,FarmImage
-from farms.api.serializers import farmSerializer,FarmImageSerializer, FarmCertificationSerializer
+from farms.api.serializers import FarmSerializer
 
-
-class farmview(viewsets.ModelViewSet):
+#trying to work with post method
+class FarmView(viewsets.ModelViewSet):
     queryset = Farms.objects.all()
-    serializer_class = farmSerializer
+    serializer_class = FarmSerializer
     http_method_names = ['post']
 
 
 
-'''
-#post method
-@api_view(['post','get' ])
-def farmview(request):
+
+'''#post method
+@api_view(['post' ])
+def FarmView(request):
 
     if request.method == 'POST':
         serialize = farmSerializer(data=request.data)
@@ -31,8 +31,8 @@ def farmview(request):
              return Response(farm.data)
         else:
             return Response(serialize.errors)   
-
-
+'''
+'''
         if request.method == 'GET':
                 data = Farms.objects.all()
                 serialize = farmSerializer(data)
