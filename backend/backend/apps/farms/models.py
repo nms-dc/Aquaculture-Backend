@@ -34,7 +34,7 @@ class Farms(models.Model):
     lastupdatedt = models.DateField(auto_now= True,null=True)
     createdAt = models.DateField(auto_now= True,null=True)
     #image = models.ForeignKey(FarmImage, on_delete=models.CASCADE,related_name='images',null=True,blank=True)
-    certificate = models.ForeignKey(FarmCertification, on_delete=models.CASCADE,related_name='certificate',null=True)
+    certificate = models.ForeignKey(FarmCertification, on_delete=models.CASCADE,related_name='certificate',null=True, blank=True)
     farm_status = models.CharField(max_length=24, default = None,null=True)
     
 
