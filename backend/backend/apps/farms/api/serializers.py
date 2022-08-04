@@ -16,21 +16,26 @@ class CertifySerializer(serializers.ModelSerializer):
 
 
 class FarmSerializer(serializers.ModelSerializer):
+    
+    #the variable name exactly should same as related name associated with the foriegn key
     certificate = CertifySerializer(many = True)
-    #`.create()` method does not support writable nested fields by default- we need to use 'read_only=True'
+    image = ImageSerializer(many = True)
+    #we need to use 'read_only=True',for represent json without using create because --
+    #create method will  not support writable nested fields by default.we have to write a function
 
+    
     class Meta:
         model = Farms
-        fields = ["farm_name","farm_area","address_line_one","address_line_two","state","town_village","description",'certificate']
+        fields = ["farm_name","farm_area","address_line_one","address_line_two","state","town_village","description",'certificate','image']
         
     
     def create(self, validated_data):
         
         #image not implemented first trying with certificate
-        certificate = validated_data.pop('certificate')
+        certify_datas = validated_data.pop('certificate')
         Farm_instance = Farms.objects.create(**validated_data)
-        for data in certificate:
-              return data          
-        #     FarmCertification.objects.create(certificate=Farm_instance,**data)
+        for data in certify_datas:
+                     
+             FarmCertification.objects.create(certificates=Farm_instance,**data)
         return Farm_instance
 

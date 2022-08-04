@@ -1,9 +1,13 @@
-from django.urls import URLPattern, path
-from ponds.api.views import pondview
+from django.urls import URLPattern, path,include
+from ponds.api.views import PondView
+from rest_framework.routers import DefaultRouter
 
 app_name = "ponds"
 
+router = DefaultRouter()
+router.register('pondregist',PondView)
+
 
 urlpatterns = [
-    path('pondregist', pondview, name="pond/register"),
+    path('', include(router.urls)),
 ]
