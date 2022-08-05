@@ -3,7 +3,6 @@ from django.db import models
 
 class Farms(models.Model):
 
-    #user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     company_id = models.IntegerField(default=0)
     farm_name = models.CharField(max_length=24, default = None,null=True)
     farm_area = models.IntegerField(default=0,null=True)
@@ -30,8 +29,8 @@ class Farms(models.Model):
 
 class FarmImage(models.Model):
     image = models.ImageField(upload_to = 'farmimage_uploads', null = True)
-    user = models.CharField(max_length=24, default = None)
-    images = models.ForeignKey(Farms, on_delete=models.CASCADE,related_name='farn_images',null=True, blank=True)
+    image_name = models.CharField(max_length=24, default = None, null = True)
+    images = models.ForeignKey(Farms, on_delete=models.CASCADE,related_name='farm_images',null=True, blank=True)
 
 class FarmCertification(models.Model):
 
