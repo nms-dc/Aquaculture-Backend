@@ -1,10 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
-class FarmImage(models.Model):
-    image = models.ImageField(upload_to = 'uploads', null = True)
-    user = models.CharField(max_length=24, default = None)
 
 class Farms(models.Model):
 
@@ -25,26 +20,23 @@ class Farms(models.Model):
     description = models.TextField(max_length=224, default = None,null=True)
     lastupdatedt = models.DateField(auto_now= True,null=True)
     createdAt = models.DateField(auto_now= True,null=True)
-    #image = models.ForeignKey(FarmImage, on_delete=models.CASCADE,related_name='images',null=True,blank=True)
-    image = models.CharField(max_length=24, default = None,null=True)#for just return response not able to create
-    #certificates = models.ForeignKey(FarmCertification, on_delete=models.CASCADE,related_name='certificate',null=True, blank=True)
-    #certificate = models.CharField(max_length=240, default = None,null=True)#for just return response not able to create
     farm_status = models.CharField(max_length=240, default = None,null=True)
     
 
     #this model has many to many reference with user model
-
-
     def __str__(self):
 
         return self.farm_name
+
+class FarmImage(models.Model):
+    image = models.ImageField(upload_to = 'farmimage_uploads', null = True)
+    user = models.CharField(max_length=24, default = None)
+    images = models.ForeignKey(Farms, on_delete=models.CASCADE,related_name='farn_images',null=True, blank=True)
 
 class FarmCertification(models.Model):
 
     certificate_name = models.CharField(max_length=24, default = None)
     certificate_number = models.IntegerField(default=0)
     add_information = models.TextField(max_length=224, default = None)
-    image = models.ImageField(upload_to = 'uploads',null=True)
-    #related name one of the most important attribute for nested serializer
+    image = models.ImageField(upload_to = 'certificate_uploads',null=True)
     certificates = models.ForeignKey(Farms, on_delete=models.CASCADE,related_name='certificate',null=True, blank=True)
-
