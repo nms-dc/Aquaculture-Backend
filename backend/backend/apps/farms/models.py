@@ -20,6 +20,7 @@ class Farms(models.Model):
     lastupdatedt = models.DateField(auto_now= True,null=True)
     createdAt = models.DateField(auto_now= True,null=True)
     farm_status = models.CharField(max_length=240, default = None,null=True)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, default = None,null=True)
     
 
     #this model has many to many reference with user model

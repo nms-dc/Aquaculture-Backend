@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from farms.models import Farms, FarmCertification,FarmImage
+from accounts.models import User
 
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,15 +29,29 @@ class FarmSerializer(serializers.ModelSerializer):
     certificate = CertifySerializer(many = True)
     farm_images = ImageSerializer(many = True)
     
+    
     class Meta:
         model = Farms
-        fields = ["id", "farm_name","farm_area","address_line_one","address_line_two","state","town_village","description","certificate", "farm_images"]
+        fields = ["id", "farm_name","farm_area","address_line_one","address_line_two","state","town_village","description","certificate", "farm_images",'user']
   
     
     def create(self, validated_data):
         certify_datas = validated_data.pop('certificate')
         image_datas = validated_data.pop('farm_images')  
-        Farm_instance = Farms.objects.create(**validated_data)
+        token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
+        user = User.objects.get(email=token)
+       
+        Farm_instance = Farms.objects.create(
+            farm_name = validated_data['farm_name'],
+            farm_area = validated_data['farm_area'],
+            address_line_one = validated_data['address_line_one'],
+            address_line_two = validated_data['address_line_two'],
+            state = validated_data['state'],
+            town_village = validated_data['town_village'],
+            description = validated_data['description'],
+            user = user       
+        )
+        
         for data in certify_datas:                   
              FarmCertification.objects.create(certificates=Farm_instance,**data)
         for image_data in image_datas:                   
@@ -47,6 +62,9 @@ class FarmSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         certify_datas = validated_data.pop('certificate')
         image_datas = validated_data.pop('farm_images')  
+        token = self.headers.get('Aqua-Auth-Token', None)
+        user = User.objects.get(email=token)
+        
         instance.farm_name = validated_data.get('farm_name',instance.farm_name)
         instance.farm_area = validated_data.get('farm_area',instance.farm_area)
         instance.address_line_one = validated_data.get('address_line_one',instance.address_line_one)
@@ -54,6 +72,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.state = validated_data.get('state',instance.state)
         instance.town_village = validated_data.get('town_village',instance.town_village)
         instance.description = validated_data.get('description',instance.description)
+        instance.user = validated_data.get('user',instance.user)
         instance.save()
         
         certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
@@ -79,4 +98,4 @@ class FarmSerializer(serializers.ModelSerializer):
             image_instance.image_name = data['image_name']
             image_instance.save()
 
-        return instance           
+        return instance      
