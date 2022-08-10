@@ -38,8 +38,11 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
     farm_id = serializers.SerializerMethodField()
     def get_farm_id(self,obj):
         try:
-            farm = Farms.objects.filter(user=obj).first()
-            return farm.id
+            if Farms.objects.filter(user=obj).exists():
+                farm = Farms.objects.filter(user=obj).first()
+                return farm.id
+            else:
+                return None
         except Farms.DoesNotExist:
             return None
 
@@ -54,8 +57,11 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
 
     def get_farm_id(self,obj):
         try:
-            farm = Farms.objects.filter(user=obj).first()
-            return farm.id
+            if Farms.objects.filter(user=obj).exists():
+                farm = Farms.objects.filter(user=obj).first()
+                return farm.id
+            else:
+                return None
         except Farms.DoesNotExist:
             return None
 
