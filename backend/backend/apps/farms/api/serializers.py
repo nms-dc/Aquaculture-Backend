@@ -12,7 +12,7 @@ class CertifySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = FarmCertification
-        fields = '__all__'#["certificate_name","certificate_number","add_information"]
+        fields = ["certificate_name","certificate_number","add_information"]
 
 
 class FarmSummarySerializer(serializers.ModelSerializer):
@@ -26,18 +26,18 @@ class FarmSummarySerializer(serializers.ModelSerializer):
 class FarmSerializer(serializers.ModelSerializer):
     
     #the variable name exactly should same as related name associated with the foriegn key
-    certificate = CertifySerializer(many = True)
-    farm_images = ImageSerializer(many = True)
+    certificate = CertifySerializer(many = True, read_only=True)
+    farm_images = ImageSerializer(many = True, read_only=True)
     
     
     class Meta:
         model = Farms
-        fields = ["id", "farm_name","farm_area","address_line_one","address_line_two","state","town_village","description","certificate", "farm_images",'user']
+        fields = ["id", "farm_name","farm_area","address_line_one","address_line_two","state","town_village","description", "farm_images","certificate",'user']
   
     
     def create(self, validated_data):
-        certify_datas = validated_data.pop('certificate')
-        image_datas = validated_data.pop('farm_images')  
+        image_datas = self.context.get('view').request.FILES
+        print('image',  image_datas)
         token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
         user = User.objects.get(email=token)
        
@@ -51,17 +51,20 @@ class FarmSerializer(serializers.ModelSerializer):
             description = validated_data['description'],
             user = user       
         )
-        
-        for data in certify_datas:                   
-             FarmCertification.objects.create(certificates=Farm_instance,**data)
-        for image_data in image_datas:                   
-             FarmImage.objects.create(images=Farm_instance,**image_data)
+
+        for image_data in image_datas.getlist('farm_images'):      
+             name = image_data.name
+             FarmImage.objects.create(images=Farm_instance, image_name=name, image=image_data)
+
+        for certify_data in image_datas.getlist('certificate'):   
+             print('certiify', certify_data)   
+             name = certify_data.name
+             FarmCertification.objects.create(certificates=Farm_instance, certificate_name=name, image=certify_data)
         return Farm_instance
 
 
     def update(self, instance, validated_data):
-        certify_datas = validated_data.pop('certificate')
-        image_datas = validated_data.pop('farm_images')  
+        image_datas = self.context.get('view').request.FILES
         token = self.headers.get('Aqua-Auth-Token', None)
         user = User.objects.get(email=token)
         
@@ -72,7 +75,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.state = validated_data.get('state',instance.state)
         instance.town_village = validated_data.get('town_village',instance.town_village)
         instance.description = validated_data.get('description',instance.description)
-        instance.user = validated_data.get('user',instance.user)
+        instance.user = user
         instance.save()
         
         certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
@@ -84,18 +87,12 @@ class FarmSerializer(serializers.ModelSerializer):
         for image_id in image_with_same_profile_instance:
             FarmImage.objects.filter(pk = image_id).delete()           
 
-        for data in certify_datas:
-            Certify_instance = FarmCertification.objects.create(certificates = instance,**data)
-            Certify_instance.certificate_name = data['certificate_name']
-            Certify_instance.certificate_number = data['certificate_number']
-            Certify_instance.add_information = data['add_information']
-            Certify_instance.image = data['image']
-            Certify_instance.save()
+        for certify_data in image_datas.getlist('certificate'):      
+             name = certify_data.name
+             FarmCertification.objects.create(certificates=instance, certificate_name=name, image=certify_data)
 
-        for data in image_datas:
-            image_instance = FarmImage.objects.create(images = instance, **data)
-            image_instance.image = data['image']
-            image_instance.image_name = data['image_name']
-            image_instance.save()
+        for image_data in image_datas.getlist('farm_images'):      
+             name = image_data.name
+             FarmImage.objects.create(images=instance, image_name=name, image=image_data)
 
         return instance      
