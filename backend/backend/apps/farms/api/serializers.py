@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from farms.models import Farms, FarmCertification,FarmImage
+from ponds.models import Ponds
+from ponds.api.serializers import PondSummarySerializer
 from accounts.models import User
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -21,7 +23,29 @@ class FarmSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Farms
         fields = ["id", "farm_name","description","farm_images"]
+
  
+class FarmPondRelationSerializer(serializers.ModelSerializer):
+    farm_images = ImageSerializer(many = True)
+    ponds = serializers.SerializerMethodField()
+
+    def get_ponds(self,obj):
+        try:
+            if Ponds.objects.filter(farm=obj).exists():
+                ponds = Ponds.objects.filter(farm=obj)
+                serializer = PondSummarySerializer(ponds, many=True).data
+                return serializer
+            else:
+                return None
+        except Ponds.DoesNotExist:
+            return None
+        # ponds = PondSummarySerializer(source='*')
+    
+    class Meta:
+        model = Farms
+        fields = ["id", "farm_name","description","farm_images","ponds"]
+
+
  
 class FarmSerializer(serializers.ModelSerializer):
     

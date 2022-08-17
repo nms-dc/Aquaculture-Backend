@@ -33,15 +33,15 @@ class Ponds(models.Model):
     last_stock_date = models.DateField(auto_now = True,null=True) 
     current_stock_id = models.IntegerField(default=0,null=True)
     estimated_harvest_date = models.DateField(auto_now = True,null=True)
-    
+    farm = models.ForeignKey('farms.Farms', on_delete=models.CASCADE,related_name = 'farm', default = None, null=True)
 
     def __str__(self):
 
         return self.pond_name
 
 class PondImage(models.Model):
-    image = models.ImageField(upload_to = 'uploads', null=True)
-    user = models.CharField(max_length=24, default = None,null=True)    
+    image = models.FileField(upload_to = 'pond_images', null=True)
+    image_name = models.CharField(max_length=24, default = None, null = True)
     images = models.ForeignKey(Ponds, on_delete = models.CASCADE, related_name = 'pond_images', null = True)
 
     
