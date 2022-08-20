@@ -14,7 +14,7 @@ class PondSummarySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Ponds
-        fields = ["id", "pond_name","description","pond_images"]
+        fields = ["id", "pond_name","description","pond_images", "pond_type"]
 
 class PondsSerializer(serializers.ModelSerializer):
 

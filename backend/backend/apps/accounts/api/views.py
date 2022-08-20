@@ -76,6 +76,7 @@ def user_profile_view(request):
             try:
                 user = User.objects.get(email=token)
                 data = copy.deepcopy(request.data)
+                print('data', data)
                 data.pop("username")
                 data['username'] = create_username(data['email'])
                 user_info = UserProfileInfoSerializer(instance=user, data=data)
