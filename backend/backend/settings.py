@@ -79,7 +79,8 @@ INSTALLED_APPS = [
     'notifications',
     'ponds',
     'seeds',
-    'species'
+    'species',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -222,3 +223,7 @@ CORS_ALLOW_METHODS = [
 ]
 
 CORS_ALLOW_HEADERS = default_headers
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS":'drf_spectacular.openapi.AutoSchema',
+}
