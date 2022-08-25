@@ -22,3 +22,5 @@ humanize==4.2.3
 timezonefinder==6.0.1
 gunicorn==20.1.0
 gevent==21.12.0
+#API documentation
+drf-spectacular>=0.15.1,<0.16
