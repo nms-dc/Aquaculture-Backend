@@ -7,6 +7,8 @@ from django.http import HttpResponse
 from accounts.models import User, create_username
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 from farms.models import Farms, FarmCertification,FarmImage
 from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer
@@ -18,12 +20,14 @@ class FarmView(viewsets.ModelViewSet):
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
 
     @action(detail=True, methods=['get'], url_path='get-farm-summary',)
+    @method_decorator(csrf_exempt)
     def get_farm_summary(self, request, *args, **kwargs):
         farm = self.get_object()
         result = FarmSummarySerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
 
     @action(detail=True, methods=['get'], url_path='get-related-ponds',)
+    @method_decorator(csrf_exempt)
     def get_related_ponds(self, request, *args, **kwargs):
         farm = self.get_object()
         result = FarmPondRelationSerializer(instance=farm, context={'request': request}).data
