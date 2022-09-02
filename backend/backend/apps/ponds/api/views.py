@@ -7,8 +7,6 @@ from rest_framework.decorators import action
 from rest_framework import viewsets
 from ponds.models import PondType,PondConstructType,Ponds
 from ponds.api.serializers import PondsSerializer, PondSummarySerializer
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
    
 
 class PondView(viewsets.ModelViewSet):
@@ -18,7 +16,6 @@ class PondView(viewsets.ModelViewSet):
 
 
     @action(detail=True, methods=['get'], url_path='get-pond-summary',)
-    @method_decorator(csrf_exempt)
     def get_Pond_summary(self, request, *args, **kwargs):
         pond = self.get_object()
         result = PondSummarySerializer(instance=pond, context={'request': request}).data
