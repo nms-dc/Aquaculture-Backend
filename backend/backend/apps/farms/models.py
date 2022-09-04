@@ -23,7 +23,7 @@ class Farms(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, default = None,null=True)
     
 
-    #this model has many to many reference with user model
+    #setting the object name for admin panel and removing the object count in admin panel
     def __str__(self):
 
         return self.farm_name
