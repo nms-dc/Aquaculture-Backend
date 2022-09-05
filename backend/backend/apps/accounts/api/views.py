@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from django.http import HttpResponse
 from accounts.models import User, create_username
 from django.utils.decorators import method_decorator
-# from django.views.decorators.csrf import ensure_csrf_cookie
+
 
 from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
 
