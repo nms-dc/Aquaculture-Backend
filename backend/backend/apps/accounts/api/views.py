@@ -7,20 +7,18 @@ from rest_framework.decorators import api_view, permission_classes
 from django.http import HttpResponse
 from accounts.models import User, create_username
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
 
-@csrf_exempt
+@ensure_csrf_cookie
 def logout_view(request):
     logout(request)
     return HttpResponse("logout successful")
 
 
 @api_view(['post', ])
-@csrf_exempt
-@permission_classes([AllowAny, ])
-
+@ensure_csrf_cookie
 def user_login_view(request):
 
     if request.method == 'POST':
@@ -37,7 +35,7 @@ def user_login_view(request):
 
 
 @api_view(['post', ])
-@csrf_exempt
+@ensure_csrf_cookie
 def user_registration_view(request):
 
     if request.method == 'POST':
@@ -58,7 +56,7 @@ def user_registration_view(request):
 
 
 @api_view(['post', 'get', ])
-@csrf_exempt
+@ensure_csrf_cookie
 def user_profile_view(request):
 
     if request.method == 'GET':
