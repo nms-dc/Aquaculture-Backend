@@ -1,8 +1,9 @@
 from rest_framework import status
+from rest_framework import permission
 import copy
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.http import HttpResponse
 from accounts.models import User, create_username
 from django.utils.decorators import method_decorator
@@ -18,6 +19,8 @@ def logout_view(request):
 
 @api_view(['post', ])
 @csrf_exempt
+@permission_classes([permission.AllowAny, ])
+
 def user_login_view(request):
 
     if request.method == 'POST':
