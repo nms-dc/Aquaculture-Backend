@@ -7,10 +7,8 @@ app_name = "farms"
 router = DefaultRouter()
 router.register('farmregist',FarmView)
 
-
+1
 urlpatterns = [
-    # path('farmregist', farmview, name="farm/register"),
-    # path('farmImage', farmImageview, name="farm/image"),
-    # path('farmcertify', farmCertificationview, name="farm/certify")
+   
      path('', include(router.urls)),
 ]

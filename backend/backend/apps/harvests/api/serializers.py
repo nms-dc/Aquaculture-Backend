@@ -1,3 +1,4 @@
+from itertools import count
 from rest_framework import serializers
 from cycle.models import Cycle, CyclePondImage, CycleSeedImage
 from accounts.models import User
@@ -87,14 +88,17 @@ class HarvestSerializer(serializers.ModelSerializer):
         for image in image_data:
             AddAnimal.objects.create(adding_animal=harvest_instance,**image)
             
-        return harvest_instance    
+        return harvest_instance
     
     
+    
+    
+    #this update method only works for images not for 'AddAnimals'
     def update(self, instance, validated_data):
-
-        ani_image = self.context.get('view').request.FILES
-        pond_image = self.context.get('view').request.FILES
-        log_image = self.context.get('view').request.FILES
+        images_list = self.context.get('view').request.FILES
+        # ani_image = self.context.get('view').request.FILES
+        # pond_image = self.context.get('view').request.FILES
+        # log_image = self.context.get('view').request.FILES
         instance.pond_type = validated_data.get('pond_type',instance.pond_type)
         instance.total_kgs = validated_data.get('total_kgs',instance.total_kgs)
         instance.temperature = validated_data.get('temperature',instance.temperature)       
@@ -119,45 +123,25 @@ class HarvestSerializer(serializers.ModelSerializer):
         for seedimage_id in log_image_with_same_profile_instance:
             HarvestLogisticImages.objects.filter(pk = seedimage_id).delete()            
 
-        for data in pond_image.getlist('pond_images'): 
+        for data in images_list.getlist('pond_images'): 
             name = data.name                      
             HarvestPondImages.objects.create(images=instance, image_name=name, image=data)         
 
 
-        for data in ani_image.getlist('ani_images'): 
+        for data in images_list.getlist('ani_images'): 
             name = data.name                      
             HarvestAnimalImages.objects.create(images=instance, image_name=name, image=data) 
         
-        for data in log_image.getlist('log_images'): 
+        for data in images_list.getlist('log_images'): 
             name = data.name                      
             HarvestLogisticImages.objects.create(images=instance, image_name=name, image=data)            
 
+        
+        for data in images_list.getlist('animal_images'): 
+                       
+            AddAnimal.objects.create(adding_animal=instance,**data)            
+
+
 
         return instance 
-    
-    
-
-'''
-    def create(self, validated_data):
-        image_data = validated_data.pop('animal_images')
         
-        harvest_instance = Harvests.objects.create(**validated_data)
-        for image in image_data:
-            AddAnimal.objects.create(adding_animal=harvest_instance,**image)
-        
-        return harvest_instance
-    
-    def update(self, instance, validated_data):
-       
-        instance.pond_type = validated_data.get('pond_type', instance.pond_type)
-        instance.total_kgs = validated_data.get('total_kgs', instance.total_kgs)
-        instance.harvest_date = validated_data.get('harvest_date', instance.harvest_date)
-        instance.temperature = validated_data.get('temperature', instance.temperature)
-        instance.harvest_animalImages = validated_data.get('harvest_animalImages', instance.harvest_animalImages)
-        instance.harvest_pondmages = validated_data.get('harvest_pondmages', instance.harvest_pondmages)
-        instance.harvest_logisticImages = validated_data.get('harvest_logisticImages', instance.harvest_logisticImages)
-        instance.harvest_notes = validated_data.get('harvest_notes', instance.harvest_notes)
-        instance.harvest_cost = validated_data.get('harvest_cost', instance.harvest_cost)
-        instance.save()
-        
-        return instance        '''

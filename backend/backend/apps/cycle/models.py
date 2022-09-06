@@ -7,21 +7,23 @@ from harvests.models import Harvests
 from common.models import Currency
 from company.models import Company
 
-species_choice = (
-    ('1' , 'Vennamai'),
-     
-)
-
-pl_choice = (
-    ('1','PL-5'),
-    ('2', 'PL-10'),
-    ('3', 'PL-15') 
-     
-)
 
 
 # Create your models here.
 class Cycle(models.Model):
+    
+    species_choice = (
+    ('1' , 'Vennamai'),
+     
+    )
+
+    pl_choice = (
+        ('1','PL-5'),
+        ('2', 'PL-10'),
+        ('3', 'PL-15') 
+        
+    )
+
 
     Pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, default = None,null=True)
     species = models.CharField(max_length = 400, null = True, choices = species_choice, default='1')
@@ -31,8 +33,6 @@ class Cycle(models.Model):
     pondPrep_cost = models.IntegerField(null = True, default = 0)
     description = models.CharField(max_length = 400, null = True)
     lastupdatedt = models.DateField(auto_now = True)
-    seed_image = models.FileField(upload_to = 'harvestpicture_uploads', null=True)
-    pond_image = models.FileField(upload_to = 'harvestpicture_uploads', null=True)
     seeding_date = models.DateField(auto_now = True)
     
     def __str__(self) -> str:

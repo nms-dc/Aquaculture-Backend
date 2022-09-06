@@ -52,7 +52,7 @@ class CycleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ['id','Pond','species','speciesPlStage','seed_company','invest_amount','pondPrep_cost',
-        'description','lastupdatedt','seed_image', 'pond_image','seeding_date','pond_images','seed_images']
+        'description','lastupdatedt','seeding_date','pond_images','seed_images']
 
     def create(self, validated_data):
             
@@ -66,8 +66,6 @@ class CycleSerializer(serializers.ModelSerializer):
             invest_amount = validated_data['invest_amount'],
             pondPrep_cost = validated_data['pondPrep_cost'],
             description = validated_data['description'],
-            seed_image = validated_data['seed_image'],
-            pond_image = validated_data['pond_image'],
             Pond = validated_data['Pond'],
             seed_company = validated_data['seed_company'],
                 
@@ -95,8 +93,6 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.invest_amount = validated_data.get('invest_amount',instance.invest_amount)
         instance.pondPrep_cost = validated_data.get('pondPrep_cost',instance.pondPrep_cost)
         instance.description = validated_data.get('description',instance.description)
-        instance.seed_image = validated_data.get('seed_image',instance.seed_image)
-        instance.pond_image = validated_data.get('pond_image',instance.pond_image)
         instance.save()
 
         #here also we have to reference models fields only like 'pond_type=instance.pk'
@@ -115,7 +111,7 @@ class CycleSerializer(serializers.ModelSerializer):
             CyclePondImage.objects.create(images=instance, image_name=name, image=data)         
 
 
-        for data in seed_image.getlist('pond_images'): 
+        for data in seed_image.getlist('seed_images'): 
             name = data.name                      
             CycleSeedImage.objects.create(images=instance, image_name=name, image=data)         
 

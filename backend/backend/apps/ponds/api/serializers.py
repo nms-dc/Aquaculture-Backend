@@ -28,7 +28,7 @@ class PondsSerializer(serializers.ModelSerializer):
         print('vali', validated_data['farm'])
         pond_image = self.context.get('view').request.FILES
         token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
-        user = User.objects.get(email=token)
+        #user = User.objects.get(email=token)
         pond_instance = Ponds.objects.create(
         pond_name = validated_data['pond_name'],
         pond_type = validated_data['pond_type'],
