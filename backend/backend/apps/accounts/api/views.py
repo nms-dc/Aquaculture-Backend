@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework import permission
+from rest_framework.permissions import AllowAny
 import copy
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
@@ -19,7 +19,7 @@ def logout_view(request):
 
 @api_view(['post', ])
 @csrf_exempt
-@permission_classes([permission.AllowAny, ])
+@permission_classes([AllowAny, ])
 
 def user_login_view(request):
 
