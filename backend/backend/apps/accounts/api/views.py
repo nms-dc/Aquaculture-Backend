@@ -1,21 +1,27 @@
 from rest_framework import status
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 import copy
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.http import HttpResponse
 from accounts.models import User, create_username
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
 
-
+@csrf_exempt
 def logout_view(request):
     logout(request)
     return HttpResponse("logout successful")
 
 
 @api_view(['post', ])
+@csrf_exempt
+@permission_classes([AllowAny])
+@authentication_classes([])
 def user_login_view(request):
 
     if request.method == 'POST':
@@ -32,6 +38,7 @@ def user_login_view(request):
 
 
 @api_view(['post', ])
+@csrf_exempt
 def user_registration_view(request):
 
     if request.method == 'POST':
@@ -52,6 +59,7 @@ def user_registration_view(request):
 
 
 @api_view(['post', 'get', ])
+@csrf_exempt
 def user_profile_view(request):
 
     if request.method == 'GET':
@@ -76,6 +84,7 @@ def user_profile_view(request):
             try:
                 user = User.objects.get(email=token)
                 data = copy.deepcopy(request.data)
+                print('data', data)
                 data.pop("username")
                 data['username'] = create_username(data['email'])
                 user_info = UserProfileInfoSerializer(instance=user, data=data)

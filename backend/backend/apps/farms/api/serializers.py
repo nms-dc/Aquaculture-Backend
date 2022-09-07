@@ -14,7 +14,7 @@ class CertifySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = FarmCertification
-        fields = ["certificate_name","certificate_number","add_information"]
+        fields = ["certificate_name","certificate_number","add_information", "image", "certificates"]
 
 
 class FarmSummarySerializer(serializers.ModelSerializer):
