@@ -1,14 +1,14 @@
 from django.urls import URLPattern, path,include
-from farms.api.views import FarmView
+from cycle.api.views import CyleView
 from rest_framework.routers import DefaultRouter
 
 app_name = "farms"
 
 router = DefaultRouter()
-router.register('farmregist',FarmView)
+router.register('cycleregist',CyleView)
 
-1
+
 urlpatterns = [
-   
+    
      path('', include(router.urls)),
 ]

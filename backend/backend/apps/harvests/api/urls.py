@@ -1,13 +1,13 @@
 from django.urls import URLPattern, path,include
-from farms.api.views import FarmView
+from harvests.api.views import HarvestView
 from rest_framework.routers import DefaultRouter
 
 app_name = "farms"
 
 router = DefaultRouter()
-router.register('farmregist',FarmView)
+router.register('harvestregist',HarvestView)
 
-1
+
 urlpatterns = [
    
      path('', include(router.urls)),
