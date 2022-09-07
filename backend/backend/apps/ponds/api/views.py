@@ -9,6 +9,7 @@ from ponds.models import PondType,PondConstructType,Ponds
 from ponds.api.serializers import PondsSerializer, PondSummarySerializer
 from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
    
 
 class PondView(viewsets.ModelViewSet):
