@@ -8,7 +8,7 @@ from ponds.models import Ponds
 
 
 
-class PondImageSerializer(serializers.ModelSerializer):
+class PrepPondImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CyclePondImage
@@ -45,7 +45,7 @@ class CycleHarvestRelationSerializer(serializers.ModelSerializer):
       
 class CycleSerializer(serializers.ModelSerializer):
 
-    pond_images = PondImageSerializer(many=True,read_only=True)
+    pond_images = PrepPondImageSerializer(many=True,read_only=True)
     seed_images= SeedImageSerializer(many=True,read_only=True)
     
 

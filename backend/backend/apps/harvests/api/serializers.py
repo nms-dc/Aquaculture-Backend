@@ -12,7 +12,7 @@ class AnimalImageSerializer(serializers.ModelSerializer):
         model = HarvestAnimalImages
         fields = '__all__'  
 
-class PondImageSerializer(serializers.ModelSerializer):
+class HarvestPondImageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HarvestPondImages
@@ -35,13 +35,13 @@ class  HarvestSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Harvests
-        fields = ['pond_type','harvest_date','harvest_notes']        
+        fields = ['harvest_type','harvest_date','harvest_notes']        
         
         
 class HarvestSerializer(serializers.ModelSerializer):
 
     ani_images = AnimalImageSerializer(many=True, read_only=True)
-    pond_images = PondImageSerializer(many=True, read_only=True)
+    pond_images = HarvestPondImageSerializer(many=True, read_only=True)
     log_images = LogImageSerializer(many=True,read_only=True)
 
     class Meta:
@@ -53,7 +53,7 @@ class HarvestSerializer(serializers.ModelSerializer):
         #the below fields for image upload and extract the names from the image
         image_data = self.context.get('view').request.FILES
         harvest_instance = Harvests.objects.create(
-        pond_type = validated_data['pond_type'],
+        harvest_type = validated_data['harvest_type'],
         total_kgs = validated_data['total_kgs'],
         temperature = validated_data['temperature'],
         sold_to = validated_data['sold_to'],
@@ -62,7 +62,8 @@ class HarvestSerializer(serializers.ModelSerializer):
         cycle = validated_data['cycle'],
         animal_count_1 = validated_data['animal_count_1'],
         total_kg_1 = validated_data['total_kg_1'],
-        price_kg_1 = validated_data['price_kg_1']           
+        price_kg_1 = validated_data['price_kg_1'],
+        is_chill_kill = validated_data['is_chill_kill']           
         )
 
 
@@ -94,7 +95,7 @@ class HarvestSerializer(serializers.ModelSerializer):
         # ani_image = self.context.get('view').request.FILES
         # pond_image = self.context.get('view').request.FILES
         # log_image = self.context.get('view').request.FILES
-        instance.pond_type = validated_data.get('pond_type',instance.pond_type)
+        instance.harvest_type = validated_data.get('harvest_type',instance.harvest_type)
         instance.total_kgs = validated_data.get('total_kgs',instance.total_kgs)
         instance.temperature = validated_data.get('temperature',instance.temperature)       
         instance.sold_to = validated_data.get('sold_to',instance.sold_to)
@@ -104,6 +105,7 @@ class HarvestSerializer(serializers.ModelSerializer):
         instance.animal_count_1 = validated_data('animal_count_1',instance.animal_count_1)
         instance.total_kg_1 = validated_data('total_kg_1',instance.total_kg_1)
         instance.price_kg_1 = validated_data('price_kg_1',instance.price_kg_1)
+        instance.is_chill_kill = validated_data('is_chill_kill',instance.is_chill_kill)
         instance.save()
 
         #here also we have to reference models fields only like 'pond_type=instance.pk'
