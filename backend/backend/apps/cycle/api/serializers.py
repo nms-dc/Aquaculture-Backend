@@ -56,8 +56,7 @@ class CycleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
             
-            pond_image = self.context.get('view').request.FILES
-            seed_image = self.context.get('view').request.FILES
+            image_data = self.context.get('view').request.FILES
             cycle_instance = Cycle.objects.create(
             species = validated_data['species'],
             speciesPlStage = validated_data['speciesPlStage'],
@@ -69,12 +68,12 @@ class CycleSerializer(serializers.ModelSerializer):
             numbers_of_larva = validated_data['numbers_of_larva']                
             )
 
-            for data in pond_image.getlist('pond_images'): 
+            for data in image_data.getlist('pond_images'): 
                 name = data.name                      
                 CyclePondImage.objects.create(images=cycle_instance, image_name=name, image=data)
                 
             
-            for data in seed_image.getlist('seed_images'): 
+            for data in image_data.getlist('seed_images'): 
                 name = data.name                      
                 CycleSeedImage.objects.create(images=cycle_instance, image_name=name, image=data)    
                 
@@ -82,8 +81,7 @@ class CycleSerializer(serializers.ModelSerializer):
         
     def update(self, instance, validated_data):
 
-        pond_image = self.context.get('view').request.FILES
-        seed_image = self.context.get('view').request.FILES
+        image_data = self.context.get('view').request.FILES
         instance.Pond = validated_data.get('Pond',instance.Pond)
         instance.species = validated_data.get('species',instance.species)
         instance.speciesPlStage = validated_data.get('speciesPlStage',instance.speciesPlStage)       
@@ -105,12 +103,12 @@ class CycleSerializer(serializers.ModelSerializer):
         for seedimage_id in seedimage_with_same_profile_instance:
             CycleSeedImage.objects.filter(pk = seedimage_id).delete()        
 
-        for data in pond_image.getlist('pond_images'): 
+        for data in image_data.getlist('pond_images'): 
             name = data.name                      
             CyclePondImage.objects.create(images=instance, image_name=name, image=data)         
 
 
-        for data in seed_image.getlist('seed_images'): 
+        for data in image_data.getlist('seed_images'): 
             name = data.name                      
             CycleSeedImage.objects.create(images=instance, image_name=name, image=data)         
 

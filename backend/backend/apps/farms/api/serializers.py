@@ -61,7 +61,6 @@ class FarmSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
-        print('image',  image_datas)
         token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
         user = User.objects.get(email=token)
        

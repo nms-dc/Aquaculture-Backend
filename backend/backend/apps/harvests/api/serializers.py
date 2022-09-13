@@ -25,11 +25,11 @@ class LogImageSerializer(serializers.ModelSerializer):
         fields = '__all__'  
 
 
-class AddAnimalSerializer(serializers.ModelSerializer):
+# class AddAnimalSerializer(serializers.ModelSerializer):
 
-    class Meta:
-        model = AddAnimal
-        fields = '__all__'  
+#     class Meta:
+#         model = AddAnimal
+#         fields = '__all__'  
         
 class  HarvestSummarySerializer(serializers.ModelSerializer):
 
@@ -40,7 +40,6 @@ class  HarvestSummarySerializer(serializers.ModelSerializer):
         
 class HarvestSerializer(serializers.ModelSerializer):
 
-    animal_images = AddAnimalSerializer(many=True)
     ani_images = AnimalImageSerializer(many=True, read_only=True)
     pond_images = PondImageSerializer(many=True, read_only=True)
     log_images = LogImageSerializer(many=True,read_only=True)
@@ -51,14 +50,8 @@ class HarvestSerializer(serializers.ModelSerializer):
         
     
     def create(self, validated_data):
-        #this field for nested data validating we have pop the data first
-        image_data = validated_data.pop('animal_images')
         #the below fields for image upload and extract the names from the image
-        ani_image = self.context.get('view').request.FILES
-        pond_image = self.context.get('view').request.FILES
-        log_image = self.context.get('view').request.FILES
-        token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
-        #user = User.objects.get(email=token)
+        image_data = self.context.get('view').request.FILES
         harvest_instance = Harvests.objects.create(
         pond_type = validated_data['pond_type'],
         total_kgs = validated_data['total_kgs'],
@@ -67,26 +60,28 @@ class HarvestSerializer(serializers.ModelSerializer):
         harvest_notes = validated_data['harvest_notes'],
         harvest_cost = validated_data['harvest_cost'],
         cycle = validated_data['cycle'],
-            
+        animal_count_1 = validated_data['animal_count_1'],
+        total_kg_1 = validated_data['total_kg_1'],
+        price_kg_1 = validated_data['price_kg_1']           
         )
 
 
         #below the three loops helps us to upload image and extracts names from that
-        for data in ani_image.getlist('ani_images'): 
+        for data in image_data.getlist('ani_images'): 
             name = data.name                      
             HarvestAnimalImages.objects.create(images=harvest_instance, image_name=name, image=data)
             
-        for data in pond_image.getlist('pond_images'): 
+        for data in image_data.getlist('pond_images'): 
             name = data.name                      
             HarvestPondImages.objects.create(images=harvest_instance, image_name=name, image=data)    
         
-        for data in log_image.getlist('log_images'): 
+        for data in image_data.getlist('log_images'): 
             name = data.name                      
             HarvestLogisticImages.objects.create(images=harvest_instance, image_name=name, image=data)
         
         #this for loop used to store the value of AddAnimal Model related with 'FK' with main Harvest model   
-        for image in image_data:
-            AddAnimal.objects.create(adding_animal=harvest_instance,**image)
+        # for image in image_data:
+        #     AddAnimal.objects.create(adding_animal=harvest_instance,**image)
             
         return harvest_instance
     
@@ -95,7 +90,7 @@ class HarvestSerializer(serializers.ModelSerializer):
     
     #this update method only works for images not for 'AddAnimals'
     def update(self, instance, validated_data):
-        images_list = self.context.get('view').request.FILES
+        image_data = self.context.get('view').request.FILES
         # ani_image = self.context.get('view').request.FILES
         # pond_image = self.context.get('view').request.FILES
         # log_image = self.context.get('view').request.FILES
@@ -106,6 +101,9 @@ class HarvestSerializer(serializers.ModelSerializer):
         instance.harvest_notes = validated_data.get('harvest_notes',instance.harvest_notes)
         instance.harvest_cost = validated_data.get('harvest_cost',instance.harvest_cost)
         instance.cycle = validated_data.get('cycle',instance.cycle)
+        instance.animal_count_1 = validated_data('animal_count_1',instance.animal_count_1)
+        instance.total_kg_1 = validated_data('total_kg_1',instance.total_kg_1)
+        instance.price_kg_1 = validated_data('price_kg_1',instance.price_kg_1)
         instance.save()
 
         #here also we have to reference models fields only like 'pond_type=instance.pk'
@@ -123,25 +121,19 @@ class HarvestSerializer(serializers.ModelSerializer):
         for seedimage_id in log_image_with_same_profile_instance:
             HarvestLogisticImages.objects.filter(pk = seedimage_id).delete()            
 
-        for data in images_list.getlist('pond_images'): 
+        for data in image_data.getlist('pond_images'): 
             name = data.name                      
             HarvestPondImages.objects.create(images=instance, image_name=name, image=data)         
 
 
-        for data in images_list.getlist('ani_images'): 
+        for data in image_data.getlist('ani_images'): 
             name = data.name                      
             HarvestAnimalImages.objects.create(images=instance, image_name=name, image=data) 
         
-        for data in images_list.getlist('log_images'): 
+        for data in image_data.getlist('log_images'): 
             name = data.name                      
             HarvestLogisticImages.objects.create(images=instance, image_name=name, image=data)            
 
         
-        for data in images_list.getlist('animal_images'): 
-                       
-            AddAnimal.objects.create(adding_animal=instance,**data)            
-
-
-
         return instance 
         

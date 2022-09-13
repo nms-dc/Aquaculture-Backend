@@ -25,10 +25,9 @@ class PondsSerializer(serializers.ModelSerializer):
         fields = ['id','pond_images','pond_name','pond_length','pond_breadth','pond_depth','pond_area','pond_capacity','description','pond_type','pond_construct_type', 'farm']
 
     def create(self, validated_data):
-        print('vali', validated_data['farm'])
         pond_image = self.context.get('view').request.FILES
-        token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
-        #user = User.objects.get(email=token)
+        # token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
+        # #user = User.objects.get(email=token)
         pond_instance = Ponds.objects.create(
         pond_name = validated_data['pond_name'],
         pond_type = validated_data['pond_type'],
@@ -45,8 +44,8 @@ class PondsSerializer(serializers.ModelSerializer):
         for data in pond_image.getlist('pond_images'): 
             name = data.name                      
             PondImage.objects.create(images=pond_instance, image_name=name, image=data)
-            
         return pond_instance
+        
     def update(self, instance, validated_data):
 
         pond_image = self.context.get('view').request.FILES
