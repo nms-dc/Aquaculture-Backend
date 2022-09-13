@@ -8,7 +8,6 @@ from common.models import Currency
 from company.models import Company
 
 
-
 # Create your models here.
 class Cycle(models.Model):
     
@@ -24,7 +23,6 @@ class Cycle(models.Model):
         
     )
 
-
     Pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, default = None,null=True)
     species = models.CharField(max_length = 400, null = True, choices = species_choice, default='1')
     speciesPlStage = models.CharField(max_length = 400, null = True, choices = pl_choice, default='1')
@@ -34,6 +32,7 @@ class Cycle(models.Model):
     description = models.CharField(max_length = 400, null = True)
     lastupdatedt = models.DateField(auto_now = True)
     seeding_date = models.DateField(auto_now = True)
+    numbers_of_larva = models.IntegerField(default=6000)
     
     def __str__(self) -> str:
         return self.species

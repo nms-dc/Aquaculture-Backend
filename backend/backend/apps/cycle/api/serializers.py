@@ -52,14 +52,12 @@ class CycleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ['id','Pond','species','speciesPlStage','seed_company','invest_amount','pondPrep_cost',
-        'description','lastupdatedt','seeding_date','pond_images','seed_images']
+        'description','lastupdatedt','seeding_date','pond_images','seed_images', 'numbers_of_larva']
 
     def create(self, validated_data):
             
             pond_image = self.context.get('view').request.FILES
             seed_image = self.context.get('view').request.FILES
-            token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
-            #user = User.objects.get(email=token)
             cycle_instance = Cycle.objects.create(
             species = validated_data['species'],
             speciesPlStage = validated_data['speciesPlStage'],
@@ -68,7 +66,7 @@ class CycleSerializer(serializers.ModelSerializer):
             description = validated_data['description'],
             Pond = validated_data['Pond'],
             seed_company = validated_data['seed_company'],
-                
+            numbers_of_larva = validated_data['numbers_of_larva']                
             )
 
             for data in pond_image.getlist('pond_images'): 
@@ -93,6 +91,7 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.invest_amount = validated_data.get('invest_amount',instance.invest_amount)
         instance.pondPrep_cost = validated_data.get('pondPrep_cost',instance.pondPrep_cost)
         instance.description = validated_data.get('description',instance.description)
+        instance.numbers_of_larva = validated_data.get('numbers_of_larva',instance.numbers_of_larva)
         instance.save()
 
         #here also we have to reference models fields only like 'pond_type=instance.pk'
