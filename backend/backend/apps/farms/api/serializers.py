@@ -63,7 +63,7 @@ class FarmSerializer(serializers.ModelSerializer):
         image_datas = self.context.get('view').request.FILES
         print('image',  image_datas)
         token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
-        #user = User.objects.get(email=token)
+        user = User.objects.get(email=token)
        
         Farm_instance = Farms.objects.create(
             farm_name = validated_data['farm_name'],
@@ -73,7 +73,7 @@ class FarmSerializer(serializers.ModelSerializer):
             state = validated_data['state'],
             town_village = validated_data['town_village'],
             description = validated_data['description'],
-            #user = user       
+            user = user   
         )
 
         for image_data in image_datas.getlist('farm_images'):      
