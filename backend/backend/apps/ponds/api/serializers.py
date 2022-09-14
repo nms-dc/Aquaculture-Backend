@@ -22,7 +22,7 @@ class PondsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ponds
-        fields = ['id','pond_images','pond_name','pond_length','pond_breadth','pond_depth','pond_area','pond_capacity','description','pond_type','pond_construct_type', 'farm']
+        fields = ['id','pond_images','pond_name','pond_length','pond_breadth','pond_depth','pond_area','pond_capacity','description','pond_type','pond_construct_type', 'is_active_pond', 'farm']
 
     def create(self, validated_data):
         pond_image = self.context.get('view').request.FILES
