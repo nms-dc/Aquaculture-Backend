@@ -14,11 +14,12 @@ class PondSummarySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Ponds
-        fields = ["id", "pond_name","description","pond_images", "pond_type"]
+        fields = ["id", "pond_name","description","pond_images", "pond_type", "is_active_pond"]
 
 class PondsSerializer(serializers.ModelSerializer):
 
     pond_images = PondImageSerializer(many=True, read_only=True)
+    # is_active_pond = serializers.BooleanField(read_only=True)
 
     class Meta:
         model = Ponds
