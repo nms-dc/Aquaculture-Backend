@@ -91,6 +91,7 @@ class HarvestSerializer(serializers.ModelSerializer):
     
     #this update method only works for images not for 'AddAnimals'
     def update(self, instance, validated_data):
+        # print('validated', validated_data)
         image_data = self.context.get('view').request.FILES
         # ani_image = self.context.get('view').request.FILES
         # pond_image = self.context.get('view').request.FILES
@@ -102,10 +103,10 @@ class HarvestSerializer(serializers.ModelSerializer):
         instance.harvest_notes = validated_data.get('harvest_notes',instance.harvest_notes)
         instance.harvest_cost = validated_data.get('harvest_cost',instance.harvest_cost)
         instance.cycle = validated_data.get('cycle',instance.cycle)
-        instance.animal_count_1 = validated_data('animal_count_1',instance.animal_count_1)
-        instance.total_kg_1 = validated_data('total_kg_1',instance.total_kg_1)
-        instance.price_kg_1 = validated_data('price_kg_1',instance.price_kg_1)
-        instance.is_chill_kill = validated_data('is_chill_kill',instance.is_chill_kill)
+        instance.animal_count_1 = validated_data.get('animal_count_1',instance.animal_count_1)
+        instance.total_kg_1 = validated_data.get('total_kg_1',instance.total_kg_1)
+        instance.price_kg_1 = validated_data.get('price_kg_1',instance.price_kg_1)
+        instance.is_chill_kill = validated_data.get('is_chill_kill',instance.is_chill_kill)
         instance.save()
 
         #here also we have to reference models fields only like 'pond_type=instance.pk'

@@ -47,19 +47,20 @@ class CycleSerializer(serializers.ModelSerializer):
 
     pond_images = PrepPondImageSerializer(many=True,read_only=True)
     seed_images= SeedImageSerializer(many=True,read_only=True)
+    cycle_harvests = CycleHarvestRelationSerializer(many=True,read_only=True)
     
 
     class Meta:
         model = Cycle
-        fields = ['id','Pond','species','speciesPlStage','seed_company','invest_amount','pondPrep_cost',
-        'description','lastupdatedt','seeding_date','pond_images','seed_images', 'numbers_of_larva']
+        fields = ['id','Pond','species','species_pl_stage','seed_company','invest_amount','pondPrep_cost',
+        'description','lastupdatedt','seeding_date','pond_images','seed_images', 'numbers_of_larva', 'is_active_cycle', 'cycle_harvests']
 
     def create(self, validated_data):
             
             image_data = self.context.get('view').request.FILES
             cycle_instance = Cycle.objects.create(
             species = validated_data['species'],
-            speciesPlStage = validated_data['speciesPlStage'],
+            species_pl_stage = validated_data['species_pl_stage'],
             invest_amount = validated_data['invest_amount'],
             pondPrep_cost = validated_data['pondPrep_cost'],
             description = validated_data['description'],
@@ -84,7 +85,7 @@ class CycleSerializer(serializers.ModelSerializer):
         image_data = self.context.get('view').request.FILES
         instance.Pond = validated_data.get('Pond',instance.Pond)
         instance.species = validated_data.get('species',instance.species)
-        instance.speciesPlStage = validated_data.get('speciesPlStage',instance.speciesPlStage)       
+        instance.species_pl_stage = validated_data.get('species_pl_stage',instance.species_pl_stage)       
         instance.seed_company = validated_data.get('seed_company',instance.seed_company)
         instance.invest_amount = validated_data.get('invest_amount',instance.invest_amount)
         instance.pondPrep_cost = validated_data.get('pondPrep_cost',instance.pondPrep_cost)
