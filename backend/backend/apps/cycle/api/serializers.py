@@ -53,7 +53,7 @@ class CycleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ['id','Pond','species','species_pl_stage','seed_company','invest_amount','pondPrep_cost',
-        'description','lastupdatedt','seeding_date','pond_images','seed_images', 'numbers_of_larva', 'is_active_cycle', 'cycle_harvests']
+        'description','lastupdatedt','seeding_date','pond_images','seed_images', 'numbers_of_larva', 'cycle_harvests']
 
     def create(self, validated_data):
             
