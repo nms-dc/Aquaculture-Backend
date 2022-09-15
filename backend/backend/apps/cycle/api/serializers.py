@@ -66,7 +66,8 @@ class CycleSerializer(serializers.ModelSerializer):
             description = validated_data['description'],
             Pond = validated_data['Pond'],
             seed_company = validated_data['seed_company'],
-            numbers_of_larva = validated_data['numbers_of_larva']                
+            numbers_of_larva = validated_data['numbers_of_larva'],
+            seeding_date = validated_data['seeding_date']        
             )
 
             for data in image_data.getlist('pond_images'): 
@@ -91,6 +92,7 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.pondPrep_cost = validated_data.get('pondPrep_cost',instance.pondPrep_cost)
         instance.description = validated_data.get('description',instance.description)
         instance.numbers_of_larva = validated_data.get('numbers_of_larva',instance.numbers_of_larva)
+        instance.seeding_date = validated_data.get('seeding_date',instance.seeding_date)       
         instance.save()
 
         #here also we have to reference models fields only like 'pond_type=instance.pk'

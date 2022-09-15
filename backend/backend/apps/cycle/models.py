@@ -6,6 +6,7 @@ from seeds.models import Seeds
 from harvests.models import Harvests
 from common.models import Currency
 from company.models import Company
+import datetime
 
 
 # Create your models here.
@@ -31,9 +32,8 @@ class Cycle(models.Model):
     pondPrep_cost = models.IntegerField(null = True, default = 0)
     description = models.CharField(max_length = 400, null = True)
     lastupdatedt = models.DateField(auto_now = True)
-    seeding_date = models.DateField(auto_now = True)
+    seeding_date = models.DateField(default=datetime.date.today)
     numbers_of_larva = models.IntegerField(default=6000)
-    is_active_cycle = models.BooleanField(default=False)
     
     def __str__(self) -> str:
         return self.species
