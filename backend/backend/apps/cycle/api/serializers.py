@@ -69,6 +69,10 @@ class CycleSerializer(serializers.ModelSerializer):
             numbers_of_larva = validated_data['numbers_of_larva'],
             seeding_date = validated_data['seeding_date']        
             )
+            obj = Ponds.objects.get(pk=validated_data['Pond'].id)
+            obj.is_active_pond = True
+            obj.active_cycle_id = cycle_instance.id
+            obj.save()
 
             for data in image_data.getlist('pond_images'): 
                 name = data.name                      

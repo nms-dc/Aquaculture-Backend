@@ -35,6 +35,7 @@ class Ponds(models.Model):
     estimated_harvest_date = models.DateField(auto_now = True,null=True)
     farm = models.ForeignKey('farms.Farms', on_delete=models.CASCADE,related_name = 'farm', default = None, null=True)
     is_active_pond = models.BooleanField(default=False)
+    active_cycle_id = models.IntegerField(null=True)
     
     def __str__(self):
 

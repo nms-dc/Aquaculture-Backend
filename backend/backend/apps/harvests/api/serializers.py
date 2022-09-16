@@ -1,6 +1,7 @@
 from itertools import count
 from rest_framework import serializers
 from cycle.models import Cycle, CyclePondImage, CycleSeedImage
+from ponds.models import Ponds
 from accounts.models import User
 from harvests.models import Harvests,AddAnimal,HarvestAnimalImages,HarvestLogisticImages,HarvestPondImages
 
@@ -66,6 +67,17 @@ class HarvestSerializer(serializers.ModelSerializer):
         is_chill_kill = validated_data['is_chill_kill']           
         )
 
+        if validated_data['harvest_type'] =='F':
+            obj_cycle = Cycle.objects.get(id=int(validated_data.get('cycle').id))
+            obj_pond = Ponds.objects.get(id=obj_cycle.Pond.id)
+            obj_pond.is_active_pond = False
+            obj_pond.active_cycle_id = None
+            obj_pond.save()
+
+        if validated_data['harvest_type'] =='P':
+            obj_cycle = Cycle.objects.get(id=int(validated_data.get('cycle').id))
+            obj_cycle.harvest_id = harvest_instance.id
+            obj_pond.save()
 
         #below the three loops helps us to upload image and extracts names from that
         for data in image_data.getlist('ani_images'): 
@@ -108,6 +120,19 @@ class HarvestSerializer(serializers.ModelSerializer):
         instance.price_kg_1 = validated_data.get('price_kg_1',instance.price_kg_1)
         instance.is_chill_kill = validated_data.get('is_chill_kill',instance.is_chill_kill)
         instance.save()
+
+        if validated_data['harvest_type'] =='F':
+            obj_cycle = Cycle.objects.get(id=int(validated_data.get('cycle').id))
+            obj_pond = Ponds.objects.get(id=obj_cycle.Pond.id)
+            obj_pond.is_active_pond = False
+            obj_pond.active_cycle_id = None
+            obj_pond.save()
+
+        if validated_data['harvest_type'] =='P':
+            obj_cycle = Cycle.objects.get(id=int(validated_data.get('cycle').id))
+            obj_cycle.harvest_id = instance.id
+            obj_pond.save()
+
 
         #here also we have to reference models fields only like 'pond_type=instance.pk'
         pondimage_with_same_profile_instance = HarvestPondImages.objects.filter(images=instance.pk).values_list('id', flat=True)
