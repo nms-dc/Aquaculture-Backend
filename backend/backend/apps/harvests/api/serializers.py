@@ -76,7 +76,11 @@ class HarvestSerializer(serializers.ModelSerializer):
 
         if validated_data['harvest_type'] =='P':
             obj_cycle = Cycle.objects.get(id=int(validated_data.get('cycle').id))
+            obj_pond = Ponds.objects.get(id=obj_cycle.Pond.id)
             obj_cycle.harvest_id = harvest_instance.id
+            # prev_harvest_count = obj_pond.no_of_harvests
+            obj_pond.no_of_harvests =  obj_pond.no_of_harvests + 1
+            obj_cycle.save()
             obj_pond.save()
 
         #below the three loops helps us to upload image and extracts names from that

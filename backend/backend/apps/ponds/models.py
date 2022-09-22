@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 
 # Create your models here.
@@ -36,10 +37,22 @@ class Ponds(models.Model):
     farm = models.ForeignKey('farms.Farms', on_delete=models.CASCADE,related_name = 'farm', default = None, null=True)
     is_active_pond = models.BooleanField(default=False)
     active_cycle_id = models.IntegerField(null=True)
+    active_cycle_date = models.DateField(null=True)
+    no_of_harvests = models.IntegerField(default = 0)
     
     def __str__(self):
-
         return self.pond_name
+
+    @property
+    def doc(self):
+        if self.active_cycle_date is None :
+            return 0
+        else :
+            delta = datetime.date.today() - self.active_cycle_date
+            return delta.days
+
+
+
 
 class PondImage(models.Model):
     image = models.FileField(upload_to = 'pond_images', null=True)

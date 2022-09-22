@@ -11,19 +11,21 @@ class PondImageSerializer(serializers.ModelSerializer):
 
 class PondSummarySerializer(serializers.ModelSerializer):
     pond_images = PondImageSerializer(many = True)
+    doc = serializers.Field(source='doc')
     
     class Meta:
         model = Ponds
-        fields = ["id", "pond_name","description","pond_images", "pond_type", "is_active_pond"]
+        fields = ["id", "pond_name","description","pond_images", "pond_type", "is_active_pond", "doc"]
 
 class PondsSerializer(serializers.ModelSerializer):
 
     pond_images = PondImageSerializer(many=True, read_only=True)
-    # is_active_pond = serializers.BooleanField(read_only=True)
+    # doc = serializers.Field(source='doc')
+
 
     class Meta:
         model = Ponds
-        fields = ['id','pond_images','pond_name','pond_length','pond_breadth','pond_depth','pond_area','pond_capacity','description','pond_type','pond_construct_type', 'is_active_pond', 'active_cycle_id','farm']
+        fields = ['id','pond_images','pond_name','pond_length','pond_breadth','pond_depth','pond_area','pond_capacity','description','pond_type','pond_construct_type', 'is_active_pond', 'active_cycle_id','farm', 'doc']
 
     def create(self, validated_data):
         pond_image = self.context.get('view').request.FILES

@@ -32,6 +32,7 @@ class Cycle(models.Model):
     pondPrep_cost = models.IntegerField(null = True, default = 0)
     description = models.CharField(max_length = 400, null = True)
     lastupdatedt = models.DateField(auto_now = True)
+    seeding_qty = models.IntegerField(default=None, null=True)
     seeding_date = models.DateField(default=datetime.date.today)
     numbers_of_larva = models.IntegerField(default=6000)
     harvest_id = models.IntegerField(null=True)

@@ -1,3 +1,4 @@
+import datetime
 from rest_framework import serializers
 from cycle.models import Cycle, CyclePondImage, CycleSeedImage
 from accounts.models import User
@@ -53,7 +54,7 @@ class CycleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ['id','Pond','species','species_pl_stage','seed_company','invest_amount','pondPrep_cost',
-        'description','lastupdatedt','seeding_date','pond_images','seed_images', 'numbers_of_larva', 'cycle_harvests']
+        'description','lastupdatedt', 'seeding_qty', 'seeding_date','pond_images','seed_images', 'numbers_of_larva', 'cycle_harvests']
 
     def create(self, validated_data):
             
@@ -67,10 +68,12 @@ class CycleSerializer(serializers.ModelSerializer):
             Pond = validated_data['Pond'],
             seed_company = validated_data['seed_company'],
             numbers_of_larva = validated_data['numbers_of_larva'],
+            seeding_qty = validated_data['seeding_qty'],     
             seeding_date = validated_data['seeding_date']        
             )
             obj = Ponds.objects.get(pk=validated_data['Pond'].id)
             obj.is_active_pond = True
+            obj.active_cycle_date = datetime.date.today() 
             obj.active_cycle_id = cycle_instance.id
             obj.save()
 
@@ -96,6 +99,7 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.pondPrep_cost = validated_data.get('pondPrep_cost',instance.pondPrep_cost)
         instance.description = validated_data.get('description',instance.description)
         instance.numbers_of_larva = validated_data.get('numbers_of_larva',instance.numbers_of_larva)
+        instance.seeding_qty = validated_data.get('seeding_qty',instance.seeding_qty)     
         instance.seeding_date = validated_data.get('seeding_date',instance.seeding_date)       
         instance.save()
 
