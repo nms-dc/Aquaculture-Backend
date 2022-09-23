@@ -11,7 +11,7 @@ class PondImageSerializer(serializers.ModelSerializer):
 
 class PondSummarySerializer(serializers.ModelSerializer):
     pond_images = PondImageSerializer(many = True)
-    doc = serializers.Field(source='doc')
+    # doc = serializers.Field(source='doc')
     
     class Meta:
         model = Ponds
