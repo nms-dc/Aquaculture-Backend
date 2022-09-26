@@ -1,6 +1,7 @@
 from django.db import models
 # from company.models import Company
 
+
 class Company(models.Model):
     company_name = models.CharField(max_length=200, default='')
     sic_gst_code = models.CharField(max_length=200, default='')
@@ -12,4 +13,3 @@ class Company(models.Model):
 
     def __str__(self):
         return self.company_name
-    

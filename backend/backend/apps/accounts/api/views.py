@@ -9,8 +9,8 @@ from django.http import HttpResponse
 from accounts.models import User, create_username
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
 from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
+
 
 @csrf_exempt
 def logout_view(request):
