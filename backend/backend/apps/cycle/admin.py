@@ -27,8 +27,6 @@ class CycleAdmin(admin.ModelAdmin):
     search_fields = ('species',)
     ordering = ('species',)
     filter_horizontal = ()
-    #filter_vertical = ()
 
 
-# Now register the new UserAdmin...
 admin.site.register(Cycle, CycleAdmin)
