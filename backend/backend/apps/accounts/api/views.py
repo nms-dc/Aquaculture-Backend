@@ -86,6 +86,7 @@ def user_profile_view(request):
                 data = copy.deepcopy(request.data)
                 print('data', data)
                 data.pop("username")
+                data.pop("image")
                 data['username'] = create_username(data['email'])
                 user_info = UserProfileInfoSerializer(instance=user, data=data)
                 if user_info.is_valid():
