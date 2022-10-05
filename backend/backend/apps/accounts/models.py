@@ -71,7 +71,6 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=255, default="Aqua")
     last_name = models.CharField(max_length=255, default="User")
     phone_no = models.CharField(max_length=20, unique=True, blank=True)
-    image = models.ImageField(upload_to=user_picture, null=True)
     company_name = models.CharField(max_length=200, default='')
     sic_gst_code = models.CharField(max_length=200, default='')
     pan_no = models.CharField(max_length=200, default='')
@@ -121,3 +120,10 @@ class User(AbstractBaseUser):
         "Is the user a verified user?"
         # Simplest possible answer: All admins are staff but not normal user
         return self.is_verified
+
+
+class Image(models.Model):
+
+    image_name = models.CharField(max_length=400, null=True)
+    image = models.FileField(upload_to='user_images', null=True)
+    images = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_images', default=None, null=True)

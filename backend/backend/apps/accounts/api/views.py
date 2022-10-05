@@ -10,6 +10,7 @@ from accounts.models import User, create_username
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
+from rest_framework import viewsets
 
 
 @csrf_exempt
@@ -58,43 +59,9 @@ def user_registration_view(request):
         return Response(data)
 
 
-@api_view(['post', 'get', ])
-@csrf_exempt
-def user_profile_view(request):
-
-    if request.method == 'GET':
-        token = request.headers.get('Aqua-Auth-Token', None)
-        if token:
-            try:
-                user = User.objects.get(email=token)
-                user_info = UserProfileInfoSerializer(instance=user).data
-                return Response(user_info)
-            except User.DoesNotExist:
-                error = {}
-                error['message'] = 'User Does Not Exists'
-                return Response(error, status=status.HTTP_404_NOT_FOUND)
-        else:
-            error = {}
-            error['message'] = 'Authentication not provided'
-            return Response(error, status=status.HTTP_401_UNAUTHORIZED)
-    if request.method == 'POST':
-        token = request.headers.get('Aqua-Auth-Token', None)
-        data = {}
-        if token:
-            try:
-                user = User.objects.get(email=token)
-                data = copy.deepcopy(request.data)
-                print('data', data)
-                data.pop("username")
-                data.pop("image")
-                data['username'] = create_username(data['email'])
-                user_info = UserProfileInfoSerializer(instance=user, data=data)
-                if user_info.is_valid():
-                    user_info.save()
-                return Response(user_info.data)
-            except User.DoesNotExist:
-                data['message'] = 'User Does Not Exists'
-                return Response(data, status=status.HTTP_404_NOT_FOUND)
-        else:
-            data['message'] = 'Authentication not provided'
-            return Response(data, status=status.HTTP_401_UNAUTHORIZED)
+class user_profile_view(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserProfileInfoSerializer
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
