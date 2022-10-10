@@ -12,10 +12,14 @@ class PondImageSerializer(serializers.ModelSerializer):
 
 class PondSummarySerializer(serializers.ModelSerializer):
     pond_images = PondImageSerializer(many=True)
+    cycle_harvests_count = serializers.SerializerMethodField(read_only=True)
+
+    def get_cycle_harvests_count(self, obj):
+        return 5
 
     class Meta:
         model = Ponds
-        fields = ["id", "pond_name", "description", "pond_images", "pond_type", "is_active_pond", "doc"]
+        fields = ["id", "pond_name", "description", "pond_images", "pond_type", "is_active_pond", "doc", "cycle_harvests_count"]
 
 
 class PondsSerializer(serializers.ModelSerializer):
