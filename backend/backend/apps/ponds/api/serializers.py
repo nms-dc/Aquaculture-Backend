@@ -1,6 +1,9 @@
+# from backend.backend.apps.cycle.models import Cycle
 from rest_framework import serializers
 from ponds.models import Ponds, PondImage
+from harvests.models import Harvests
 from accounts.models import User
+from cycle.models import Cycle
 
 
 class PondImageSerializer(serializers.ModelSerializer):
@@ -15,7 +18,17 @@ class PondSummarySerializer(serializers.ModelSerializer):
     cycle_harvests_count = serializers.SerializerMethodField(read_only=True)
 
     def get_cycle_harvests_count(self, obj):
-        return 5
+        try:
+            if Cycle.objects.filter(id=obj.active_cycle_id).exists():
+                active_cycle = Cycle.objects.filter(id=obj.active_cycle_id).first()
+                if Harvests.objects.filter(cycle=active_cycle, harvest_type='P').exists():
+                    return Harvests.objects.filter(cycle=active_cycle, harvest_type='P').count()
+                else:
+                    return 0
+            else:
+                return 0   
+        except Ponds.DoesNotExist:
+            return None
 
     class Meta:
         model = Ponds
