@@ -15,7 +15,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'phone_no', 'password', 'password2', 'first_name', 'last_name']
+        fields = ['id','email', 'phone_no', 'password', 'password2', 'first_name', 'last_name']
         extra_kwargs = {
             'password': {'write_only': True}
         }
@@ -54,7 +54,7 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'phone_no', 'first_name', 'last_name', 'username', 'is_verified', 'farm_id']
+        fields = ['id','email', 'phone_no', 'first_name', 'last_name', 'username', 'is_verified', 'farm_id']
 
 
 class UserProfileInfoSerializer(serializers.ModelSerializer):
@@ -74,7 +74,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', 'user_images',
+        fields = ['id','email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', 'user_images',
                   'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'website', 'is_verified', 'farm_id']
 
     def create(self, validated_data):

@@ -50,7 +50,17 @@ class PondsSerializer(serializers.ModelSerializer):
         return pond_instance
 
     def update(self, instance, validated_data):
-        pond_image = self.context.get('view').request.FILES
+        image_datas = self.context.get('view').request.FILES
+        
+        data = self.context['request'].data.get('pond_images_id', None)
+        #filtering 'farm_image_id' and converting it into an integer list
+        int_image_id = []
+        if data:
+            trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
+            for id in trim_image_id:
+                int_image_id.append(int(id))
+
+        
         instance.pond_name = validated_data.get('pond_name', instance.pond_name)
         instance.pond_type = validated_data.get('pond_type', instance.pond_type)
         instance.pond_construct_type = validated_data.get('pond_construct_type', instance.pond_construct_type)
@@ -65,10 +75,19 @@ class PondsSerializer(serializers.ModelSerializer):
 
         pondimage_with_same_profile_instance = PondImage.objects.filter(images=instance.pk).values_list('id', flat=True)
 
-        for pondimage_id in pondimage_with_same_profile_instance:
-            PondImage.objects.filter(pk=pondimage_id).delete()
-        for data in pond_image.getlist('pond_images'):
-            name = data.name
-            PondImage.objects.create(images=instance, image_name=name, image=data)
+        if len(int_image_id) != 0:
+            for delete_id in pondimage_with_same_profile_instance:
+                if delete_id in int_image_id:
+                    '''if the id is there in database we should not delete'''
+                    pass
+                else:
+                    
+                    PondImage.objects.filter(pk=delete_id).delete()
+                    
+        if len(image_datas.getlist('pond_images')) != 0:  
+            
+            for image_data in image_datas.getlist('pond_images'):
+                name = image_data.name
+                PondImage.objects.create(images=instance, image_name=name, image=image_data)            
 
         return instance
