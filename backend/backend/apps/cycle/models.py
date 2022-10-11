@@ -33,8 +33,8 @@ class Cycle(models.Model):
     numbers_of_larva = models.IntegerField(default=6000)
     harvest_id = models.IntegerField(null=True)
 
-    def __str__(self) -> str:
-        return self.species
+    def __str__(self):
+        return str(self.species)
 
 
 class CyclePondImage(models.Model):
