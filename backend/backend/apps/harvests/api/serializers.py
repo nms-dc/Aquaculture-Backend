@@ -38,7 +38,7 @@ class HarvestSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Harvests
-        fields = ['id','harvest_type', 'harvest_date', 'harvest_notes']
+        fields = ['id', 'harvest_type', 'harvest_date', 'harvest_notes']
 
 
 class HarvestSerializer(serializers.ModelSerializer):
@@ -95,22 +95,20 @@ class HarvestSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         image_datas = self.context.get('view').request.FILES
-        
-        
         data = self.context['request'].data.get('ani_images_id', None)
         int_animal_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_animal_id.append(int(id))
-        
+
         data = self.context['request'].data.get('pond_images_id', None)
         int_pond_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_pond_id.append(int(id))
-        
+
         data = self.context['request'].data.get('log_images_id', None)
         int_log_id = []
         if data:
@@ -118,8 +116,6 @@ class HarvestSerializer(serializers.ModelSerializer):
             for id in trim_image_id:
                 int_log_id.append(int(id))
 
-        
-        
         instance.harvest_type = validated_data.get('harvest_type', instance.harvest_type)
         instance.total_kgs = validated_data.get('total_kgs',  instance.total_kgs)
         instance.temperature = validated_data.get('temperature', instance.temperature)
@@ -149,60 +145,50 @@ class HarvestSerializer(serializers.ModelSerializer):
         ani_image_with_same_profile_instance = HarvestAnimalImages.objects.filter(images=instance.pk).values_list('id', flat=True)
         log_image_with_same_profile_instance = HarvestLogisticImages.objects.filter(images=instance.pk).values_list('id', flat=True)
 
-        
         if len(int_animal_id) != 0:
             for delete_id in ani_image_with_same_profile_instance:
                 if delete_id in int_animal_id:
                     '''if the id is there in database we should not delete'''
                     pass
                 else:
-                    
                     HarvestAnimalImages.objects.filter(pk=delete_id).delete()
-        
+
         '''this if block should come after the deletion block which is the abouve if block
             then only this data will get delete after insertion of data base if we put the below
             if block above into the deletion if which above if block this new image also will get deleted'''
-        if len(image_datas.getlist('ani_images')) != 0:  
-            
+        if len(image_datas.getlist('ani_images')) != 0:
             for image_data in image_datas.getlist('ani_images'):
                 name = image_data.name
                 HarvestAnimalImages.objects.create(images=instance, image_name=name, image=image_data)
-                
         if len(int_pond_id) != 0:
             for delete_id in pondimage_with_same_profile_instance:
                 if delete_id in int_pond_id:
                     '''if the id is there in database we should not delete'''
                     pass
                 else:
-                    
                     HarvestPondImages.objects.filter(pk=delete_id).delete()
-        
+
         '''this if block should come after the deletion block which is the abouve if block
             then only this data will get delete after insertion of data base if we put the below
             if block above into the deletion if which above if block this new image also will get deleted'''
-        if len(image_datas.getlist('pond_images')) != 0:  
-            
+        if len(image_datas.getlist('pond_images')) != 0:
             for image_data in image_datas.getlist('pond_images'):
                 name = image_data.name
                 HarvestPondImages.objects.create(images=instance, image_name=name, image=image_data)
-                
         if len(int_log_id) != 0:
             for delete_id in log_image_with_same_profile_instance:
                 if delete_id in int_log_id:
                     '''if the id is there in database we should not delete'''
                     pass
                 else:
-                    
                     HarvestLogisticImages.objects.filter(pk=delete_id).delete()
-        
+
         '''this if block should come after the deletion block which is the abouve if block
             then only this data will get delete after insertion of data base if we put the below
             if block above into the deletion if which above if block this new image also will get deleted'''
-        if len(image_datas.getlist('log_images')) != 0:  
-            
+        if len(image_datas.getlist('log_images')) != 0:
             for image_data in image_datas.getlist('log_images'):
                 name = image_data.name
-                HarvestLogisticImages.objects.create(images=instance, image_name=name, image=image_data)                   
-               
+                HarvestLogisticImages.objects.create(images=instance, image_name=name, image=image_data)
 
         return instance
