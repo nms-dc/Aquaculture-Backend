@@ -26,7 +26,7 @@ class PondSummarySerializer(serializers.ModelSerializer):
                 else:
                     return 0
             else:
-                return 0   
+                return 0
         except Ponds.DoesNotExist:
             return None
 
@@ -68,16 +68,14 @@ class PondsSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         image_datas = self.context.get('view').request.FILES
-        
         data = self.context['request'].data.get('pond_images_id', None)
-        #filtering 'farm_image_id' and converting it into an integer list
+        '''filtering 'farm_image_id' and converting it into an integer list'''
         int_image_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_image_id.append(int(id))
 
-        
         instance.pond_name = validated_data.get('pond_name', instance.pond_name)
         instance.pond_type = validated_data.get('pond_type', instance.pond_type)
         instance.pond_construct_type = validated_data.get('pond_construct_type', instance.pond_construct_type)
@@ -98,13 +96,11 @@ class PondsSerializer(serializers.ModelSerializer):
                     '''if the id is there in database we should not delete'''
                     pass
                 else:
-                    
                     PondImage.objects.filter(pk=delete_id).delete()
-                    
-        if len(image_datas.getlist('pond_images')) != 0:  
-            
+
+        if len(image_datas.getlist('pond_images')) != 0:
             for image_data in image_datas.getlist('pond_images'):
                 name = image_data.name
-                PondImage.objects.create(images=instance, image_name=name, image=image_data)            
+                PondImage.objects.create(images=instance, image_name=name, image=image_data)
 
         return instance

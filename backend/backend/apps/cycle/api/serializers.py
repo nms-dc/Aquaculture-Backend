@@ -39,6 +39,7 @@ class CycleHarvestRelationSerializer(serializers.ModelSerializer):
         model = Cycle
         fields = ["id", "species", "description", "species_pl_stage", "harvest"]
 
+
 class CycleSerializer(serializers.ModelSerializer):
 
     pond_images = PrepPondImageSerializer(many=True, read_only=True)
@@ -94,29 +95,27 @@ class CycleSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         image_datas = self.context.get('view').request.FILES
-        
         data = self.context['request'].data.get('pond_images_id', None)
-        #filtering 'pond_image_id' and converting it into an integer list
+        '''#filtering 'pond_image_id' and converting it into an integer list'''
         int_Pimage_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             print('type of data', type(trim_image_id))
             for id in trim_image_id:
-                print('id',int(id))
+                print('id', int(id))
                 int_Pimage_id.append(int(id))
-        print(int_Pimage_id)    
-        
+        print(int_Pimage_id)
+
         data = self.context['request'].data.get('seed_images_id', None)
-        #filtering 'seed_images_id' and converting it into an integer list
+        '''#filtering 'seed_images_id' and converting it into an integer list'''
         int_Simage_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             print('type of data', type(trim_image_id))
             for id in trim_image_id:
-                print('id',int(id))
+                print('id', int(id))
                 int_Simage_id.append(int(id))
-        print(int_Simage_id)    
-        
+        print(int_Simage_id)
         instance.Pond = validated_data.get('Pond', instance.Pond)
         instance.species = validated_data.get('species', instance.species)
         instance.species_pl_stage = validated_data.get('species_pl_stage', instance.species_pl_stage)
@@ -138,29 +137,20 @@ class CycleSerializer(serializers.ModelSerializer):
                     '''if the id is there in database we should not delete'''
                     pass
                 else:
-                    
                     CyclePondImage.objects.filter(pk=delete_id).delete()
-                    
-        if len(image_datas.getlist('pond_images')) != 0:  
-            
+        if len(image_datas.getlist('pond_images')) != 0:
             for image_data in image_datas.getlist('pond_images'):
                 name = image_data.name
                 CyclePondImage.objects.create(images=instance, image_name=name, image=image_data)
-                            
-        
         if len(int_Simage_id) != 0:
             for delete_id in seedimage_with_same_profile_instance:
                 if delete_id in int_Simage_id:
                     '''if the id is there in database we should not delete'''
                     pass
                 else:
-                    
-                    CycleSeedImage.objects.filter(pk=delete_id).delete()   
-        
-        if len(image_datas.getlist('seed_images')) != 0:  
-            
+                    CycleSeedImage.objects.filter(pk=delete_id).delete()
+        if len(image_datas.getlist('seed_images')) != 0:
             for image_data in image_datas.getlist('seed_images'):
                 name = image_data.name
-                CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data)                                
-
+                CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data)
         return instance

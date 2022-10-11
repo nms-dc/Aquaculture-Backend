@@ -24,7 +24,7 @@ class Harvests(models.Model):
     price_kg_1 = models.IntegerField(null=True, default=0)
 
     def __str__(self) -> str:
-        return self.pond_type
+        return self.harvest_type
 
 
 class AddAnimal(models.Model):

@@ -6,10 +6,11 @@ class HarvestAdmin(admin.ModelAdmin):
 
     list_display = ('harvest_type', 'harvest_cost', 'total_kgs', 'harvest_date')
     list_filter = ('harvest_type',)
+    '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
         (None, {'fields': ('harvest_type', 'harvest_cost')}),
-        ('Personal info', {'fields': (('total_kgs'), 'temperature', 'harvest_animalImages', )}),
-        ('Company info', {'fields': ('harvest_pondmages', 'harvest_logisticImages', 'harvest_notes', )}),
+        ('Personal info', {'fields': (('total_kgs'), 'temperature',)}),
+        ('Company info', {'fields': ('harvest_notes', )}),
     )
     add_fieldsets = (
         (None, {
