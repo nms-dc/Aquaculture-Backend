@@ -4,7 +4,7 @@ from ponds.models import Ponds, PondImage
 from harvests.models import Harvests
 from accounts.models import User
 from cycle.models import Cycle
-
+from cycle.api.serializers import CycleSerializer
 
 class PondImageSerializer(serializers.ModelSerializer):
 
@@ -33,6 +33,26 @@ class PondSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = Ponds
         fields = ["id", "pond_name", "description", "pond_images", "pond_type", "is_active_pond", "doc", "cycle_harvests_count"]
+
+
+class PondCycleRelationSerializer(serializers.ModelSerializer):
+    #farm_images = ImageSerializer(many=True)
+    cycle = serializers.SerializerMethodField()
+
+    def get_cycle(self, obj):
+        try:
+            if Cycle.objects.filter(Pond=obj).exists():
+                cycle = Cycle.objects.filter(Pond=obj)
+                serializer = CycleSerializer(cycle, many=True).data
+                return serializer
+            else:
+                return None
+        except Ponds.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Ponds
+        fields = ["id", "pond_name", "description", "cycle"]
 
 
 class PondsSerializer(serializers.ModelSerializer):
