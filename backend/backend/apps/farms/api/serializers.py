@@ -84,8 +84,9 @@ class FarmSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         image_datas = self.context.get('view').request.FILES
-        token = self.headers.get('Aqua-Auth-Token', None)
-        user = User.objects.get(email=token)
+        # token = self.headers.get('Aqua-Auth-Token', None)
+        # print('headers',self.headers)
+        # user = User.objects.get(email=token)
         '''filtering the required data from the user payload request
         #here the farm_image_id is not a field defined in models from the user payload added extra'''
         data = self.context['request'].data.get('farm_images_id', None)
@@ -109,7 +110,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.state = validated_data.get('state', instance.state)
         instance.town_village = validated_data.get('town_village', instance.town_village)
         instance.description = validated_data.get('description', instance.description)
-        instance.user = user
+        # instance.user = user
         instance.save()
 
         certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
