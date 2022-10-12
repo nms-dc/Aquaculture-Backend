@@ -53,7 +53,7 @@ class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
-                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode']
+                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -69,6 +69,7 @@ class FarmSerializer(serializers.ModelSerializer):
                 town_village=validated_data['town_village'],
                 description=validated_data['description'],
                 zipcode = validated_data['zipcode'],
+                district = validated_data['district'],
                 user=user
             )
 
@@ -112,6 +113,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.town_village = validated_data.get('town_village', instance.town_village)
         instance.description = validated_data.get('description', instance.description)
         instance.zipcode = validated_data.get('zipcode', instance.zipcode)
+        instance.district = validated_data.get('district', instance.district)
         # instance.user = user
         instance.save()
 

@@ -21,6 +21,7 @@ class Farms(models.Model):
     createdAt = models.DateField(auto_now=True, null=True)
     farm_status = models.CharField(max_length=240, default=None, null=True)
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, default=None, null=True)
+    district = models.CharField(max_length=24, default=None, null=True)
 
     def __str__(self):
         return self.farm_name
