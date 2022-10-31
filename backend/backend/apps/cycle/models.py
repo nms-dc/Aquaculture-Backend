@@ -32,6 +32,7 @@ class Cycle(models.Model):
     seeding_date = models.DateField(default=datetime.date.today)
     numbers_of_larva = models.IntegerField(default=6000)
     harvest_id = models.IntegerField(null=True)
+    doc = models.IntegerField(null=True)
 
     def __str__(self):
         return str(self.species)

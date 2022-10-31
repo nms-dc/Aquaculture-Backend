@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from farms.models import Farms, FarmCertification, FarmImage
-from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer
+from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer, FarmCycleRelationSerializer
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -32,4 +32,11 @@ class FarmView(viewsets.ModelViewSet):
     def get_related_ponds(self, request, *args, **kwargs):
         farm = self.get_object()
         result = FarmPondRelationSerializer(instance=farm, context={'request': request}).data
+        return Response({"result": result})
+
+    @action(detail=True, methods=['get'], url_path='get-related-cycle',)
+    @csrf_exempt
+    def get_related_cycle(self, request, *args, **kwargs):
+        farm = self.get_object()
+        result = FarmCycleRelationSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})

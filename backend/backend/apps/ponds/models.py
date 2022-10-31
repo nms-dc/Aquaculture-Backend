@@ -31,7 +31,7 @@ class Ponds(models.Model):
     last_stock_date = models.DateField(auto_now=True, null=True)
     current_stock_id = models.IntegerField(default=0, null=True)
     estimated_harvest_date = models.DateField(auto_now=True, null=True)
-    farm = models.ForeignKey('farms.Farms', on_delete=models.CASCADE, related_name='farm', default=None, null=True)
+    farm = models.ForeignKey('farms.Farms', on_delete=models.CASCADE, default=None, null=True)
     is_active_pond = models.BooleanField(default=False)
     active_cycle_id = models.IntegerField(null=True)
     active_cycle_date = models.DateField(null=True)
