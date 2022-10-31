@@ -14,7 +14,7 @@ from rest_framework import viewsets
 
 
 @csrf_exempt
-def logout_view(request):
+def logout_View(request):
     logout(request)
     return HttpResponse("logout successful")
 

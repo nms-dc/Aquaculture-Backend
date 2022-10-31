@@ -6,6 +6,7 @@ from accounts.models import User
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
 
+
 class PondImageSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -14,6 +15,35 @@ class PondImageSerializer(serializers.ModelSerializer):
 
 
 class PondSummarySerializer(serializers.ModelSerializer):
+    pond_images = PondImageSerializer(many=True)
+    cycle_harvests_count = serializers.SerializerMethodField(read_only=True)
+    cycle_data = serializers.SerializerMethodField(read_only=True)
+
+    def get_cycle_data(self, obj):
+        cycle = Cycle.objects.filter(Pond=obj)
+        serializer = CycleSerializer(cycle, many=True).data
+        return serializer
+
+    def get_cycle_harvests_count(self, obj):
+        try:
+            if Cycle.objects.filter(id=obj.active_cycle_id).exists():
+                active_cycle = Cycle.objects.filter(id=obj.active_cycle_id).first()
+                if Harvests.objects.filter(cycle=active_cycle, harvest_type='P').exists():
+                    return Harvests.objects.filter(cycle=active_cycle, harvest_type='P').count()
+                else:
+                    return 0
+            else:
+                return 0
+        except Ponds.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Ponds
+        fields = ["id", "pond_name", "description", "pond_images", "pond_type", "is_active_pond", "doc", "cycle_harvests_count",
+                  "cycle_data"]
+
+
+class PondSummaryOnlySerializer(serializers.ModelSerializer):
     pond_images = PondImageSerializer(many=True)
     cycle_harvests_count = serializers.SerializerMethodField(read_only=True)
 
@@ -36,7 +66,6 @@ class PondSummarySerializer(serializers.ModelSerializer):
 
 
 class PondCycleRelationSerializer(serializers.ModelSerializer):
-    #farm_images = ImageSerializer(many=True)
     cycle = serializers.SerializerMethodField()
 
     def get_cycle(self, obj):

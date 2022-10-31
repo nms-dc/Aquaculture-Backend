@@ -1,8 +1,11 @@
+from itertools import cycle
 from rest_framework import serializers
 from farms.models import Farms, FarmCertification, FarmImage
 from ponds.models import Ponds
-from ponds.api.serializers import PondSummarySerializer
+from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSummaryOnlySerializer
 from accounts.models import User
+from cycle.models import Cycle
+from cycle.api.serializers import CycleSerializer
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -27,19 +30,31 @@ class FarmSummarySerializer(serializers.ModelSerializer):
 
 
 class FarmPondRelationSerializer(serializers.ModelSerializer):
-    farm_images = ImageSerializer(many=True)
     ponds = serializers.SerializerMethodField()
 
     def get_ponds(self, obj):
         try:
             if Ponds.objects.filter(farm=obj).exists():
                 ponds = Ponds.objects.filter(farm=obj)
-                serializer = PondSummarySerializer(ponds, many=True).data
+                serializer = PondSummaryOnlySerializer(ponds, many=True).data
                 return serializer
             else:
                 return None
         except Ponds.DoesNotExist:
             return None
+
+    class Meta:
+        model = Farms
+        fields = ["id", "farm_name", "description", "farm_images", "ponds"]
+
+
+class FarmCycleRelationSerializer(serializers.ModelSerializer):
+    ponds = serializers.SerializerMethodField()
+
+    def get_ponds(self, obj):
+        pond = Ponds.objects.filter(farm=obj)
+        serializer = PondSummarySerializer(pond, many=True).data
+        return serializer
 
     class Meta:
         model = Farms
@@ -68,8 +83,8 @@ class FarmSerializer(serializers.ModelSerializer):
                 state=validated_data['state'],
                 town_village=validated_data['town_village'],
                 description=validated_data['description'],
-                zipcode = validated_data['zipcode'],
-                district = validated_data['district'],
+                zipcode=validated_data['zipcode'],
+                district=validated_data['district'],
                 user=user
             )
 
@@ -78,7 +93,6 @@ class FarmSerializer(serializers.ModelSerializer):
             FarmImage.objects.create(images=Farm_instance, image_name=name, image=image_data)
 
         for certify_data in image_datas.getlist('certificate'):
-            print('certiify', certify_data)
             name = certify_data.name
             FarmCertification.objects.create(certificates=Farm_instance, certificate_name=name, image=certify_data)
 
@@ -86,9 +100,6 @@ class FarmSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         image_datas = self.context.get('view').request.FILES
-        # token = self.headers.get('Aqua-Auth-Token', None)
-        # print('headers',self.headers)
-        # user = User.objects.get(email=token)
         '''filtering the required data from the user payload request
         #here the farm_image_id is not a field defined in models from the user payload added extra'''
         data = self.context['request'].data.get('farm_images_id', None)

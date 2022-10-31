@@ -13,7 +13,6 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from cycle.models import Cycle
 
 
-
 class PondView(viewsets.ModelViewSet):
     queryset = Ponds.objects.all()
     serializer_class = PondsSerializer
@@ -26,12 +25,10 @@ class PondView(viewsets.ModelViewSet):
         pond = self.get_object()
         result = PondSummarySerializer(instance=pond, context={'request': request}).data
         return Response({"result": result})
-    
+
     @action(detail=True, methods=['get'], url_path='get-cycle-history',)
     @csrf_exempt
     def get_cycle_history(self, request, *args, **kwargs):
         pond = self.get_object()
         result = PondCycleRelationSerializer(instance=pond, context={'request': request}).data
         return Response({"result": result})
-    
-    
