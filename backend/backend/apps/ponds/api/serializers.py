@@ -1,10 +1,11 @@
 # from backend.backend.apps.cycle.models import Cycle
 from rest_framework import serializers
-from ponds.models import Ponds, PondImage
+from ponds.models import Ponds, PondImage, PondConstructType, PondType
 from harvests.models import Harvests
 from accounts.models import User
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
+
 
 
 class PondImageSerializer(serializers.ModelSerializer):
@@ -153,3 +154,15 @@ class PondsSerializer(serializers.ModelSerializer):
                 PondImage.objects.create(images=instance, image_name=name, image=image_data)
 
         return instance
+
+class PondTypeSerializer(serializers.ModelSerializer):
+    #pond_types = PondsSerializer(many=True, read_only = True)
+    class Meta:
+        model = PondType
+        fields = ['id','name','desc']#, 'pond_types']
+
+class PondConstructTypeSerializer(serializers.ModelSerializer):
+    #Pond_construct = PondTypeSerializer(many=True,read_only = True)
+    class Meta:
+        model = PondConstructType
+        fields = ['id','construct_type']#,'Pond_construct']

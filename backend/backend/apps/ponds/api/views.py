@@ -6,7 +6,8 @@ from django.http import HttpResponse
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from ponds.models import PondType, PondConstructType, Ponds
-from ponds.api.serializers import PondsSerializer, PondSummarySerializer, PondCycleRelationSerializer
+from ponds.api.serializers import PondsSerializer, PondSummarySerializer, PondCycleRelationSerializer\
+                                            , PondConstructTypeSerializer, PondTypeSerializer
 from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -32,3 +33,17 @@ class PondView(viewsets.ModelViewSet):
         pond = self.get_object()
         result = PondCycleRelationSerializer(instance=pond, context={'request': request}).data
         return Response({"result": result})
+ 
+class PondMasterView(viewsets.ModelViewSet):
+    queryset = PondConstructType.objects.all()
+    serializer_class = PondConstructTypeSerializer
+    authentication_classes = []
+    permission_classes = [AllowAny]     
+    http_method_names = [ 'get']
+    
+class PondTypeView(viewsets.ModelViewSet):
+    queryset = PondType.objects.all()
+    serializer_class = PondTypeSerializer
+    authentication_classes = []
+    permission_classes = [AllowAny]   
+    http_method_names = [ 'get'] 

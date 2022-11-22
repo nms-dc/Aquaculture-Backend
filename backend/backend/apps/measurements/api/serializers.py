@@ -20,11 +20,17 @@ class MeasurementPicsSerializer(serializers.ModelSerializer):
 class MeasurementSerializer(serializers.ModelSerializer):
     nutrition_data = NutritionSerializer(many=True, read_only=True)
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
+    measurement_description = serializers.SerializerMethodField()
+    
+    def get_measurement_description(sself, obj):
+         return  "pH value"
+    
+    
 
     class Meta:
         model = Measurement
-        fields = ['id', 'cycle', 'measurementType', 'measurement_description', 'measurement_type', 'value', 'time',
-                  'company', 'price_per_kg', 'nutrition_data', 'measure_images']
+        fields = ['id', 'cycle', 'measurement_type', 'value', 'time',
+                  'company', 'price_per_kg', 'nutrition_data', 'measure_images','measurement_description']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -35,8 +41,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
             time=validated_data['time'],
             company=validated_data['company'],
             price_per_kg=validated_data['price_per_kg'],
-            measurementType=validated_data['measurementType'],
-            measurement_description=validated_data['measurement_description']
             )
 
         for data in image_datas.getlist('measure_images'):
@@ -69,8 +73,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
         instance.time = validated_data.get('time', instance.time)
         instance.company = validated_data.get('company', instance.company)
         instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
-        instance.measurementType = validated_data.get('measurementType', instance.measurementType)
-        instance.measurement_description = validated_data.get('measurement_description', instance.measurement_description)
         instance.save()
 
         measureimage_with_same_profile_instance = MeasurementPics.objects.filter(images=instance.pk).values_list('id', flat=True)
@@ -93,8 +95,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
 
 
 class MasterSerializer(serializers.ModelSerializer):
-    measurement_data = MeasurementSerializer(many=True, read_only=True)
-
+   # measurement_data = MeasurementSerializer(many=True, read_only=True)
     class Meta:
         model = MeasurementMaster
-        fields = ['id', 'measurement_data']
+        fields = ['id', 'measurement_type', 'measurement_description' ]
