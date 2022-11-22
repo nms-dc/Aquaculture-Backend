@@ -2,13 +2,16 @@ import datetime
 from django.db import models
 
 
-class PondType(models.Model):
-    name = models.CharField(max_length=24, default=None)
-    desc = models.CharField(max_length=24, default=None)
 
 
 class PondConstructType(models.Model):
     construct_type = models.CharField(max_length=24, default=None, null=True)
+
+class PondType(models.Model):
+    name = models.CharField(max_length=24, default=None)
+    desc = models.CharField(max_length=24, default=None)
+    pond_construct = models.ForeignKey(PondConstructType, on_delete=models.CASCADE, related_name='Pond_construct', null=True)
+    
 
 
 class Ponds(models.Model):
