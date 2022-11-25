@@ -6,7 +6,7 @@ from company.models import Company
 from cycle.models import Cycle
 
 # Create your models here.
-class MeasurementType(models.Model):
+class MeasurementMaster(models.Model):
     measurement_type = models.CharField(max_length=400, null=True)
     measurement_description = models.CharField(max_length=400, null=True)
 
@@ -17,7 +17,7 @@ class Measurement(models.Model):
     time = models.TimeField(null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
     price_per_kg = models.IntegerField(null=True)
-    measurement_type = models.ForeignKey(MeasurementType, on_delete=models.CASCADE,related_name='measurement_types', default=None, null=True)
+    measurement_type = models.ForeignKey(MeasurementMaster, on_delete=models.CASCADE, default=None, null=True)
     
 
     
