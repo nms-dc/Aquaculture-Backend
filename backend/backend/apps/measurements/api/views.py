@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
-from measurements.models import MeasurementMaster, Measurement
-from measurements.api.serializers import MeasurementSerializer, MasterSerializer
+from measurements.models import MeasurementType, Measurement
+from measurements.api.serializers import MeasurementSerializer, MeasurementTypeSerializer, MasterSerializer
 from django.http import JsonResponse,  HttpResponse
 from datetime import datetime, timedelta
 
@@ -16,7 +16,7 @@ class MeasureView(viewsets.ModelViewSet):
 
 
 class MasterView(viewsets.ModelViewSet):
-    queryset = MeasurementMaster.objects.all()
+    queryset = MeasurementType.objects.all()
     serializer_class = MasterSerializer
     authentication_classes = []
     permission_classes = [AllowAny]
@@ -24,6 +24,14 @@ class MasterView(viewsets.ModelViewSet):
 
 
 def notifications(request, *args, **kwargs):
+    
+    '''
+	For each date since measurement cycle has started
+	     select *  where Measurement where measurement_type not in (select measurement-type from MeasurementType and time.date = date)
+		 pass this object to measurement Serializer
+
+	'''
+	
     date = datetime.now()
     date_1 =  datetime.now() - timedelta(days=1)
     date_2 =  datetime.now() - timedelta(days=2)
@@ -139,6 +147,14 @@ def notifications(request, *args, **kwargs):
     return JsonResponse([l,l1,l2,l3,l4], safe=False)
     
 def measurements(request, *args, **kwargs):
+    '''
+    
+	For each date since measurement cycle has started
+	     select *  where Measurement where measurement_type in (select measurement-type
+      from MeasurementType and time.date = date)
+		 pass this object to measurement Serializer
+	
+    '''
     date = datetime.now()
     date_1 =  datetime.now() - timedelta(days=1)
     date_2 =  datetime.now() - timedelta(days=2)

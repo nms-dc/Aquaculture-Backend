@@ -1,6 +1,6 @@
 from attr import fields
 from rest_framework import serializers
-from measurements.models import Measurement, MeasurementMaster, MeasurementPics, Nutrition
+from measurements.models import Measurement, MeasurementType, MeasurementPics, Nutrition
 
 
 class NutritionSerializer(serializers.ModelSerializer):
@@ -8,6 +8,10 @@ class NutritionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Nutrition
         fields = '__all__'
+        
+
+        
+
 
 
 class MeasurementPicsSerializer(serializers.ModelSerializer):
@@ -24,13 +28,11 @@ class MeasurementSerializer(serializers.ModelSerializer):
     
     def get_measurement_description(sself, obj):
          return  "pH value"
-    
-    
-
+ 
     class Meta:
         model = Measurement
-        fields = ['id', 'cycle', 'measurement_type', 'value', 'time',
-                  'company', 'price_per_kg', 'nutrition_data', 'measure_images','measurement_description']
+        fields = ['id', 'cycle', 'value', 'time','measurement_type','measurement_description',
+                  'company', 'price_per_kg', 'nutrition_data', 'measure_images']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -93,9 +95,15 @@ class MeasurementSerializer(serializers.ModelSerializer):
 
         return instance
 
-
-class MasterSerializer(serializers.ModelSerializer):
-   # measurement_data = MeasurementSerializer(many=True, read_only=True)
+class MeasurementTypeSerializer(serializers.ModelSerializer):
+    measurement_types = MeasurementSerializer(many=True, read_only=True)
     class Meta:
-        model = MeasurementMaster
-        fields = ['id', 'measurement_type', 'measurement_description' ]
+        model = MeasurementType
+        fields = ['id', 'measurement_type', 'measurement_description','measurement_types' ] 
+        
+class MasterSerializer(serializers.ModelSerializer):
+    #measurement_types = MeasurementSerializer(many=True, read_only=True)
+    class Meta:
+        model = MeasurementType
+        fields = ['id', 'measurement_type', 'measurement_description' ]         
+
