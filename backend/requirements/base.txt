@@ -24,4 +24,5 @@ gunicorn==20.1.0
 gevent==21.12.0
 #API documentation
 drf-spectacular>=0.15.1,<0.16
-
+#for google authentication
+django-allauth==0.50

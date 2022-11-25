@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
-from measurements.models import MeasurementType, Measurement
+from measurements.models import MeasurementMaster, Measurement
 from measurements.api.serializers import MeasurementSerializer, MeasurementTypeSerializer, MasterSerializer
 from django.http import JsonResponse,  HttpResponse
 from datetime import datetime, timedelta
@@ -16,7 +16,7 @@ class MeasureView(viewsets.ModelViewSet):
 
 
 class MasterView(viewsets.ModelViewSet):
-    queryset = MeasurementType.objects.all()
+    queryset = MeasurementMaster.objects.all()
     serializer_class = MasterSerializer
     authentication_classes = []
     permission_classes = [AllowAny]

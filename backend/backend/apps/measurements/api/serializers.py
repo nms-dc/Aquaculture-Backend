@@ -1,6 +1,6 @@
 from attr import fields
 from rest_framework import serializers
-from measurements.models import Measurement, MeasurementType, MeasurementPics, Nutrition
+from measurements.models import Measurement, MeasurementMaster, MeasurementPics, Nutrition
 
 
 class NutritionSerializer(serializers.ModelSerializer):
@@ -98,12 +98,12 @@ class MeasurementSerializer(serializers.ModelSerializer):
 class MeasurementTypeSerializer(serializers.ModelSerializer):
     measurement_types = MeasurementSerializer(many=True, read_only=True)
     class Meta:
-        model = MeasurementType
+        model = MeasurementMaster
         fields = ['id', 'measurement_type', 'measurement_description','measurement_types' ] 
         
 class MasterSerializer(serializers.ModelSerializer):
     #measurement_types = MeasurementSerializer(many=True, read_only=True)
     class Meta:
-        model = MeasurementType
+        model = MeasurementMaster
         fields = ['id', 'measurement_type', 'measurement_description' ]         
 
