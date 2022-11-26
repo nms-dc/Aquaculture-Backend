@@ -24,10 +24,14 @@ class MeasurementPicsSerializer(serializers.ModelSerializer):
 class MeasurementSerializer(serializers.ModelSerializer):
     nutrition_data = NutritionSerializer(many=True, read_only=True)
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
-    measurement_description = serializers.SerializerMethodField()
+    measurement_description = serializers.SerializerMethodField(read_only=True)
     
-    def get_measurement_description(sself, obj):
-         return  "pH value"
+    def get_measurement_description(self, obj):
+        measurement_type_var = self.context['request'].data.get('measurement_type', None)
+        if measurement_type_var:
+            return MeasurementMaster.objects.filter(id=int(measurement_type_var)).values_list('measurement_description',flat=True).first()
+        else:
+            return None
  
     class Meta:
         model = Measurement
