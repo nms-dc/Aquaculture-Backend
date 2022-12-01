@@ -1,6 +1,6 @@
 from itertools import cycle
 from rest_framework import serializers
-from farms.models import Farms, FarmCertification, FarmImage
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots
 from ponds.models import Ponds
 from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSummaryOnlySerializer
 from accounts.models import User
@@ -64,11 +64,15 @@ class FarmCycleRelationSerializer(serializers.ModelSerializer):
 class FarmSerializer(serializers.ModelSerializer):
     certificate = CertifySerializer(many=True, read_only=True)
     farm_images = ImageSerializer(many=True, read_only=True)
-
+    fcr = serializers.SerializerMethodField(read_only = True)
+    
+    def get_fcr(self,obj):
+        return 1.0
+    
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
-                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district']
+                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -173,3 +177,10 @@ class FarmSerializer(serializers.ModelSerializer):
                 name = image_data.name
                 FarmImage.objects.create(images=instance, image_name=name, image=image_data)
         return instance
+
+
+class FeedLotsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FeedLots
+        fields = '__all__'
