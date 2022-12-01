@@ -1,4 +1,6 @@
 from django.db import models
+from company.models import Company
+from common.models import Currency
 
 
 class Farms(models.Model):
@@ -41,3 +43,16 @@ class FarmCertification(models.Model):
     add_information = models.TextField(max_length=224, default=None, null=True)
     image = models.ImageField(upload_to='certificate_uploads', null=True)
     certificates = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
+
+class FeedLots(models.Model):
+    farm_id = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, blank=True)
+    lot_number = models.CharField(max_length=24, default=None, null=True)
+    company_purchased_from = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    weight_of_each_bag_at_purchase = models.FloatField(default=0, null=True)
+    date_purchased = models.DateField(null=True)
+    date_shipped = models.DateField(null=True)
+    date_received = models.DateField(null=True)
+    bag_is_used = models.BooleanField(default=False)
+    feed_cost = models.IntegerField(default=0, null=True)
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
+    Image = models.FileField(upload_to='FeedLots_images', null=True)

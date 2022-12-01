@@ -8,8 +8,9 @@ from accounts.models import User, create_username
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
-from farms.models import Farms, FarmCertification, FarmImage
-from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer, FarmCycleRelationSerializer
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots
+from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer,\
+    FarmCycleRelationSerializer, FeedLotsSerializer
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -40,3 +41,10 @@ class FarmView(viewsets.ModelViewSet):
         farm = self.get_object()
         result = FarmCycleRelationSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
+
+class FeedLotsView(viewsets.ModelViewSet):
+    queryset = FeedLots.objects.all()
+    serializer_class = FeedLotsSerializer
+    authentication_classes = []
+    permission_classes = [AllowAny]
+    http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']    
