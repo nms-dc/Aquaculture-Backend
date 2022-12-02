@@ -4,6 +4,8 @@ from django.db import models
 from numpy import record
 from company.models import Company
 from cycle.models import Cycle
+from django.utils import timezone
+
 
 # Create your models here.
 class MeasurementMaster(models.Model):
@@ -14,7 +16,9 @@ class MeasurementMaster(models.Model):
 class Measurement(models.Model):
     cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, default=None, null=True)
     value = models.FloatField(null=True)
-    time = models.TimeField(null=True)
+    # time = models.TimeField(null=True)
+    time = models.DateTimeField(default=timezone.now)
+    # time = models.TimeField(null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
     price_per_kg = models.IntegerField(null=True)
     measurement_type = models.ForeignKey(MeasurementMaster, on_delete=models.CASCADE, default=None, null=True)
