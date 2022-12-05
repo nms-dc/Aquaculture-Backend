@@ -17,7 +17,7 @@ class Measurement(models.Model):
     cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, default=None, null=True)
     value = models.FloatField(null=True)
     # time = models.TimeField(null=True)
-    time = models.DateTimeField(default=timezone.now)
+    # time = models.DateTimeField(default=timezone.now)
     # time = models.TimeField(null=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
     price_per_kg = models.IntegerField(null=True)
