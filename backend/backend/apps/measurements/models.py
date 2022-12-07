@@ -22,11 +22,6 @@ class Measurement(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
     price_per_kg = models.IntegerField(null=True)
     measurement_type = models.ForeignKey(MeasurementMaster, on_delete=models.CASCADE, default=None, null=True)
-    
-
-    
-
-    
 
 
 class Nutrition(models.Model):

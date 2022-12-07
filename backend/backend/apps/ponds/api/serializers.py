@@ -1,6 +1,6 @@
 # from backend.backend.apps.cycle.models import Cycle
 from rest_framework import serializers
-from ponds.models import Ponds, PondImage, PondConstructType, PondType
+from ponds.models import Ponds, PondImage, PondConstructType, PondType,PondGraphs
 from harvests.models import Harvests
 from accounts.models import User
 from cycle.models import Cycle
@@ -166,3 +166,65 @@ class PondConstructTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PondConstructType
         fields = ['id','construct_type']#,'Pond_construct']
+        
+class PondGraphSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PondGraphs
+        fields = ['id','farm','abw','pond','total_feed','time']        
+        
+
+class PondGraphRelationSerializer(serializers.ModelSerializer):
+    abw_data = serializers.SerializerMethodField()
+
+    def get_abw_data(self, obj):
+        try:
+            if PondGraphs.objects.filter(pond=obj).exists():
+                ponds = PondGraphs.objects.filter(pond=obj)
+                serializer = PondGraphSerializer(ponds, many=True).data
+                data = []
+                for i in serializer:
+                    #converting an ordereddict to normal dictionary
+                    dic = dict(i)
+                    data.append({'date':dic['time'],'abw_data':dic['abw']})
+                    print(data)
+                data = sorted(data, key = lambda d: d['date'])
+                return data
+            
+            else:
+                return None
+        except Ponds.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Cycle
+        fields = ["id", 'abw_data']        
+        
+        
+class PondGraphFCRSerializer(serializers.ModelSerializer):
+    fcr_data = serializers.SerializerMethodField()
+
+    def get_fcr_data(self, obj):
+        try:
+            if PondGraphs.objects.filter(pond=obj).exists():
+                ponds = PondGraphs.objects.filter(pond=obj)
+                serializer = PondGraphSerializer(ponds, many=True).data
+                data = []
+                for i in serializer:
+                    #converting an ordereddict to normal dictionary
+                    dic = dict(i)
+                    abw = dic['abw']
+                    total_feed = dic['total_feed']
+                    fcr = abw/total_feed
+                    data.append({'date':dic['time'],'fcr_data':fcr})
+                    print(data)
+                data = sorted(data, key = lambda d: d['date'])
+                return data
+            
+            else:
+                return None
+        except Ponds.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Cycle
+        fields = ["id", 'fcr_data']
