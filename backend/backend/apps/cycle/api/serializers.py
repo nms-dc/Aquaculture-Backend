@@ -9,7 +9,8 @@ from ponds.models import Ponds
 import datetime
 from dateutil import parser
 from measurements.models import Measurement
-from measurements.api.serializers import MeasurementSerializer
+from measurements.api.serializers import MeasurementSerializer,MeasurementcycleSerializer
+
 
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
@@ -182,3 +183,28 @@ class CycleSerializer(serializers.ModelSerializer):
                 name = image_data.name
                 CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data)
         return instance
+
+
+class CycleMeasureSerializers(serializers.ModelSerializer):
+    measurements = serializers.SerializerMethodField()
+
+    def get_measurements(self, obj):
+        try:
+            if Measurement.objects.filter(cycle=obj).exists():
+                ponds = Measurement.objects.filter(cycle=obj)
+                serializer = MeasurementcycleSerializer(ponds, many=True).data
+                data = []
+                for i in serializer:
+                    dic = dict(i)
+                    data.append(dic)
+                data = sorted(data, key = lambda d: d['time'])
+                data.reverse()
+                return data
+            else:
+                return None
+        except Ponds.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Cycle
+        fields = ["id", 'measurements']

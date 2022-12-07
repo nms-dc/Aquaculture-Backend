@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from farms.models import Farms
 
 
 
@@ -56,3 +57,13 @@ class PondImage(models.Model):
     image = models.FileField(upload_to='pond_images', null=True)
     image_name = models.CharField(max_length=24, default=None, null=True)
     images = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_images', null=True)
+
+
+class PondGraphs(models.Model):
+    
+    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='grphs_of_a_farm')
+    pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='graphs_of_pond', null=True)
+    time = models.DateTimeField(auto_now=True, null=True)
+    abw = models.FloatField(null=True, blank=True)
+    total_feed = models.FloatField(null=True, blank=True)
+    
