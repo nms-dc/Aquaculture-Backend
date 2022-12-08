@@ -26,3 +26,6 @@ gevent==21.12.0
 drf-spectacular>=0.15.1,<0.16
 #for google authentication
 django-allauth==0.50
+drf_social_oauth2==1.0.9
+django-rest-framework-social-oauth2==1.0.4
+django-rest-auth==0.9.5
