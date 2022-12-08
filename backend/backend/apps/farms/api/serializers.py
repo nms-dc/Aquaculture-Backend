@@ -6,6 +6,9 @@ from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSu
 from accounts.models import User
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
+from company.models import Company
+from company.api.serializers import CompanySerializers
+
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -184,3 +187,59 @@ class FeedLotsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedLots
         fields = '__all__'
+        
+class FeedlotFilterSerializer(serializers.ModelSerializer):
+    
+    feeds = serializers.SerializerMethodField()
+
+    def get_feeds(self, obj):
+        pond = FeedLots.objects.all()
+        serializer = FeedLotsSerializer(pond, many=True).data
+        data = []
+        for i in serializer:
+            dic = dict(i)
+            val =dic['feed_lot_type']
+            c = Company.objects.filter(id=dic['company_purchased_from'])
+            com = CompanySerializers(c, many = True).data
+            for i in com:
+                c_dic = dict(i)
+                c_name = c_dic['company_name']
+                print(c_name)
+                if val == 'F':
+                    result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
+                            'company_purchased_from':c_name}
+                    data.append(result)
+        return data
+
+    class Meta:
+        model = FeedLots
+        fields = ["id", 'feeds']
+
+class FeedProSerializer(serializers.ModelSerializer):
+    
+    feeds = serializers.SerializerMethodField()
+
+    def get_feeds(self, obj):
+        pond = FeedLots.objects.all()
+        serializer = FeedLotsSerializer(pond, many=True).data
+        data = []
+        for i in serializer:
+            dic = dict(i)
+            val =dic['feed_lot_type']
+            #print(dic)
+            c = Company.objects.filter(id=dic['company_purchased_from'])
+            com = CompanySerializers(c, many = True).data
+            for i in com:
+                c_dic = dict(i)
+                c_name = c_dic['company_name']
+                print(c_name)
+                if val == 'P':
+                    result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
+                            'company_purchased_from':c_name}
+                    data.append(result)
+        
+        return data
+
+    class Meta:
+        model = FeedLots
+        fields = ["id", 'feeds']
