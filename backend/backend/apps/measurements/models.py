@@ -5,6 +5,7 @@ from numpy import record
 from company.models import Company
 from cycle.models import Cycle
 from django.utils import timezone
+from farms.models import FeedLots
 
 
 # Create your models here.
@@ -19,7 +20,8 @@ class Measurement(models.Model):
     # time = models.TimeField(null=True)
     time = models.DateTimeField(default=timezone.now)
     # time = models.TimeField(null=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
+    #company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
+    lot = models.ForeignKey(FeedLots, on_delete=models.CASCADE, default=None, null=True)
     price_per_kg = models.IntegerField(null=True)
     measurement_type = models.ForeignKey(MeasurementMaster, on_delete=models.CASCADE, default=None, null=True)
 

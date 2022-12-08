@@ -22,6 +22,8 @@ class MasterView(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     http_method_names = [ 'get']
 
+	
+
 
 def notifications(request, *args, **kwargs):
     

@@ -45,6 +45,10 @@ class FarmCertification(models.Model):
     certificates = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
 
 class FeedLots(models.Model):
+    LOT_TYPE = (
+        ('F', 'Feed'),
+        ('P', 'Probiotics')
+    )
     farm_id = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, blank=True)
     lot_number = models.CharField(max_length=24, default=None, null=True)
     company_purchased_from = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
@@ -56,3 +60,4 @@ class FeedLots(models.Model):
     feed_cost = models.IntegerField(default=0, null=True)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     Image = models.FileField(upload_to='FeedLots_images', null=True)
+    feed_lot_type = models.CharField(max_length=400, choices=LOT_TYPE, default='F', null=True)

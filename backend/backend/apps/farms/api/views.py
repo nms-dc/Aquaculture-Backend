@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from farms.models import Farms, FarmCertification, FarmImage, FeedLots
 from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer,\
-    FarmCycleRelationSerializer, FeedLotsSerializer
+    FarmCycleRelationSerializer, FeedLotsSerializer, FeedlotFilterSerializer,  FeedProSerializer
 from django.views.decorators.csrf import csrf_exempt
 from ponds.api.serializers import PondSummaryOnlySerializer
 from measurements.models import MeasurementMaster, Measurement
@@ -85,10 +85,25 @@ class FarmView(viewsets.ModelViewSet):
         farm = self.get_object()
         result = FarmCycleRelationSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
-
+    
+    
 class FeedLotsView(viewsets.ModelViewSet):
     queryset = FeedLots.objects.all()
     serializer_class = FeedLotsSerializer
     authentication_classes = []
     permission_classes = [AllowAny]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']    
+
+    @action(detail=True, methods=['get'], url_path='F',)
+    @csrf_exempt
+    def get_F(self, request, *args, **kwargs):
+        farm = self.get_object()
+        result = FeedlotFilterSerializer(instance=farm, context={'request': request}).data
+        return Response({"result": result})
+    
+    @action(detail=True, methods=['get'], url_path='P',)
+    @csrf_exempt
+    def get_P(self, request, *args, **kwargs):
+        farm = self.get_object()
+        result = FeedProSerializer(instance=farm, context={'request': request}).data
+        return Response({"result": result})
