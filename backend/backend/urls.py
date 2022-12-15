@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import include, path
 from django.conf.urls.static import static
 from  django.conf import settings
+from django.contrib.auth.views import LogoutView
+from django.views.generic import TemplateView
 
 
 urlpatterns = [
@@ -33,7 +35,11 @@ urlpatterns = [
     path('api/v1/notifications/', include('notifications.api.urls', 'notifications_api')),
     path('api/v1/graphs/', include('graphs.api.urls', 'graphs_api')),
     path('admin/', admin.site.urls),
+    path('auth/',include('drf_social_oauth2.urls',namespace='drf')),
     path('schema', SpectacularAPIView.as_view(), name = 'api-schema'),
-    path('docs', SpectacularSwaggerView.as_view(url_name = 'api-schema'),name = 'api-docs')
+    path('docs', SpectacularSwaggerView.as_view(url_name = 'api-schema'),name = 'api-docs'),
+    path('', TemplateView.as_view(template_name="index.html")),
+    path('accounts/', include('allauth.urls')),
+    path('logout', LogoutView.as_view()),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 #pond is pending
