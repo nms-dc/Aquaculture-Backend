@@ -26,7 +26,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
     nutrition_data = NutritionSerializer(many=True, read_only=True)
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
     measurement_description = serializers.SerializerMethodField(read_only=True)
-    lot = serializers.SerializerMethodField(read_only=True)
+    # lot = serializers.SerializerMethodField(read_only=True)
     lot_number = serializers.SerializerMethodField(read_only=True)
     company_name = serializers.SerializerMethodField(read_only=True)
     
@@ -38,25 +38,25 @@ class MeasurementSerializer(serializers.ModelSerializer):
         else:
             return None
  
-    def get_lot(self, obj):
-        measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        #print(measurement_type_var)
-        if measurement_type_var=='1' or measurement_type_var=='11' :
-            data = FeedLots.objects.filter(id = measurement_type_var).values_list('id',flat=True).first()
-            return data
+    # def get_lot(self, obj):
+    #     measurement_type_var = self.context['request'].data.get('measurement_type', None)
+    #     #print(measurement_type_var)
+    #     if measurement_type_var=='1' or measurement_type_var=='11' :
+    #         data = FeedLots.objects.filter(id = measurement_type_var).values_list('id',flat=True).first()
+    #         return data
         
-        else:
-            return None
+    #     else:
+    #         return None
     
-    def get_lot_number(self, obj):
-        measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        #print(measurement_type_var)
-        if measurement_type_var=='1' or measurement_type_var=='11' :
-            data = FeedLots.objects.filter(id = measurement_type_var).values_list('id',flat=True).first()
-            return data
+    # def get_lot_number(self, obj):
+    #     measurement_type_var = self.context['request'].data.get('measurement_type', None)
+    #     #print(measurement_type_var)
+    #     if measurement_type_var=='1' or measurement_type_var=='11' :
+    #         data = FeedLots.objects.filter(id = measurement_type_var).values_list('id',flat=True).first()
+    #         return data
         
-        else:
-            return None    
+    #     else:
+    #         return None    
     
     def get_lot_number(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
@@ -66,7 +66,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
             return data
         
         else:
-            return None    
+            return None  
+
     def get_company_name(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
         #print(measurement_type_var)
