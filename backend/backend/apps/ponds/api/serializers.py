@@ -5,6 +5,7 @@ from harvests.models import Harvests
 from accounts.models import User
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
+import pandas as pd
 
 
 
@@ -172,7 +173,6 @@ class PondGraphSerializer(serializers.ModelSerializer):
         model = PondGraphs
         fields = ['id','farm','abw','pond','total_feed','time']        
         
-
 class PondGraphRelationSerializer(serializers.ModelSerializer):
     abw_data = serializers.SerializerMethodField()
 
@@ -181,13 +181,24 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
             if PondGraphs.objects.filter(pond=obj).exists():
                 ponds = PondGraphs.objects.filter(pond=obj)
                 serializer = PondGraphSerializer(ponds, many=True).data
-                data = []
+                datas = []
                 for i in serializer:
-                    #converting an ordereddict to normal dictionary
                     dic = dict(i)
-                    data.append({'date':dic['time'],'abw_data':dic['abw']})
-                    print(data)
-                data = sorted(data, key = lambda d: d['date'])
+                    datas.append(dic)
+                df = pd.DataFrame(datas)
+                df['Date'] = pd.to_datetime(df['time']).dt.date
+                    
+                df =  df.groupby('Date')
+                data = []
+                for i in df:
+                    abw = i[1]['abw']
+                    #print(abw)
+                    date = list(i[1]['Date'])
+                    date = date[0]
+                    print(type(date))
+                    means = abw.mean()
+                    data.append({'date':date,'abw_average':means})
+                    #break
                 return data
             
             else:
@@ -196,7 +207,7 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
             return None
 
     class Meta:
-        model = Cycle
+        model = PondGraphs
         fields = ["id", 'abw_data']        
         
         
@@ -204,20 +215,31 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
     fcr_data = serializers.SerializerMethodField()
 
     def get_fcr_data(self, obj):
+        
         try:
             if PondGraphs.objects.filter(pond=obj).exists():
                 ponds = PondGraphs.objects.filter(pond=obj)
                 serializer = PondGraphSerializer(ponds, many=True).data
-                data = []
+                datas = []
                 for i in serializer:
-                    #converting an ordereddict to normal dictionary
                     dic = dict(i)
-                    abw = dic['abw']
-                    total_feed = dic['total_feed']
-                    fcr = abw/total_feed
-                    data.append({'date':dic['time'],'fcr_data':fcr})
-                    print(data)
-                data = sorted(data, key = lambda d: d['date'])
+                    datas.append(dic)
+                df = pd.DataFrame(datas)
+                df['Date'] = pd.to_datetime(df['time']).dt.date
+                    
+                df =  df.groupby('Date')
+                data = []
+                for i in df:
+                    abw = i[1]['abw']
+                    #print(abw)
+                    date = list(i[1]['Date'])
+                    total_feed = i[1]['total_feed']
+                    date = date[0]
+                    print(type(date))
+                    means = abw.mean()
+                    fcr_data = list(total_feed/means)
+                    data.append({'date':date,'fcr_average':fcr_data[0]})
+                    #break
                 return data
             
             else:
