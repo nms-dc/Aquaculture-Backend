@@ -200,15 +200,18 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
             dic = dict(i)
             val =dic['feed_lot_type']
             c = Company.objects.filter(id=dic['company_purchased_from'])
-            com = CompanySerializers(c, many = True).data
-            for i in com:
-                c_dic = dict(i)
-                c_name = c_dic['company_name']
-                print(c_name)
-                if val == 'F':
-                    result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
-                            'company_purchased_from':c_name}
-                    data.append(result)
+            if val == 'F':
+                result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
+                    'company_purchased_from': c["company_name"]}
+                data.append(result)
+            # for i in com:
+            #     c_dic = dict(i)
+            #     c_name = c_dic['company_name']
+            #     print(c_name)
+            #     if val == 'F':
+            #         result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
+            #                 'company_purchased_from':c_name}
+            #         data.append(result)
         return data
 
     class Meta:
