@@ -68,14 +68,28 @@ class FarmSerializer(serializers.ModelSerializer):
     certificate = CertifySerializer(many=True, read_only=True)
     farm_images = ImageSerializer(many=True, read_only=True)
     fcr = serializers.SerializerMethodField(read_only = True)
+    feed_data = serializers.SerializerMethodField(read_only = True)
     
     def get_fcr(self,obj):
         return 1.0
     
+    def get_feed_data(self,obj):
+        try:
+            if FeedLots.objects.filter(farm_id=obj).exists():
+                ponds = FeedLots.objects.filter(farm_id=obj)
+                serializer = FeedLotsSerializer(ponds, many=True).data
+                return serializer
+            
+            else:
+                return None
+        except Ponds.DoesNotExist:
+            return None
+        return 'hello world'
+    
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
-                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr']
+                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr','feed_data']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -193,29 +207,30 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
     feeds = serializers.SerializerMethodField()
 
     def get_feeds(self, obj):
-        pond = FeedLots.objects.all()
-        serializer = FeedLotsSerializer(pond, many=True).data
-        data = []
-        for i in serializer:
-            dic = dict(i)
-            val =dic['feed_lot_type']
-            c = Company.objects.filter(id=dic['company_purchased_from'])
-            if val == 'F':
-                result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
-                    'company_purchased_from': c["company_name"]}
-                data.append(result)
-            # for i in com:
-            #     c_dic = dict(i)
-            #     c_name = c_dic['company_name']
-            #     print(c_name)
-            #     if val == 'F':
-            #         result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
-            #                 'company_purchased_from':c_name}
-            #         data.append(result)
-        return data
+        farm = Farms.objects.filter(farm_name = obj)
+        #this data will be in django list format to convert that into ordered dict use for loop
+        serializers = FarmSerializer(farm, many=True).data
+        #to convert ordered dict to formal dict use for loop
+        result = []
+        
+        for feed in serializers:
+            dic = dict(feed)
+            feed_data = dic['feed_data']
+            for data in feed_data:
+                dic_data = dict(data)
+                c_name = None
+                if dic_data['feed_lot_type'] == 'F':
+                    c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
+                    if c != None:
+                        c_name = c.company_name
+                    re_data = {'id':dic_data['id'], 'lotnumber':dic_data['lot_number'],'company_id':dic_data['company_purchased_from']
+                            ,'company_purchased_from':c_name}
+                    result.append(re_data)
+       
+        return result
 
     class Meta:
-        model = FeedLots
+        model = Farms
         fields = ["id", 'feeds']
 
 class FeedProSerializer(serializers.ModelSerializer):
@@ -223,26 +238,27 @@ class FeedProSerializer(serializers.ModelSerializer):
     feeds = serializers.SerializerMethodField()
 
     def get_feeds(self, obj):
-        pond = FeedLots.objects.all()
-        serializer = FeedLotsSerializer(pond, many=True).data
-        data = []
-        for i in serializer:
-            dic = dict(i)
-            val =dic['feed_lot_type']
-            #print(dic)
-            c = Company.objects.filter(id=dic['company_purchased_from'])
-            com = CompanySerializers(c, many = True).data
-            for i in com:
-                c_dic = dict(i)
-                c_name = c_dic['company_name']
-                print(c_name)
-                if val == 'P':
-                    result = {'id':dic['id'],'lotnumber':dic['lot_number'], 'company_id':dic['company_purchased_from'],
-                            'company_purchased_from':c_name}
-                    data.append(result)
+        farm = Farms.objects.filter(farm_name = obj)
+        #this data will be in django list format to convert that into ordered dict use for loop
+        serializers = FarmSerializer(farm, many=True).data
+        #to convert ordered dict to formal dict use for loop
+        result = []
         
-        return data
-
+        for feed in serializers:
+            dic = dict(feed)
+            feed_data = dic['feed_data']
+            for data in feed_data:
+                dic_data = dict(data)
+                c_name = None
+                if dic_data['feed_lot_type'] == 'P':
+                    c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
+                    if c != None:
+                        c_name = c.company_name
+                    re_data = {'id':dic_data['id'], 'lotnumber':dic_data['lot_number'],'company_id':dic_data['company_purchased_from']
+                            ,'company_purchased_from':c_name}
+                    result.append(re_data)
+        
+        return result
     class Meta:
         model = FeedLots
         fields = ["id", 'feeds']
