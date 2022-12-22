@@ -1,6 +1,6 @@
 # from backend.backend.apps.cycle.models import Cycle
 from rest_framework import serializers
-from ponds.models import Ponds, PondImage, PondConstructType, PondType,PondGraphs
+from ponds.models import Ponds, PondImage, PondConstructType, PondType,PondGraphs, PondAnalytics
 from harvests.models import Harvests
 from accounts.models import User
 from cycle.models import Cycle
@@ -94,14 +94,47 @@ class PondsSerializer(serializers.ModelSerializer):
     total_avg_fcr = serializers.SerializerMethodField(read_only = True)
 
     def get_completed_cycle_count(self,obj):
-        return 11
+        if obj.active_cycle_id is not None:
+            active_cycle_id = obj.active_cycle_id
+            cycles=Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
+            if cycles.exists():
+                completed_cycle_count=cycles.count
+            else:
+                completed_cycle_count=0
+        else:
+            active_cycle_id = obj.active_cycle_id
+            cycles=Cycle.objects.filter(Pond=obj)
+            if cycles.exists():
+                completed_cycle_count=cycles.count
+            else:
+                completed_cycle_count=0
+        return completed_cycle_count
     
+  
     def get_total_harvested_amt(self,obj):
-        return 250
-    
+        already_exists_pond = PondAnalytics.objects.filter(pond=obj, farm=obj.farm)
+        if already_exists_pond.exists():
+            pond_analytics_instance = already_exists_pond.first()
+            return pond_analytics_instance.harvest_amount
+        else:
+            return 0.0
+   
     def get_total_avg_fcr(self,obj):
-        return 2.5
+        already_exists_pond = PondAnalytics.objects.filter(pond=obj, farm=obj.farm)
+        if already_exists_pond.exists():
+            pond_analytics_instance = already_exists_pond.first()
+            if pond_analytics_instance.total_feed>0:
+                return pond_analytics_instance.harvest_amount/pond_analytics_instance.total_feed
+            else:
+                return 0.0
+
+        else:
+            return 0.0
     
+
+
+
+
     class Meta:
         model = Ponds
         fields = ['id', 'pond_images', 'pond_name', 'pond_length', 'pond_breadth', 'pond_depth', 'pond_area',

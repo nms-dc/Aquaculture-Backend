@@ -1,5 +1,5 @@
 from django.contrib import admin
-from cycle.models import Cycle
+from cycle.models import Cycle, CycleAnalytics
 from django.contrib.auth.models import Group
 
 
@@ -30,3 +30,4 @@ class CycleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Cycle, CycleAdmin)
+admin.site.register(CycleAnalytics)

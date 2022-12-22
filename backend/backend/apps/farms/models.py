@@ -61,3 +61,14 @@ class FeedLots(models.Model):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     Image = models.FileField(upload_to='FeedLots_images', null=True)
     feed_lot_type = models.CharField(max_length=400, choices=LOT_TYPE, default='F', null=True)
+
+
+def get_default_info():
+    return {'measurement_id': None}
+
+class FarmAnalytics(models.Model):
+    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='pond_analytics')
+    no_of_cycles = models.IntegerField(default=0,  null=True)
+    harvest_amount = models.FloatField(null=True, blank=True)
+    total_feed = models.FloatField(null=True, blank=True)
+    extra_info = models.JSONField(null=True, blank=True, default=get_default_info)

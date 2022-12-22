@@ -1,5 +1,5 @@
 from django.contrib import admin
-from farms.models import Farms, FarmImage, FarmCertification, FeedLots
+from farms.models import Farms, FarmImage, FarmCertification, FeedLots, FarmAnalytics
 
 
 # Register your models here.
@@ -28,3 +28,4 @@ admin.site.register(Farms, FarmsAdmin)
 admin.site.register(FarmImage)
 admin.site.register(FarmCertification)
 admin.site.register(FeedLots)
+admin.site.register(FarmAnalytics)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGraphs
+from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGraphs, PondAnalytics
 
 
 class PondAdmin(admin.ModelAdmin):
@@ -26,4 +26,5 @@ admin.site.register(PondConstructType)
 admin.site.register(Ponds, PondAdmin)
 admin.site.register(PondImage)
 admin.site.register(PondGraphs)
+admin.site.register(PondAnalytics)
 

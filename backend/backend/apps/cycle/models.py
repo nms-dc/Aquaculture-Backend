@@ -1,6 +1,7 @@
 from locale import currency
 from django.db import models
 from ponds.models import Ponds, PondImage
+from farms.models import Farms
 from species.models import Species
 from seeds.models import Seeds
 from harvests.models import Harvests
@@ -53,3 +54,15 @@ class CycleSeedImage(models.Model):
     image_name = models.CharField(max_length=400, null=True)
     image = models.FileField(upload_to='seed_images', null=True)
     images = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='seed_images', default=None, null=True)
+
+
+def get_default_info():
+    return {'measurement_id': None}
+
+class CycleAnalytics(models.Model):
+    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='cycle_farm_analytics')
+    pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='cycle_pond_analytics', null=True)
+    cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='cycle_analytics', default=None, null=True)
+    harvest_amount = models.FloatField(null=True, blank=True)
+    total_feed = models.FloatField(null=True, blank=True)
+    extra_info = models.JSONField(null=True, blank=True, default=get_default_info)

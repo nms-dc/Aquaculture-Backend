@@ -1,6 +1,6 @@
 from itertools import cycle
 from rest_framework import serializers
-from farms.models import Farms, FarmCertification, FarmImage, FeedLots
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics
 from ponds.models import Ponds
 from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSummaryOnlySerializer
 from accounts.models import User
@@ -73,14 +73,43 @@ class FarmSerializer(serializers.ModelSerializer):
     total_harvested_amt = serializers.SerializerMethodField(read_only = True)
     
     def get_completed_cycle_count(self,obj):
+        # if obj.active_cycle_id is not None:
+        #     active_cycle_id = obj.active_cycle_id
+        #     cycles=Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
+        #     if cycles.exists():
+        #         completed_cycle_count=cycles.count
+        #     else:
+        #         completed_cycle_count=0
+        # else:
+        #     active_cycle_id = obj.active_cycle_id
+        #     cycles=Cycle.objects.filter(Pond=obj)
+        #     if cycles.exists():
+        #         completed_cycle_count=cycles.count
+        #     else:
+        #         completed_cycle_count=0
+        # return completed_cycle_count
         return 11
     
     def get_total_harvested_amt(self,obj):
-        return 250
+        already_exists_farm = FarmAnalytics.objects.filter(arm=obj)
+        if already_exists_farm.exists():
+            farm_analytics_instance = already_exists_farm.first()
+            return farm_analytics_instance.harvest_amount
+        else:
+            return 0.0
     
     
     def get_fcr(self,obj):
-        return 1.0
+        already_exists_farm = FarmAnalytics.objects.filter(farm=obj)
+        if already_exists_farm.exists():
+            farm_analytics_instance = already_exists_farm.first()
+            if farm_analytics_instance.total_feed>0:
+                return farm_analytics_instance.harvest_amount/farm_analytics_instance.total_feed
+            else:
+                return 0.0
+
+        else:
+            return 0.0
     
     def get_feed_data(self,obj):
         try:

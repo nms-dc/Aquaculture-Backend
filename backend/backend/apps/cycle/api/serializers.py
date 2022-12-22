@@ -1,7 +1,7 @@
 import datetime
 from itertools import cycle
 from rest_framework import serializers
-from cycle.models import Cycle, CyclePondImage, CycleSeedImage
+from cycle.models import Cycle, CyclePondImage, CycleSeedImage, CycleAnalytics
 from accounts.models import User
 from harvests.models import Harvests
 from harvests.api.serializers import HarvestSummarySerializer
@@ -85,10 +85,23 @@ class CycleSerializer(serializers.ModelSerializer):
             return None
 
     def get_total_harvested_amt(self,obj):
-        return 250
-    
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.pond, farm=obj.pond.farm)
+        if already_exists_cycle.exists():
+            cycle_analytics_instance = already_exists_cycle.first()
+            return cycle_analytics_instance.harvest_amount
+        else:
+            return 0.0
+   
     def get_total_avg_fcr(self,obj):
-        return 2.5
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.pond, farm=obj.pond.farm)
+        if already_exists_cycle.exists():
+            cycle_analytics_instance = already_exists_cycle.first()
+            if cycle_analytics_instance.total_feed>0:
+                return cycle_analytics_instance.harvest_amount/cycle_analytics_instance.total_feed
+            else:
+                return 0.0
+        else:
+            return 0.0
     
 
     class Meta:

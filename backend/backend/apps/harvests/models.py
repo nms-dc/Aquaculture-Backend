@@ -11,17 +11,17 @@ class Harvests(models.Model):
         ('P', 'Partial Harvest')
     )
     harvest_type = models.CharField(max_length=400, choices=HARVEST_TYPE, default='F', null=True)
-    total_kgs = models.IntegerField(null=True, default=0)
+    total_kgs = models.FloatField(null=True, default=0)
     is_chill_kill = models.BooleanField(default=True)
     harvest_date = models.DateField(auto_now=True)
-    temperature = models.IntegerField(null=True, default=0)
+    temperature = models.FloatField(null=True, default=0)
     sold_to = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
     harvest_notes = models.CharField(max_length=400, null=True, default='1')
-    harvest_cost = models.IntegerField(null=True, default=0)
+    harvest_cost = models.FloatField(null=True, default=0)
     cycle = models.ForeignKey('cycle.Cycle', on_delete=models.CASCADE, default=None, null=True)
     animal_count_1 = models.IntegerField(null=True, default=0)
-    total_kg_1 = models.IntegerField(null=True, default=0)
-    price_kg_1 = models.IntegerField(null=True, default=0)
+    total_kg_1 = models.FloatField(null=True, default=0)
+    price_kg_1 = models.FloatField(null=True, default=0)
 
     def __str__(self) -> str:
         return self.harvest_type
