@@ -69,6 +69,15 @@ class FarmSerializer(serializers.ModelSerializer):
     farm_images = ImageSerializer(many=True, read_only=True)
     fcr = serializers.SerializerMethodField(read_only = True)
     feed_data = serializers.SerializerMethodField(read_only = True)
+    completed_cycle_count = serializers.SerializerMethodField(read_only = True)
+    total_harvested_amt = serializers.SerializerMethodField(read_only = True)
+    
+    def get_completed_cycle_count(self,obj):
+        return 11
+    
+    def get_total_harvested_amt(self,obj):
+        return 250
+    
     
     def get_fcr(self,obj):
         return 1.0
@@ -89,7 +98,7 @@ class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
-                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr','feed_data']
+                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES

@@ -89,12 +89,24 @@ class PondCycleRelationSerializer(serializers.ModelSerializer):
 class PondsSerializer(serializers.ModelSerializer):
 
     pond_images = PondImageSerializer(many=True, read_only=True)
+    completed_cycle_count = serializers.SerializerMethodField(read_only = True)
+    total_harvested_amt = serializers.SerializerMethodField(read_only = True)
+    total_avg_fcr = serializers.SerializerMethodField(read_only = True)
 
+    def get_completed_cycle_count(self,obj):
+        return 11
+    
+    def get_total_harvested_amt(self,obj):
+        return 250
+    
+    def get_total_avg_fcr(self,obj):
+        return 2.5
+    
     class Meta:
         model = Ponds
         fields = ['id', 'pond_images', 'pond_name', 'pond_length', 'pond_breadth', 'pond_depth', 'pond_area',
                   'pond_capacity', 'description', 'pond_type', 'pond_construct_type', 'is_active_pond',
-                  'active_cycle_id', 'active_cycle_date', 'farm', 'doc']
+                  'active_cycle_id', 'active_cycle_date', 'farm', 'doc', 'completed_cycle_count', 'total_harvested_amt', 'total_avg_fcr']
 
     def create(self, validated_data):
         pond_image = self.context.get('view').request.FILES

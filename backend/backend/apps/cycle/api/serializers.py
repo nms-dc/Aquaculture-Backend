@@ -70,6 +70,8 @@ class CycleSerializer(serializers.ModelSerializer):
     pond_images = PrepPondImageSerializer(many=True, read_only=True)
     seed_images = SeedImageSerializer(many=True, read_only=True)
     cycle_harvests = serializers.SerializerMethodField(read_only=True)
+    total_harvested_amt = serializers.SerializerMethodField(read_only = True)
+    total_avg_fcr = serializers.SerializerMethodField(read_only = True)
 
     def get_cycle_harvests(self, obj):
         try:
@@ -82,11 +84,18 @@ class CycleSerializer(serializers.ModelSerializer):
         except Ponds.DoesNotExist:
             return None
 
+    def get_total_harvested_amt(self,obj):
+        return 250
+    
+    def get_total_avg_fcr(self,obj):
+        return 2.5
+    
+
     class Meta:
         model = Cycle
         fields = ['id', 'Pond', 'species', 'species_pl_stage', 'seed_company', 'invest_amount', 'pondPrep_cost',
                   'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'pond_images', 'seed_images',
-                  'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from']
+                  'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from', 'total_harvested_amt', 'total_avg_fcr']
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
