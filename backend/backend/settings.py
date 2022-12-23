@@ -217,11 +217,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     send_default_pii=True
 # )
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:4000',
     'http://0.0.0.0:4000',
+    'http://localhost:3000',
+    'http://0.0.0.0:3000',
+    'http://103.127.146.20:4000'
 ]
 
 CORS_ALLOW_METHODS = [
@@ -239,9 +242,10 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS":'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
     ]
 }
-
 
 #google authentication configurations
 
@@ -279,7 +283,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
-SITE_ID = 4
+SITE_ID = 5
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'

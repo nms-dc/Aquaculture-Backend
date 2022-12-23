@@ -4,7 +4,7 @@ from harvests.models import Harvests
 
 class HarvestAdmin(admin.ModelAdmin):
 
-    list_display = ('harvest_type', 'harvest_cost', 'total_kgs', 'harvest_date')
+    list_display = ('harvest_type', 'harvest_cost', 'harvest_date')
     list_filter = ('harvest_type',)
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (

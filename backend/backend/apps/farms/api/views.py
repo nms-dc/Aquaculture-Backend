@@ -85,6 +85,22 @@ class FarmView(viewsets.ModelViewSet):
         farm = self.get_object()
         result = FarmCycleRelationSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
+
+
+    @action(detail=True, methods=['get'], url_path='get-feed-lots',)
+    @csrf_exempt
+    def get_feed_lots(self, request, *args, **kwargs):
+        farm = self.get_object()
+        result = FeedlotFilterSerializer(instance=farm, context={'request': request}).data
+        return Response({"result": result})
+
+
+    @action(detail=True, methods=['get'], url_path='get-probiotics-lots',)
+    @csrf_exempt
+    def get_probiotics_lots(self, request, *args, **kwargs):
+        farm = self.get_object()
+        result = FeedProSerializer(instance=farm, context={'request': request}).data
+        return Response({"result": result})
     
     
 class FeedLotsView(viewsets.ModelViewSet):

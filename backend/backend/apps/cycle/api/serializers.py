@@ -1,7 +1,7 @@
 import datetime
 from itertools import cycle
 from rest_framework import serializers
-from cycle.models import Cycle, CyclePondImage, CycleSeedImage
+from cycle.models import Cycle, CyclePondImage, CycleSeedImage, CycleAnalytics
 from accounts.models import User
 from harvests.models import Harvests
 from harvests.api.serializers import HarvestSummarySerializer
@@ -70,6 +70,8 @@ class CycleSerializer(serializers.ModelSerializer):
     pond_images = PrepPondImageSerializer(many=True, read_only=True)
     seed_images = SeedImageSerializer(many=True, read_only=True)
     cycle_harvests = serializers.SerializerMethodField(read_only=True)
+    total_harvested_amt = serializers.SerializerMethodField(read_only = True)
+    total_avg_fcr = serializers.SerializerMethodField(read_only = True)
 
     def get_cycle_harvests(self, obj):
         try:
@@ -82,11 +84,31 @@ class CycleSerializer(serializers.ModelSerializer):
         except Ponds.DoesNotExist:
             return None
 
+    def get_total_harvested_amt(self,obj):
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.pond, farm=obj.pond.farm)
+        if already_exists_cycle.exists():
+            cycle_analytics_instance = already_exists_cycle.first()
+            return cycle_analytics_instance.harvest_amount
+        else:
+            return 0.0
+   
+    def get_total_avg_fcr(self,obj):
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.pond, farm=obj.pond.farm)
+        if already_exists_cycle.exists():
+            cycle_analytics_instance = already_exists_cycle.first()
+            if cycle_analytics_instance.total_feed>0:
+                return cycle_analytics_instance.harvest_amount/cycle_analytics_instance.total_feed
+            else:
+                return 0.0
+        else:
+            return 0.0
+    
+
     class Meta:
         model = Cycle
         fields = ['id', 'Pond', 'species', 'species_pl_stage', 'seed_company', 'invest_amount', 'pondPrep_cost',
                   'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'pond_images', 'seed_images',
-                  'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from']
+                  'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from', 'total_harvested_amt', 'total_avg_fcr']
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES

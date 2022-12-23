@@ -71,3 +71,11 @@ class PondGraphs(models.Model):
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
     
+
+class PondAnalytics(models.Model):
+    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='pond_farm_analytics')
+    pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_analytics', null=True)
+    no_of_cycles = models.IntegerField(default=0,  null=True)
+    harvest_amount = models.FloatField(null=True, blank=True)
+    total_feed = models.FloatField(null=True, blank=True)
+    extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
