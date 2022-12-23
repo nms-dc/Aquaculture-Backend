@@ -98,19 +98,19 @@ class PondsSerializer(serializers.ModelSerializer):
             active_cycle_id = obj.active_cycle_id
             cycles=Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
             if cycles.exists():
-                completed_cycle_count=cycles.count
+                completed_cycle_count=cycles.count()
             else:
                 completed_cycle_count=0
         else:
             active_cycle_id = obj.active_cycle_id
             cycles=Cycle.objects.filter(Pond=obj)
             if cycles.exists():
-                completed_cycle_count=cycles.count
+                completed_cycle_count=cycles.count()
             else:
                 completed_cycle_count=0
         return completed_cycle_count
-    
-  
+
+ 
     def get_total_harvested_amt(self,obj):
         already_exists_pond = PondAnalytics.objects.filter(pond=obj, farm=obj.farm)
         if already_exists_pond.exists():
@@ -131,8 +131,6 @@ class PondsSerializer(serializers.ModelSerializer):
         else:
             return 0.0
     
-
-
 
 
     class Meta:
