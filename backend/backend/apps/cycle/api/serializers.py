@@ -85,7 +85,7 @@ class CycleSerializer(serializers.ModelSerializer):
             return None
 
     def get_total_harvested_amt(self,obj):
-        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.pond, farm=obj.pond.farm)
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
             return cycle_analytics_instance.harvest_amount
@@ -93,7 +93,7 @@ class CycleSerializer(serializers.ModelSerializer):
             return 0.0
    
     def get_total_avg_fcr(self,obj):
-        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.pond, farm=obj.pond.farm)
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
             if cycle_analytics_instance.total_feed>0:
