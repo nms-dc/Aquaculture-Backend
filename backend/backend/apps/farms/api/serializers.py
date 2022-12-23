@@ -91,7 +91,7 @@ class FarmSerializer(serializers.ModelSerializer):
         return 11
     
     def get_total_harvested_amt(self,obj):
-        already_exists_farm = FarmAnalytics.objects.filter(arm=obj)
+        already_exists_farm = FarmAnalytics.objects.filter(farm=obj)
         if already_exists_farm.exists():
             farm_analytics_instance = already_exists_farm.first()
             return farm_analytics_instance.harvest_amount
