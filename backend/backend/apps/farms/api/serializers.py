@@ -73,23 +73,13 @@ class FarmSerializer(serializers.ModelSerializer):
     total_harvested_amt = serializers.SerializerMethodField(read_only = True)
     
     def get_completed_cycle_count(self,obj):
-        # if obj.active_cycle_id is not None:
-        #     active_cycle_id = obj.active_cycle_id
-        #     cycles=Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
-        #     if cycles.exists():
-        #         completed_cycle_count=cycles.count
-        #     else:
-        #         completed_cycle_count=0
-        # else:
-        #     active_cycle_id = obj.active_cycle_id
-        #     cycles=Cycle.objects.filter(Pond=obj)
-        #     if cycles.exists():
-        #         completed_cycle_count=cycles.count
-        #     else:
-        #         completed_cycle_count=0
-        # return completed_cycle_count
-        return 11
-    
+        all_ponds = Ponds.objects.filter(farm=obj).values_list('id', flat=True)
+        all_cycles = Cycle.objects.filter(Pond_id__in=list(all_ponds))
+        all_ponds_active_cycle = Ponds.objects.filter(farm=obj, is_active_pond=True).values_list('active_cycle_id', flat=True)
+        total_completed_cycle = all_cycles.exclude(id__in=list(all_ponds_active_cycle)).count()
+        return total_completed_cycle
+
+
     def get_total_harvested_amt(self,obj):
         already_exists_farm = FarmAnalytics.objects.filter(farm=obj)
         if already_exists_farm.exists():
@@ -254,17 +244,18 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
         for feed in serializers:
             dic = dict(feed)
             feed_data = dic['feed_data']
-            for data in feed_data:
-                dic_data = dict(data)
-                c_name = None
-                if dic_data['feed_lot_type'] == 'F':
-                    c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
-                    if c != None:
-                        c_name = c.company_name
-                    re_data = {'id':dic_data['id'], 'lotnumber':dic_data['lot_number'],'company_id':dic_data['company_purchased_from']
-                            ,'company_purchased_from':c_name}
-                    result.append(re_data)
-       
+            if feed_data:
+                for data in feed_data:
+                    dic_data = dict(data)
+                    c_name = None
+                    if dic_data['feed_lot_type'] == 'F':
+                        c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
+                        if c != None:
+                            c_name = c.company_name
+                        re_data = {'id':dic_data['id'], 'lotnumber':dic_data['lot_number'],'company_id':dic_data['company_purchased_from']
+                                ,'company_purchased_from':c_name}
+                        result.append(re_data)
+        
         return result
 
     class Meta:

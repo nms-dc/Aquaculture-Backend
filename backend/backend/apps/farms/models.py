@@ -67,7 +67,7 @@ def get_default_info():
     return {'measurement_id': None}
 
 class FarmAnalytics(models.Model):
-    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='pond_analytics')
+    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='farm_analytics')
     no_of_cycles = models.IntegerField(default=0,  null=True)
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
