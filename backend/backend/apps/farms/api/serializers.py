@@ -114,8 +114,7 @@ class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
-                  "town_village", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr',
-                  'feed_data', 'completed_cycle_count', 'total_harvested_amt']
+                  "town_village", "location", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES

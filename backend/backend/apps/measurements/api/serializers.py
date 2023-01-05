@@ -70,6 +70,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
             measurement_type=validated_data['measurement_type'],
             value=validated_data['value'],
             time=validated_data['time'],
+            lot=validated_data['lot'],
+            #company=validated_data['company'],
             price_per_kg=validated_data['price_per_kg'],
             )
 
@@ -100,6 +102,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
         instance.measurement_type = validated_data.get('measurement_type', instance.measurement_type)
         instance.value = validated_data.get('value', instance.value)
         instance.time = validated_data.get('time', instance.time)
+        #instance.company = validated_data.get('company', instance.company)
+        instance.lot = validated_data.get('lot', instance.lot)
         instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
         instance.save()
 

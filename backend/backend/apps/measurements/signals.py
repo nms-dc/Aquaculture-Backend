@@ -16,12 +16,13 @@ def compute_graph(sender, instance, created, *args, **kwargs):
         already_exists = PondGraphs.objects.filter(extra_info__measurement_id=instance.id)
     if created and measure_type in default_list:
         PondGraphs.objects.create(farm=instance.cycle.Pond.farm,
-                                  pond=instance.cycle.Pond,
-                                  time=instance.time,
-                                  abw=instance.value if measure_type == default_list[1] else None,
-                                  total_feed=instance.value if measure_type == default_list[0] else None,
-                                  extra_info={'measurement_id': instance.id})
-    elif already_exists.first() and measure_type in default_list and not created:
+            pond=instance.cycle.Pond,
+            time=instance.time,
+            abw=instance.value if measure_type == default_list[1] else None,
+            total_feed=instance.value if measure_type == default_list[0] else None,
+            extra_info={'measurement_id': instance.id}
+        )
+    elif measure_type in default_list and not created:
         pond_graph_instance = already_exists.first()
         print('pond_graph_instance', pond_graph_instance.abw)
         # pond_graph_instance.farm=instance.cycle.Pond.farm
