@@ -21,7 +21,7 @@ def compute_graph(sender, instance, created, *args, **kwargs):
             total_feed=instance.value if measure_type == default_list[0] else None,
             extra_info={'measurement_id': instance.id}
         )
-    elif already_exists.first() and measure_type in default_list and not created:
+    elif measure_type in default_list and not created:
         pond_graph_instance = already_exists.first()
         print('pond_graph_instance', pond_graph_instance.abw)
         # pond_graph_instance.farm=instance.cycle.Pond.farm
