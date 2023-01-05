@@ -1,6 +1,6 @@
 from re import I
 from species.api.serializers import SpeciesSerializer, SpeciesCategorySerializer
-from species.models import Species,SpeciesCategory
+from species.models import Species, SpeciesCategory
 from rest_framework import status
 import copy
 from rest_framework.response import Response

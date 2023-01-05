@@ -12,8 +12,7 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from cycle.models import Cycle
-from cycle.api.serializers import CycleSerializer, CycleHarvestRelationSerializer, CycleMeasureRelationSerializer \
-    ,CycleMeasureSerializers
+from cycle.api.serializers import CycleSerializer, CycleHarvestRelationSerializer, CycleMeasureRelationSerializer, CycleMeasureSerializers
 
 
 class CyleView(viewsets.ModelViewSet):
@@ -36,7 +35,7 @@ class CyleView(viewsets.ModelViewSet):
         cycle = self.get_object()
         result = CycleMeasureRelationSerializer(instance=cycle, context={'request': request}).data
         return Response({"result": result})
-    
+
     @action(detail=True, methods=['get'], url_path='get-measurement-history',)
     def get_measurement_history(self, request, *args, **kwargs):
         cycle = self.get_object()

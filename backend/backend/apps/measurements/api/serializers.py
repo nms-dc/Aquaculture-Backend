@@ -7,7 +7,6 @@ from company.models import Company
 from company.api.serializers import CompanySerializers
 
 
-
 class NutritionSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -29,65 +28,40 @@ class MeasurementSerializer(serializers.ModelSerializer):
     # lot = serializers.SerializerMethodField(read_only=True)
     lot_number = serializers.SerializerMethodField(read_only=True)
     company_name = serializers.SerializerMethodField(read_only=True)
-    
+
     def get_measurement_description(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        #print(measurement_type_var)
         if measurement_type_var:
-            return MeasurementMaster.objects.filter(id=int(measurement_type_var)).values_list('measurement_description',flat=True).first()
+            return MeasurementMaster.objects.filter(id=int(measurement_type_var)).values_list('measurement_description',
+                                                                                              flat=True).first()
         else:
             return None
- 
-    # def get_lot(self, obj):
-    #     measurement_type_var = self.context['request'].data.get('measurement_type', None)
-    #     #print(measurement_type_var)
-    #     if measurement_type_var=='1' or measurement_type_var=='11' :
-    #         data = FeedLots.objects.filter(id = measurement_type_var).values_list('id',flat=True).first()
-    #         return data
-        
-    #     else:
-    #         return None
-    
-    # def get_lot_number(self, obj):
-    #     measurement_type_var = self.context['request'].data.get('measurement_type', None)
-    #     #print(measurement_type_var)
-    #     if measurement_type_var=='1' or measurement_type_var=='11' :
-    #         data = FeedLots.objects.filter(id = measurement_type_var).values_list('id',flat=True).first()
-    #         return data
-        
-    #     else:
-    #         return None    
-    
+
     def get_lot_number(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        #print(measurement_type_var)
-        if measurement_type_var=='1' or measurement_type_var=='11' :
-            data = FeedLots.objects.filter(id = measurement_type_var).values_list('lot_number',flat=True).first()
+        if measurement_type_var == '1' or measurement_type_var == '11':
+            data = FeedLots.objects.filter(id=measurement_type_var).values_list('lot_number', flat=True).first()
             return data
-        
         else:
-            return None  
+            return None
 
     def get_company_name(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        #print(measurement_type_var)
-        if measurement_type_var=='1' or measurement_type_var=='11' :
+        if measurement_type_var == '1' or measurement_type_var == '11':
             c = Company.objects.filter(id=measurement_type_var)
-            com = CompanySerializers(c, many = True).data
+            com = CompanySerializers(c, many=True).data
             for i in com:
                 c_dic = dict(i)
                 c_name = c_dic['company_name']
                 print(c_name)
             return c_name
-        
         else:
-            return None      
- 
- 
+            return None
+
     class Meta:
         model = Measurement
-        fields = ['id', 'cycle', 'value', 'time','measurement_type','measurement_description',
-                   'price_per_kg', 'nutrition_data', 'measure_images', 'lot','lot_number','company_name']
+        fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'measurement_description',
+                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'lot_number', 'company_name']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -96,7 +70,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
             measurement_type=validated_data['measurement_type'],
             value=validated_data['value'],
             time=validated_data['time'],
-            #company=validated_data['company'],
             price_per_kg=validated_data['price_per_kg'],
             )
 
@@ -111,7 +84,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
             Nutrition.objects.create(feed_data=measurement_instance, nutrition=nutritions,
                                      nutrition_type=nutrition_types,
                                      nutrition_description=nutrition_descriptions)
-
         return measurement_instance
 
     def update(self, instance, validated_data):
@@ -128,7 +100,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
         instance.measurement_type = validated_data.get('measurement_type', instance.measurement_type)
         instance.value = validated_data.get('value', instance.value)
         instance.time = validated_data.get('time', instance.time)
-        #instance.company = validated_data.get('company', instance.company)
         instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
         instance.save()
 
@@ -150,21 +121,24 @@ class MeasurementSerializer(serializers.ModelSerializer):
 
         return instance
 
+
 class MeasurementTypeSerializer(serializers.ModelSerializer):
     measurement_types = MeasurementSerializer(many=True, read_only=True)
+
     class Meta:
         model = MeasurementMaster
-        fields = ['id', 'measurement_type', 'measurement_description','measurement_types' ] 
-        
+        fields = ['id', 'measurement_type', 'measurement_description', 'measurement_types']
+
+
 class MasterSerializer(serializers.ModelSerializer):
-    #measurement_types = MeasurementSerializer(many=True, read_only=True)
+
     class Meta:
         model = MeasurementMaster
-        fields = ['id', 'measurement_type', 'measurement_description' ]         
-        
-        
+        fields = ['id', 'measurement_type', 'measurement_description']
+
+
 class MeasurementcycleSerializer(serializers.ModelSerializer):
-   
+
     class Meta:
         model = Measurement
-        fields = ['id', 'cycle', 'value', 'time','measurement_type', 'price_per_kg',  'measure_images']
+        fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'price_per_kg',  'measure_images']

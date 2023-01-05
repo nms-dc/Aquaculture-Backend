@@ -3,16 +3,14 @@ from django.db import models
 from farms.models import Farms
 
 
-
-
 class PondConstructType(models.Model):
     construct_type = models.CharField(max_length=24, default=None, null=True)
+
 
 class PondType(models.Model):
     name = models.CharField(max_length=24, default=None)
     desc = models.CharField(max_length=24, default=None)
     pond_construct = models.ForeignKey(PondConstructType, on_delete=models.CASCADE, related_name='Pond_construct', null=True)
-    
 
 
 class Ponds(models.Model):
@@ -64,16 +62,16 @@ def get_default_info():
 
 
 class PondGraphs(models.Model):
-    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='grphs_of_a_farm')
+    farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='grphs_of_a_farm')
     pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='graphs_of_pond', null=True)
     time = models.DateTimeField(auto_now=True, null=True)
     abw = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
-    
+
 
 class PondAnalytics(models.Model):
-    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='pond_farm_analytics')
+    farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='pond_farm_analytics')
     pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_analytics', null=True)
     no_of_cycles = models.IntegerField(default=0,  null=True)
     harvest_amount = models.FloatField(null=True, blank=True)

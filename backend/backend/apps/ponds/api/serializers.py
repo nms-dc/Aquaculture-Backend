@@ -1,12 +1,11 @@
 # from backend.backend.apps.cycle.models import Cycle
 from rest_framework import serializers
-from ponds.models import Ponds, PondImage, PondConstructType, PondType,PondGraphs, PondAnalytics
+from ponds.models import Ponds, PondImage, PondConstructType, PondType, PondGraphs, PondAnalytics
 from harvests.models import Harvests
 from accounts.models import User
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
 import pandas as pd
-
 
 
 class PondImageSerializer(serializers.ModelSerializer):
@@ -64,7 +63,8 @@ class PondSummaryOnlySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ponds
-        fields = ["id", "pond_name", "description", "pond_images", "pond_type", "is_active_pond", "doc", "cycle_harvests_count"]
+        fields = ["id", "pond_name", "description", "pond_images", "pond_type", "is_active_pond", "doc",
+                  "cycle_harvests_count"]
 
 
 class PondCycleRelationSerializer(serializers.ModelSerializer):
@@ -89,55 +89,52 @@ class PondCycleRelationSerializer(serializers.ModelSerializer):
 class PondsSerializer(serializers.ModelSerializer):
 
     pond_images = PondImageSerializer(many=True, read_only=True)
-    completed_cycle_count = serializers.SerializerMethodField(read_only = True)
-    total_harvested_amt = serializers.SerializerMethodField(read_only = True)
-    total_avg_fcr = serializers.SerializerMethodField(read_only = True)
+    completed_cycle_count = serializers.SerializerMethodField(read_only=True)
+    total_harvested_amt = serializers.SerializerMethodField(read_only=True)
+    total_avg_fcr = serializers.SerializerMethodField(read_only=True)
 
-    def get_completed_cycle_count(self,obj):
+    def get_completed_cycle_count(self, obj):
         if obj.active_cycle_id is not None:
             active_cycle_id = obj.active_cycle_id
-            cycles=Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
+            cycles = Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
             if cycles.exists():
-                completed_cycle_count=cycles.count()
+                completed_cycle_count = cycles.count()
             else:
-                completed_cycle_count=0
+                completed_cycle_count = 0
         else:
             active_cycle_id = obj.active_cycle_id
-            cycles=Cycle.objects.filter(Pond=obj)
+            cycles = Cycle.objects.filter(Pond=obj)
             if cycles.exists():
-                completed_cycle_count=cycles.count()
+                completed_cycle_count = cycles.count()
             else:
-                completed_cycle_count=0
+                completed_cycle_count = 0
         return completed_cycle_count
 
- 
-    def get_total_harvested_amt(self,obj):
+    def get_total_harvested_amt(self, obj):
         already_exists_pond = PondAnalytics.objects.filter(pond=obj, farm=obj.farm)
         if already_exists_pond.exists():
             pond_analytics_instance = already_exists_pond.first()
             return pond_analytics_instance.harvest_amount
         else:
             return 0.0
-   
-    def get_total_avg_fcr(self,obj):
+
+    def get_total_avg_fcr(self, obj):
         already_exists_pond = PondAnalytics.objects.filter(pond=obj, farm=obj.farm)
         if already_exists_pond.exists():
             pond_analytics_instance = already_exists_pond.first()
-            if pond_analytics_instance.total_feed>0:
-                return pond_analytics_instance.harvest_amount/pond_analytics_instance.total_feed
+            if pond_analytics_instance.total_feed > 0:
+                return pond_analytics_instance.harvest_amount / pond_analytics_instance.total_feed
             else:
                 return 0.0
-
         else:
             return 0.0
-    
-
 
     class Meta:
         model = Ponds
         fields = ['id', 'pond_images', 'pond_name', 'pond_length', 'pond_breadth', 'pond_depth', 'pond_area',
                   'pond_capacity', 'description', 'pond_type', 'pond_construct_type', 'is_active_pond',
-                  'active_cycle_id', 'active_cycle_date', 'farm', 'doc', 'completed_cycle_count', 'total_harvested_amt', 'total_avg_fcr']
+                  'active_cycle_id', 'active_cycle_date', 'farm', 'doc', 'completed_cycle_count', 'total_harvested_amt',
+                  'total_avg_fcr']
 
     def create(self, validated_data):
         pond_image = self.context.get('view').request.FILES
@@ -199,23 +196,27 @@ class PondsSerializer(serializers.ModelSerializer):
 
         return instance
 
+
 class PondTypeSerializer(serializers.ModelSerializer):
-    #pond_types = PondsSerializer(many=True, read_only = True)
+    '''pond_types = PondsSerializer(many=True, read_only = True)'''
     class Meta:
         model = PondType
-        fields = ['id','name','desc']#, 'pond_types']
+        fields = ['id', 'name', 'desc']
+
 
 class PondConstructTypeSerializer(serializers.ModelSerializer):
-    #Pond_construct = PondTypeSerializer(many=True,read_only = True)
+    '''Pond_construct = PondTypeSerializer(many=True,read_only = True)'''
     class Meta:
         model = PondConstructType
-        fields = ['id','construct_type']#,'Pond_construct']
-        
+        fields = ['id', 'construct_type']
+
+
 class PondGraphSerializer(serializers.ModelSerializer):
     class Meta:
         model = PondGraphs
-        fields = ['id','farm','abw','pond','total_feed','time']        
-        
+        fields = ['id', 'farm', 'abw', 'pond', 'total_feed', 'time']
+
+
 class PondGraphRelationSerializer(serializers.ModelSerializer):
     abw_data = serializers.SerializerMethodField()
 
@@ -230,20 +231,16 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
                     datas.append(dic)
                 df = pd.DataFrame(datas)
                 df['Date'] = pd.to_datetime(df['time']).dt.date
-                    
-                df =  df.groupby('Date')
+                df = df.groupby('Date')
                 data = []
                 for i in df:
                     abw = i[1]['abw']
-                    #print(abw)
                     date = list(i[1]['Date'])
                     date = date[0]
                     print(type(date))
                     means = abw.mean()
-                    data.append({'date':date,'abw_average':means})
-                    #break
+                    data.append({'date': date, 'abw_average': means})
                 return data
-            
             else:
                 return None
         except Ponds.DoesNotExist:
@@ -251,14 +248,13 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PondGraphs
-        fields = ["id", 'abw_data']        
-        
-        
+        fields = ["id", 'abw_data']
+
+
 class PondGraphFCRSerializer(serializers.ModelSerializer):
     fcr_data = serializers.SerializerMethodField()
 
     def get_fcr_data(self, obj):
-        
         try:
             if PondGraphs.objects.filter(pond=obj).exists():
                 ponds = PondGraphs.objects.filter(pond=obj)
@@ -269,22 +265,18 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                     datas.append(dic)
                 df = pd.DataFrame(datas)
                 df['Date'] = pd.to_datetime(df['time']).dt.date
-                    
-                df =  df.groupby('Date')
+                df = df.groupby('Date')
                 data = []
                 for i in df:
                     abw = i[1]['abw']
-                    #print(abw)
                     date = list(i[1]['Date'])
                     total_feed = i[1]['total_feed']
                     date = date[0]
                     print(type(date))
                     means = abw.mean()
                     fcr_data = list(total_feed/means)
-                    data.append({'date':date,'fcr_average':fcr_data[0]})
-                    #break
+                    data.append({'date': date, 'fcr_average': fcr_data[0]})
                 return data
-            
             else:
                 return None
         except Ponds.DoesNotExist:

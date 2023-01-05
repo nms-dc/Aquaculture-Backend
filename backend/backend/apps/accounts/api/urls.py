@@ -4,8 +4,12 @@ from rest_framework.routers import DefaultRouter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
+
+
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+
+
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
 
@@ -14,8 +18,6 @@ app_name = "account"
 
 router = DefaultRouter()
 router.register('profile', user_profile_view)
-
-
 
 
 urlpatterns = [

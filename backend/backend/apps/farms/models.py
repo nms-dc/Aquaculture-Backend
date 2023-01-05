@@ -44,6 +44,7 @@ class FarmCertification(models.Model):
     image = models.ImageField(upload_to='certificate_uploads', null=True)
     certificates = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
 
+
 class FeedLots(models.Model):
     LOT_TYPE = (
         ('F', 'Feed'),
@@ -66,8 +67,9 @@ class FeedLots(models.Model):
 def get_default_info():
     return {'measurement_id': None}
 
+
 class FarmAnalytics(models.Model):
-    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='farm_analytics')
+    farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='farm_analytics')
     no_of_cycles = models.IntegerField(default=0,  null=True)
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
