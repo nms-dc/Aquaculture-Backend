@@ -26,6 +26,7 @@ class Ponds(models.Model):
     pond_construct_type = models.ForeignKey(PondConstructType, on_delete=models.CASCADE, related_name='pond_construct_types', null=True)
     lat = models.FloatField(null=True)
     lng = models.FloatField(null=True)
+    location = models.TextField(max_length=2024, default=None, null=True)
     description = models.CharField(max_length=240, default=None)
     createdAt = models.DateField(auto_now=True, null=True)
     lastupdatedt = models.DateField(auto_now=True, null=True)

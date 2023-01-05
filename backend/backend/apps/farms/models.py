@@ -18,6 +18,7 @@ class Farms(models.Model):
     state = models.CharField(max_length=24, default=None, null=True)
     lat = models.IntegerField(default=0, null=True)
     lng = models.IntegerField(default=0, null=True)
+    location = models.TextField(max_length=2024, default=None, null=True)
     description = models.TextField(max_length=224, default=None, null=True)
     lastupdatedt = models.DateField(auto_now=True, null=True)
     createdAt = models.DateField(auto_now=True, null=True)

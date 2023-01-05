@@ -136,7 +136,7 @@ class PondsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ponds
         fields = ['id', 'pond_images', 'pond_name', 'pond_length', 'pond_breadth', 'pond_depth', 'pond_area',
-                  'pond_capacity', 'description', 'pond_type', 'pond_construct_type', 'is_active_pond',
+                  'pond_capacity', 'description', 'pond_type', 'pond_construct_type', 'is_active_pond', 'location',
                   'active_cycle_id', 'active_cycle_date', 'farm', 'doc', 'completed_cycle_count', 'total_harvested_amt', 'total_avg_fcr']
 
     def create(self, validated_data):
