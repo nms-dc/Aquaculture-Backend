@@ -92,7 +92,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
             website=validated_data['website'],
             email=validated_data['email'],
         )
-        for data in image_data.getlist('user_images'):
+        for data in image_data.getlist('image'):
             name = data.name
             Image.objects.create(images=user_instance, image_name=name, image=data)
             print(user_instance)
@@ -114,12 +114,12 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
         instance.save()
 
         userimage_with_same_profile_instance = Image.objects.filter(images=instance.pk).values_list('id', flat=True)
-        if len(image_data.getlist('user_images')) == 0:
+        if len(image_data.getlist('image')) == 0:
             pass
         else:
             for image_id in userimage_with_same_profile_instance:
                 Image.objects.filter(pk=image_id).delete()
-            for data in image_data.getlist('user_images'):
+            for data in image_data.getlist('image'):
                 name = data.name
                 Image.objects.create(images=instance, image_name=name, image=data)
 
