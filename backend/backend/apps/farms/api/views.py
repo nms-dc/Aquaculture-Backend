@@ -38,7 +38,7 @@ class FarmView(viewsets.ModelViewSet):
         farm = self.get_object()
         result = FarmPondRelationSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
-    
+
     @action(detail=True, methods=['get'], url_path='get-notification',)
     @csrf_exempt
     def get_notification(self, request, *args, **kwargs):
@@ -49,16 +49,17 @@ class FarmView(viewsets.ModelViewSet):
             import datetime
             real_date1 = datetime.datetime.strptime(str(pond.active_cycle_date), '%Y-%m-%d')
             real_date2 = datetime.datetime.today()
-            date_range =  real_date2 - real_date1
+            date_range = real_date2 - real_date1
             dates = list()
-            for days in range(0,date_range.days+1):
-                dates.append((real_date1 + datetime.timedelta(days)).strftime('%Y-%m-%d') )
-
+            for days in range(0, date_range.days+1):
+                dates.append((real_date1 + datetime.timedelta(days)).strftime('%Y-%m-%d'))
             dates.reverse()
             for date in dates:
                 my_dict = {}
-                measure = Measurement.objects.filter(cycle__id=pond.active_cycle_id, time__date=date).order_by('-time').values_list('measurement_type__id', flat=True)
-                not_accesed = MeasurementMaster.objects.filter(~Q(id__in=list(measure))).values_list('measurement_type', flat=True)
+                measure = Measurement.objects.filter(cycle__id=pond.active_cycle_id,
+                                                     time__date=date).order_by('-time').values_list('measurement_type__id', flat=True)
+                not_accesed = MeasurementMaster.objects.filter(~Q(id__in=list(measure))).values_list('measurement_type',
+                                                                                                     flat=True)
                 ponds_data = Ponds.objects.get(id=pond.id)
                 serializer = PondSummaryOnlySerializer(ponds_data).data
                 try:
@@ -77,7 +78,7 @@ class FarmView(viewsets.ModelViewSet):
                     my_dict["notification"] = [serializer]
                     my_dict["notification"][0]["pending_records"] = list(not_accesed)
                     my_list_two.append(my_dict)
-        return Response(my_list_two) 
+        return Response(my_list_two)
 
     @action(detail=True, methods=['get'], url_path='get-related-cycle',)
     @csrf_exempt
@@ -86,7 +87,6 @@ class FarmView(viewsets.ModelViewSet):
         result = FarmCycleRelationSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
 
-
     @action(detail=True, methods=['get'], url_path='get-feed-lots',)
     @csrf_exempt
     def get_feed_lots(self, request, *args, **kwargs):
@@ -94,21 +94,20 @@ class FarmView(viewsets.ModelViewSet):
         result = FeedlotFilterSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
 
-
     @action(detail=True, methods=['get'], url_path='get-probiotics-lots',)
     @csrf_exempt
     def get_probiotics_lots(self, request, *args, **kwargs):
         farm = self.get_object()
         result = FeedProSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
-    
-    
+
+
 class FeedLotsView(viewsets.ModelViewSet):
     queryset = FeedLots.objects.all()
     serializer_class = FeedLotsSerializer
     authentication_classes = []
     permission_classes = [AllowAny]
-    http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']    
+    http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
 
     @action(detail=True, methods=['get'], url_path='F',)
     @csrf_exempt
@@ -116,7 +115,7 @@ class FeedLotsView(viewsets.ModelViewSet):
         farm = self.get_object()
         result = FeedlotFilterSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
-    
+
     @action(detail=True, methods=['get'], url_path='P',)
     @csrf_exempt
     def get_P(self, request, *args, **kwargs):

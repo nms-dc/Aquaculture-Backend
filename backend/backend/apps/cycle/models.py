@@ -21,7 +21,7 @@ class Cycle(models.Model):
         (3, 'PL-15')
     )
 
-    Pond = models.ForeignKey(Ponds, on_delete=models.CASCADE,related_name='pond_description', default=None, null=True)
+    Pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_description', default=None, null=True)
     species = models.IntegerField(null=True, choices=species_choice, default='1')
     species_pl_stage = models.IntegerField(null=True, choices=pl_choice, default='1')
     seed_company = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
@@ -35,9 +35,9 @@ class Cycle(models.Model):
     harvest_id = models.IntegerField(null=True)
     doc = models.IntegerField(null=True)
     seed_transfer_date = models.DateField(default=None, null=True)
+<<<<<<< HEAD
     is_active = models.BooleanField(default=True)
     pond_transfered_from = models.ForeignKey(Ponds, on_delete=models.CASCADE,related_name='pond_availability', default=None, null=True)
-
 
     def __str__(self):
         return str(self.species)
@@ -60,8 +60,9 @@ class CycleSeedImage(models.Model):
 def get_default_info():
     return {'measurement_id': None}
 
+
 class CycleAnalytics(models.Model):
-    farm = models.ForeignKey(Farms, on_delete= models.CASCADE, null=True, related_name='cycle_farm_analytics')
+    farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='cycle_farm_analytics')
     pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='cycle_pond_analytics', null=True)
     cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='cycle_analytics', default=None, null=True)
     harvest_amount = models.FloatField(null=True, blank=True)

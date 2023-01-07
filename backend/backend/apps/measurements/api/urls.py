@@ -1,5 +1,5 @@
 from django.urls import URLPattern, path, include
-from measurements.api.views import MeasureView, MasterView,notifications,measurements
+from measurements.api.views import MeasureView, MasterView
 from rest_framework.routers import DefaultRouter
 
 app_name = "farms"
@@ -10,6 +10,6 @@ router.register('get-master', MasterView)
 
 urlpatterns = [
      path('', include(router.urls)),
-     path('pk/get-notifications', notifications),
-     path('pk/get-measurements', measurements),
+     # path('pk/get-notifications', notifications),
+     # path('pk/get-measurements', measurements),
 ]

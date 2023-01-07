@@ -1,5 +1,5 @@
 from django.urls import URLPattern, path, include
-from farms.api.views import FarmView,FeedLotsView
+from farms.api.views import FarmView, FeedLotsView
 from rest_framework.routers import DefaultRouter
 
 app_name = "farms"

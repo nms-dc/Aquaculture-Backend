@@ -10,7 +10,6 @@ from company.models import Company
 from company.api.serializers import CompanySerializers
 
 
-
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = FarmImage
@@ -67,53 +66,51 @@ class FarmCycleRelationSerializer(serializers.ModelSerializer):
 class FarmSerializer(serializers.ModelSerializer):
     certificate = CertifySerializer(many=True, read_only=True)
     farm_images = ImageSerializer(many=True, read_only=True)
-    fcr = serializers.SerializerMethodField(read_only = True)
-    feed_data = serializers.SerializerMethodField(read_only = True)
-    completed_cycle_count = serializers.SerializerMethodField(read_only = True)
-    total_harvested_amt = serializers.SerializerMethodField(read_only = True)
-    
-    def get_completed_cycle_count(self,obj):
+    fcr = serializers.SerializerMethodField(read_only=True)
+    feed_data = serializers.SerializerMethodField(read_only=True)
+    completed_cycle_count = serializers.SerializerMethodField(read_only=True)
+    total_harvested_amt = serializers.SerializerMethodField(read_only=True)
+
+    def get_completed_cycle_count(self, obj):
         all_ponds = Ponds.objects.filter(farm=obj).values_list('id', flat=True)
         all_cycles = Cycle.objects.filter(Pond_id__in=list(all_ponds))
         all_ponds_active_cycle = Ponds.objects.filter(farm=obj, is_active_pond=True).values_list('active_cycle_id', flat=True)
         total_completed_cycle = all_cycles.exclude(id__in=list(all_ponds_active_cycle)).count()
         return total_completed_cycle
 
-
-    def get_total_harvested_amt(self,obj):
+    def get_total_harvested_amt(self, obj):
         already_exists_farm = FarmAnalytics.objects.filter(farm=obj)
         if already_exists_farm.exists():
             farm_analytics_instance = already_exists_farm.first()
             return farm_analytics_instance.harvest_amount
         else:
             return 0.0
-    
-    
-    def get_fcr(self,obj):
+
+    def get_fcr(self, obj):
         already_exists_farm = FarmAnalytics.objects.filter(farm=obj)
         if already_exists_farm.exists():
             farm_analytics_instance = already_exists_farm.first()
-            if farm_analytics_instance.total_feed>0:
-                return farm_analytics_instance.harvest_amount/farm_analytics_instance.total_feed
+            if farm_analytics_instance.total_feed > 0:
+                return farm_analytics_instance.harvest_amount / farm_analytics_instance.total_feed
             else:
                 return 0.0
 
         else:
             return 0.0
-    
-    def get_feed_data(self,obj):
+
+    def get_feed_data(self, obj):
         try:
             if FeedLots.objects.filter(farm_id=obj).exists():
                 ponds = FeedLots.objects.filter(farm_id=obj)
                 serializer = FeedLotsSerializer(ponds, many=True).data
                 return serializer
-            
+
             else:
                 return None
         except Ponds.DoesNotExist:
             return None
         return 'hello world'
-    
+
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
@@ -229,18 +226,19 @@ class FeedLotsSerializer(serializers.ModelSerializer):
     class Meta:
         model = FeedLots
         fields = '__all__'
-        
+
+
 class FeedlotFilterSerializer(serializers.ModelSerializer):
-    
+
     feeds = serializers.SerializerMethodField()
 
     def get_feeds(self, obj):
-        farm = Farms.objects.filter(farm_name = obj)
-        #this data will be in django list format to convert that into ordered dict use for loop
+        farm = Farms.objects.filter(farm_name=obj)
+        '''this data will be in django list format to convert that into ordered dict use for loop'''
         serializers = FarmSerializer(farm, many=True).data
-        #to convert ordered dict to formal dict use for loop
+        '''to convert ordered dict to formal dict use for loop'''
         result = []
-        
+
         for feed in serializers:
             dic = dict(feed)
             feed_data = dic['feed_data']
@@ -250,29 +248,30 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
                     c_name = None
                     if dic_data['feed_lot_type'] == 'F':
                         c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
-                        if c != None:
+                        if c != 0:
                             c_name = c.company_name
-                        re_data = {'id':dic_data['id'], 'lotnumber':dic_data['lot_number'],'company_id':dic_data['company_purchased_from']
-                                ,'company_purchased_from':c_name}
+                        re_data = {'id': dic_data['id'], 'lotnumber': dic_data['lot_number'],
+                                   'company_id': dic_data['company_purchased_from'], 'company_purchased_from': c_name}
                         result.append(re_data)
-        
+
         return result
 
     class Meta:
         model = Farms
         fields = ["id", 'feeds']
 
+
 class FeedProSerializer(serializers.ModelSerializer):
-    
+
     feeds = serializers.SerializerMethodField()
 
     def get_feeds(self, obj):
-        farm = Farms.objects.filter(farm_name = obj)
-        #this data will be in django list format to convert that into ordered dict use for loop
+        farm = Farms.objects.filter(farm_name=obj)
+        '''this data will be in django list format to convert that into ordered dict use for loop'''
         serializers = FarmSerializer(farm, many=True).data
-        #to convert ordered dict to formal dict use for loop
+        '''to convert ordered dict to formal dict use for loop'''
         result = []
-        
+
         for feed in serializers:
             dic = dict(feed)
             feed_data = dic['feed_data']
@@ -281,13 +280,14 @@ class FeedProSerializer(serializers.ModelSerializer):
                 c_name = None
                 if dic_data['feed_lot_type'] == 'P':
                     c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
-                    if c != None:
+                    if c != 0:
                         c_name = c.company_name
-                    re_data = {'id':dic_data['id'], 'lotnumber':dic_data['lot_number'],'company_id':dic_data['company_purchased_from']
-                            ,'company_purchased_from':c_name}
+                    re_data = {'id': dic_data['id'], 'lotnumber': dic_data['lot_number'],
+                               'company_id': dic_data['company_purchased_from'], 'company_purchased_from': c_name}
                     result.append(re_data)
-        
+
         return result
+
     class Meta:
         model = FeedLots
         fields = ["id", 'feeds']

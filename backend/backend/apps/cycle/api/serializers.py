@@ -9,8 +9,7 @@ from ponds.models import Ponds
 import datetime
 from dateutil import parser
 from measurements.models import Measurement
-from measurements.api.serializers import MeasurementSerializer,MeasurementcycleSerializer
-
+from measurements.api.serializers import MeasurementSerializer, MeasurementcycleSerializer
 
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
@@ -70,8 +69,8 @@ class CycleSerializer(serializers.ModelSerializer):
     pond_images = PrepPondImageSerializer(many=True, read_only=True)
     seed_images = SeedImageSerializer(many=True, read_only=True)
     cycle_harvests = serializers.SerializerMethodField(read_only=True)
-    total_harvested_amt = serializers.SerializerMethodField(read_only = True)
-    total_avg_fcr = serializers.SerializerMethodField(read_only = True)
+    total_harvested_amt = serializers.SerializerMethodField(read_only=True)
+    total_avg_fcr = serializers.SerializerMethodField(read_only=True)
 
     def get_cycle_harvests(self, obj):
         try:
@@ -84,25 +83,24 @@ class CycleSerializer(serializers.ModelSerializer):
         except Ponds.DoesNotExist:
             return None
 
-    def get_total_harvested_amt(self,obj):
+    def get_total_harvested_amt(self, obj):
         already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
             return cycle_analytics_instance.harvest_amount
         else:
             return 0.0
-   
-    def get_total_avg_fcr(self,obj):
+
+    def get_total_avg_fcr(self, obj):
         already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
-            if cycle_analytics_instance.total_feed>0:
-                return cycle_analytics_instance.harvest_amount/cycle_analytics_instance.total_feed
+            if cycle_analytics_instance.total_feed > 0:
+                return cycle_analytics_instance.harvest_amount / cycle_analytics_instance.total_feed
             else:
                 return 0.0
         else:
             return 0.0
-    
 
     class Meta:
         model = Cycle
@@ -219,7 +217,7 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
                 for i in serializer:
                     dic = dict(i)
                     data.append(dic)
-                data = sorted(data, key = lambda d: d['time'])
+                data = sorted(data, key=lambda d: d['time'])
                 data.reverse()
                 return data
             else:
