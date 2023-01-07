@@ -125,7 +125,8 @@ class CycleSerializer(serializers.ModelSerializer):
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True
-        obj.active_cycle_date = datetime.date.today()
+        # obj.active_cycle_date = datetime.date.today()
+        obj.active_cycle_date = cycle_instance.seeding_date
         obj.active_cycle_id = cycle_instance.id
         obj.save()
 
