@@ -60,6 +60,23 @@ def user_registration_view(request):
         return Response(data)
 
 
+@api_view(['post', 'get'])
+@csrf_exempt
+def user_terms_accept(request):
+    if request.method == 'POST':
+        dic = request.data
+        mail = dic['email']
+        filtering = User.objects.filter(email = mail)
+        filtering.update(is_terms_accepted = True)
+        user = UserRegistrationSerializer(filtering, many=True).data
+        return Response(user)
+    elif request.method == 'GET':
+        data = User.objects.all()
+        serialize = UserRegistrationSerializer(data, many=True).data
+        print(request)
+        return Response(serialize)
+
+
 class user_profile_view(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileInfoSerializer
