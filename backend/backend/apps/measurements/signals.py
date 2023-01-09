@@ -9,7 +9,7 @@ from farms.models import FarmAnalytics
 @receiver(post_save, sender=Measurement)
 def compute_graph(sender, instance, created, *args, **kwargs):
     default_list = ['feeds', 'abw']
-    measure_type = instance.measurement_type.measurement_type()
+    measure_type = instance.measurement_type.measurement_type
     already_exists = None
     if not created:
         # already_exists = PondGraphs.objects.filter(extra_info__contains=[{'measurement_id': instance.id}])
