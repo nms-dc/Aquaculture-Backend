@@ -36,7 +36,7 @@ def compute_graph(sender, instance, created, *args, **kwargs):
 @receiver(post_save, sender=Measurement)
 def compute_analytics(sender, instance, created, *args, **kwargs):
     default_list = ['feeds']
-    measure_type = instance.measurement_type.measurement_type()
+    measure_type = instance.measurement_type.measurement_type
     already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond, farm=instance.cycle.Pond.farm)
     if already_exists_cycle.exists() and measure_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()
