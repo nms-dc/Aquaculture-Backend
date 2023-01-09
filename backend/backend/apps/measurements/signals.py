@@ -12,6 +12,8 @@ def compute_graph(sender, instance, created, *args, **kwargs):
     measure_type = instance.measurement_type.measurement_type
     if instance.value is None :
         instance_value = 0
+    else :
+        instance_value = instance.value
     already_exists = None
     if not created:
         already_exists = PondGraphs.objects.filter(extra_info__measurement_id=instance.id)
@@ -37,6 +39,8 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
     measure_type = instance.measurement_type.measurement_type
     if instance.value is None :
         instance_value = 0
+    else :
+        instance_value = instance.value
     already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond, farm=instance.cycle.Pond.farm)
     if already_exists_cycle.exists() and measure_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()

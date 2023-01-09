@@ -10,6 +10,8 @@ from farms.models import FarmAnalytics
 def compute_harvest_analytics(sender, instance, created, *args, **kwargs):
     if instance.total_kgs is None :
         instance_total_kgs = 0
+    else :
+        instance_total_kgs = instance.total_kgs
     already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond,
                                                          farm=instance.cycle.Pond.farm)
 
