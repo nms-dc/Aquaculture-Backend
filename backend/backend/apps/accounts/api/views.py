@@ -68,12 +68,12 @@ def user_terms_accept(request):
         mail = dic['email']
         filtering = User.objects.filter(email = mail)
         filtering.update(is_terms_accepted = True)
-        user = UserRegistrationSerializer(filtering, many=True).data
+        user = UserProfileInfoSerializer(filtering, many=True).data
         return Response(user)
     elif request.method == 'GET':
-        data = User.objects.all()
-        serialize = UserRegistrationSerializer(data, many=True).data
-        print(request)
+        email = request.META['HTTP_AQUA_AUTH_TOKEN']
+        data = User.objects.filter(email = email)
+        serialize = UserProfileInfoSerializer(data, many=True).data
         return Response(serialize)
 
 
