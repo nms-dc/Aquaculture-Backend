@@ -68,6 +68,8 @@ class HarvestSerializer(serializers.ModelSerializer):
 
         if validated_data['harvest_type'] == 'F':
             obj_cycle = Cycle.objects.get(id=int(validated_data.get('cycle').id))
+            obj_cycle.is_active = False
+            obj_cycle.save()
             obj_pond = Ponds.objects.get(id=obj_cycle.Pond.id)
             obj_pond.is_active_pond = False
             obj_pond.active_cycle_id = None
@@ -131,9 +133,11 @@ class HarvestSerializer(serializers.ModelSerializer):
 
         if validated_data['harvest_type'] == 'F':
             obj_cycle = Cycle.objects.get(id=int(validated_data.get('cycle').id))
+            obj_cycle.is_active = False
             obj_pond = Ponds.objects.get(id=obj_cycle.Pond.id)
             obj_pond.is_active_pond = False
             obj_pond.active_cycle_id = None
+            obj_cycle.save()
             obj_pond.save()
 
         if validated_data['harvest_type'] == 'P':
