@@ -213,7 +213,7 @@ class PondConstructTypeSerializer(serializers.ModelSerializer):
 class PondGraphSerializer(serializers.ModelSerializer):
     class Meta:
         model = PondGraphs
-        fields = ['id', 'farm', 'abw', 'pond', 'total_feed', 'time']
+        fields = ['id', 'farm', 'abw', 'pond', 'total_feed', 'time', 'cycle']
 
 
 class PondGraphRelationSerializer(serializers.ModelSerializer):
@@ -259,20 +259,27 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                 ponds = PondGraphs.objects.filter(pond=obj)
                 serializer = PondGraphSerializer(ponds, many=True).data
                 datas = []
+                cycle_id = 0
                 for i in serializer:
                     dic = dict(i)
                     datas.append(dic)
+                    cycle_id = dic['cycle']
                 df = pd.DataFrame(datas)
                 df['Date'] = pd.to_datetime(df['time']).dt.date
                 df = df.groupby('Date')
                 data = []
+                cycle_data = Cycle.objects.filter(id=cycle_id)
+                larva = CycleSerializer(cycle_data, many=True).data
+                larva_count=larva[0]['numbers_of_larva']
                 for i in df:
                     abw = i[1]['abw']
+                    
+                    average=larva_count*0.8*abw
                     date = list(i[1]['Date'])
                     total_feed = i[1]['total_feed']
                     date = date[0]
-                    print(type(date))
-                    means = abw.mean()
+                   
+                    means = average.mean()
                     fcr_data = list(total_feed/means)
                     data.append({'date': date, 'fcr_average': fcr_data[0]})
                 return data
