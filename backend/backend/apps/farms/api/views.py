@@ -12,7 +12,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from farms.models import Farms, FarmCertification, FarmImage, FeedLots
 from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer,\
-    FarmCycleRelationSerializer, FeedLotsSerializer, FeedlotFilterSerializer,  FeedProSerializer
+    FarmCycleRelationSerializer, FeedLotsSerializer, FeedlotFilterSerializer,  FeedProSerializer, FeedAllSerializer
 from django.views.decorators.csrf import csrf_exempt
 from ponds.api.serializers import PondSummaryOnlySerializer
 from measurements.models import MeasurementMaster, Measurement
@@ -100,6 +100,16 @@ class FarmView(viewsets.ModelViewSet):
         farm = self.get_object()
         result = FeedProSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
+    
+    
+    @action(detail=True, methods=['get'], url_path='get-feedlots',)
+    @csrf_exempt
+    def get_feedlots(self, request, *args, **kwargs):
+        farm = self.get_object()
+        print(farm)
+        result = FeedAllSerializer(instance=farm, context={'request': request}).data
+        return Response({"result": result})
+    
 
 
 class FeedLotsView(viewsets.ModelViewSet):
