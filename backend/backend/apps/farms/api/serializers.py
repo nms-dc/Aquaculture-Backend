@@ -280,11 +280,42 @@ class FeedProSerializer(serializers.ModelSerializer):
                 c_name = None
                 if dic_data['feed_lot_type'] == 'P':
                     c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
-                    if c != 0:
+                    print(c)
+                    if c is not None:
                         c_name = c.company_name
                     re_data = {'id': dic_data['id'], 'lotnumber': dic_data['lot_number'],
                                'company_id': dic_data['company_purchased_from'], 'company_purchased_from': c_name}
                     result.append(re_data)
+
+        return result
+
+    class Meta:
+        model = FeedLots
+        fields = ["id", 'feeds']
+
+
+class FeedAllSerializer(serializers.ModelSerializer):
+
+    feeds = serializers.SerializerMethodField()
+
+    def get_feeds(self, obj):
+        farm = Farms.objects.filter(farm_name=obj)
+        '''this data will be in django list format to convert that into ordered dict use for loop'''
+        serializers = FarmSerializer(farm, many=True).data
+        '''to convert ordered dict to formal dict use for loop'''
+        result = []
+
+        for feed in serializers:
+            dic = dict(feed)
+            feed_data = dic['feed_data']
+            for data in feed_data:
+                dic_data = dict(data)
+                if dic_data:
+                    c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
+                    c = c.company_name
+                    dic_data['company_name'] = c
+                    
+                result.append(dic_data)
 
         return result
 
