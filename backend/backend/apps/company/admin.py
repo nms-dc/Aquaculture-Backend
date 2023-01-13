@@ -9,7 +9,7 @@ class CompanyAdmin(admin.ModelAdmin):
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     list_display = ('company_name', 'address_one', 'address_two')
-    list_filter = ('company_name', 'address_two')
+    list_filter = ('company_name',)
     fieldsets = (
         (None, {'fields': ('company_name', 'website')}),
         ('Personal info', {'fields': ('pan_no', 'address_one', 'address_two')}),

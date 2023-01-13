@@ -3,11 +3,11 @@ from measurements.models import Measurement, MeasurementMaster
 
 
 class MeasurementAdmin(admin.ModelAdmin):
-    list_display = ('measurement_type', 'value', 'time', 'lot')
-    list_filter = ('measurement_type', )
+    list_display = ('cycle', 'value', 'time', 'lot')
+    list_filter = ('cycle', )
     fieldsets = (
         (None, {'fields': ('cycle', 'value')}),
-        ('Personal info', {'fields': (('time', 'lot'), 'price_per_kg', 'measurement_type', )}),
+        ('Personal info', {'fields': (('time', 'lot'), 'price_per_kg', 'measurement_type', 'is_probiotic_mixed')}),
     )
     add_fieldsets = (
         (None, {
@@ -21,7 +21,7 @@ class MeasurementAdmin(admin.ModelAdmin):
 
 class MeasurementmasterAdmin(admin.ModelAdmin):
 
-    list_display = ('measurement_type', )
+    list_display = ('measurement_type', 'measurement_description' )
     list_filter = ('measurement_type', )
     fieldsets = (
         (None, {'fields': ('measurement_type', 'measurement_description')}),

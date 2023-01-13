@@ -8,8 +8,8 @@ class CycleAdmin(admin.ModelAdmin):
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('species', 'species_pl_stage', 'invest_amount', 'seeding_date')
-    list_filter = ('species',)
+    list_display = ('Pond','species', 'species_pl_stage', 'invest_amount', 'seeding_date')
+    list_filter = ('Pond',)
     fieldsets = (
         (None, {'fields': ('species', 'species_pl_stage')}),
         ('Personal info', {'fields': ('invest_amount', 'pondPrep_cost', 'description', )}),
@@ -34,11 +34,11 @@ class CycleAnalyticsAdmin(admin.ModelAdmin):
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
     list_display = ('farm', 'pond', 'cycle',)
-    list_filter = ('harvest_amount', 'extra_info')
+    list_filter = ('farm',)
     fieldsets = (
         (None, {'fields': ('farm', 'pond')}),
         ('Personal info', {'fields': ('cycle', 'harvest_amount', )}),
-        ('Company info', {'fields': ('total_feed', 'extra_info')}),
+        ('Company info', {'fields': ('total_feed', 'extra_info',)}),
        )
     ''' add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.'''

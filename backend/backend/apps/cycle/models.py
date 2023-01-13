@@ -46,14 +46,14 @@ class Cycle(models.Model):
 class CyclePondImage(models.Model):
 
     image_name = models.CharField(max_length=400, null=True)
-    image = models.FileField(upload_to='pond_images', null=True)
-    images = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='pond_images', default=None, null=True)
+    image = models.FileField(upload_to='cycle_pond_images', null=True)
+    images = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='cycle_pond_images', default=None, null=True)
 
 
 class CycleSeedImage(models.Model):
 
     image_name = models.CharField(max_length=400, null=True)
-    image = models.FileField(upload_to='seed_images', null=True)
+    image = models.FileField(upload_to='cycle_seed_images', null=True)
     images = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='seed_images', default=None, null=True)
 
 
@@ -68,3 +68,7 @@ class CycleAnalytics(models.Model):
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
+
+
+    class Meta:
+        verbose_name_plural = "CycleAnalytics"    

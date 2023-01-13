@@ -61,7 +61,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
         fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'measurement_description',
-                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'lot_number', 'company_name']
+                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'lot_number', 'company_name', 'is_probiotic_mixed']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES

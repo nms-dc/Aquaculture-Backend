@@ -9,4 +9,4 @@ class CompanyView(viewsets.ModelViewSet):
     serializer_class = CompanySerializers
     authentication_classes = []
     permission_classes = [AllowAny]
-    http_method_names = ['get']
+    http_method_names = ['get','post']

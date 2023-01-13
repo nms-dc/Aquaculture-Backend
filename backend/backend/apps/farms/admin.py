@@ -6,7 +6,7 @@ from farms.models import Farms, FarmImage, FarmCertification, FeedLots, FarmAnal
 
 class FarmsAdmin(admin.ModelAdmin):
 
-    list_display = ('company_id', 'farm_name', 'farm_area', 'farm_status')
+    list_display = ('farm_name', 'farm_area', 'farm_status', 'company_id')
     list_filter = ('company_id',)
     fieldsets = (
         (None, {'fields': ('company_id', 'farm_name')}),
@@ -30,7 +30,7 @@ class FarmAnalyticsAdmin(admin.ModelAdmin):
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     list_display = ('farm', 'no_of_cycles', 'harvest_amount',)
-    list_filter = ('total_feed', 'extra_info')
+    list_filter = ('farm', )
     fieldsets = (
         (None, {'fields': ('farm', 'harvest_amount')}),
         ('Personal info', {'fields': ('no_of_cycles', 'total_feed', )}),
@@ -51,8 +51,8 @@ class FarmAnalyticsAdmin(admin.ModelAdmin):
 
 class FarmCertificatesAdmin(admin.ModelAdmin):
 
-    list_display = ('certificate_name', 'certificate_number', )
-    list_filter = ('certificate_number', 'certificates')
+    list_display = ('certificates','certificate_name', 'certificate_number', )
+    list_filter = ('certificates',)
     fieldsets = (
         (None, {'fields': ('certificate_name', 'certificate_number')}),
         ('Personal info', {'fields': ('add_information', 'image', )}),
@@ -72,8 +72,8 @@ class FarmCertificatesAdmin(admin.ModelAdmin):
 
 class FarmImagesAdmin(admin.ModelAdmin):
 
-    list_display = ('image',)
-    list_filter = ('image_name',)
+    list_display = ('image','images')
+    list_filter = ('images',)
     fieldsets = (
         (None, {'fields': ('image_name', 'image')}),
         ('Personal info', {'fields': ('images',)}),
@@ -93,7 +93,7 @@ class FarmImagesAdmin(admin.ModelAdmin):
 class FeedLotsAdmin(admin.ModelAdmin):
 
     list_display = ('farm_id', 'lot_number',)
-    list_filter = ('company_purchased_from', 'lot_number')
+    list_filter = ('farm_id', )
     fieldsets = (
         (None, {'fields': ('farm_id', 'lot_number', 'company_purchased_from', 'date_purchased', 'date_shipped')}),
         ('Personal info', {'fields': ('date_received', 'bag_is_used', 'feed_cost', 'currency',)}),
