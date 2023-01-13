@@ -3,8 +3,8 @@ from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGrap
 
 
 class PondAdmin(admin.ModelAdmin):
-    list_display = ('pond_name', 'pond_length', 'pond_depth', 'pond_breadth')
-    list_filter = ('pond_name',)
+    list_display = ('pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm')
+    list_filter = ('farm',)
     fieldsets = (
         (None, {'fields': ('pond_name', 'pond_length')}),
         ('Personal info', {'fields': ('pond_depth', 'pond_construct_type', 'lat', 'lng', 'is_active_pond', 'active_cycle_id',
@@ -27,9 +27,7 @@ class PondAnalyticsAdmin(admin.ModelAdmin):
     list_display = ('farm', 'pond', 'no_of_cycles')
     list_filter = ('pond',)
     fieldsets = (
-        (None, {'fields': ('pond', 'farm')}),
-        ('Personal info', {'fields': ('no_of_cycles', 'harvest_amount', )}),
-        ('Company info', {'fields': ('total_feed', 'extra_info', )}),
+        (None, {'fields': ('pond', 'farm','no_of_cycles','harvest_amount','total_feed','extra_info')}),
     )
     add_fieldsets = (
         (None, {
@@ -43,11 +41,11 @@ class PondAnalyticsAdmin(admin.ModelAdmin):
 
 
 class PondGraphsAdmin(admin.ModelAdmin):
-    list_display = ('farm', 'pond', 'time')
+    list_display = ('farm', 'pond', 'time','total_feed')
     list_filter = ('pond', )
     fieldsets = (
         (None, {'fields': ('pond', 'farm')}),
-        ('Personal info', {'fields': ('time', 'abw', )}),
+        ('Personal info', {'fields': ( 'abw', )}),
         ('Company info', {'fields': ('total_feed', 'extra_info', )}),
     )
     add_fieldsets = (

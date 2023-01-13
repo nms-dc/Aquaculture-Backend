@@ -38,19 +38,19 @@ class AddAnimal(models.Model):
 class HarvestAnimalImages(models.Model):
 
     image_name = models.CharField(max_length=400, null=True)
-    image = models.FileField(upload_to='ani_images', null=True)
+    image = models.FileField(upload_to='harvest_animal_images', null=True)
     images = models.ForeignKey(Harvests, on_delete=models.CASCADE, related_name='ani_images', default=None, null=True)
 
 
 class HarvestPondImages(models.Model):
 
     image_name = models.CharField(max_length=400, null=True)
-    image = models.FileField(upload_to='pond_images', null=True)
+    image = models.FileField(upload_to='harvest_pond_images', null=True)
     images = models.ForeignKey(Harvests, on_delete=models.CASCADE, related_name='pond_images', default=None, null=True)
 
 
 class HarvestLogisticImages(models.Model):
 
     image_name = models.CharField(max_length=400, null=True)
-    image = models.FileField(upload_to='log_images', null=True)
+    image = models.FileField(upload_to='harvest_log_images', null=True)
     images = models.ForeignKey(Harvests, on_delete=models.CASCADE, related_name='log_images', default=None, null=True)

@@ -130,7 +130,7 @@ class CycleSerializer(serializers.ModelSerializer):
         obj.active_cycle_id = cycle_instance.id
         obj.save()
 
-        for data in image_data.getlist('pond_images'):
+        for data in image_data.getlist('cycle_pond_images'):
             name = data.name
             CyclePondImage.objects.create(images=cycle_instance, image_name=name, image=data)
 

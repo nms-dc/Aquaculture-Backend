@@ -28,6 +28,9 @@ class Farms(models.Model):
 
     def __str__(self):
         return self.farm_name
+    
+    class Meta:
+        verbose_name_plural = "Farms"
 
 
 class FarmImage(models.Model):

@@ -1,3 +1,5 @@
+
+
 from django.db import models
 import datetime
 import re
@@ -70,14 +72,14 @@ class User(AbstractBaseUser):
     )
     first_name = models.CharField(max_length=255, default="Aqua")
     last_name = models.CharField(max_length=255, default="User")
-    phone_no = models.CharField(max_length=20, blank=True)
-    company_name = models.CharField(max_length=200, default='')
-    sic_gst_code = models.CharField(max_length=200, default='')
-    pan_no = models.CharField(max_length=200, default='')
-    address_one = models.TextField(default='')
-    address_two = models.TextField(default='')
-    pincode = models.IntegerField(default=0)
-    website = models.URLField(max_length=200, default='')
+    phone_no = models.CharField(max_length=20, blank=True,)
+    company_name = models.CharField(max_length=200, default='', blank=True)
+    sic_gst_code = models.CharField(max_length=200, default='', blank=True)
+    pan_no = models.CharField(max_length=200, default='', blank=True)
+    address_one = models.TextField(default='', blank=True)
+    address_two = models.TextField(default='', blank=True)
+    pincode = models.IntegerField(default=0, blank=True)
+    website = models.URLField(max_length=200, default='', blank=True)
     username = models.CharField(
         'username', max_length=30, unique=False, default="",
         validators=[
@@ -90,7 +92,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
-    is_terms_accepted = models.BooleanField(default=False)
+    is_term_accepted = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -128,3 +130,4 @@ class Image(models.Model):
     image_name = models.CharField(max_length=400, null=True)
     image = models.FileField(upload_to='user_images', null=True)
     images = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_images', default=None, null=True)
+

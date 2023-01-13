@@ -42,6 +42,10 @@ class Ponds(models.Model):
 
     def __str__(self):
         return self.pond_name
+    
+    class Meta:
+        verbose_name_plural = "Ponds"
+
 
     @property
     def doc(self):
@@ -69,6 +73,10 @@ class PondGraphs(models.Model):
     abw = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
+    cycle = models.ForeignKey('cycle.Cycle', on_delete=models.CASCADE, null=True, related_name='cycle_id')
+
+    class Meta:
+        verbose_name_plural = "PondGraphs"
 
 
 class PondAnalytics(models.Model):
@@ -78,3 +86,6 @@ class PondAnalytics(models.Model):
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
+
+    class Meta:
+        verbose_name_plural = "PondAnalytics"
