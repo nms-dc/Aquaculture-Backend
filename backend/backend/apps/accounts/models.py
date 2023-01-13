@@ -92,7 +92,7 @@ class User(AbstractBaseUser):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
-    is_term_accepted = models.BooleanField(default=False)
+    is_terms_accepted = models.BooleanField(default=False)
 
     objects = UserManager()
 
