@@ -41,7 +41,7 @@ class PondAnalyticsAdmin(admin.ModelAdmin):
 
 
 class PondGraphsAdmin(admin.ModelAdmin):
-    list_display = ('farm', 'pond', 'time','total_feed')
+    list_display = ('farm', 'pond', 'time','total_feed', 'abw')
     list_filter = ('pond', )
     fieldsets = (
         (None, {'fields': ('pond', 'farm')}),
