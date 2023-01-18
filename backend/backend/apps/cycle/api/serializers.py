@@ -66,7 +66,7 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
 class CycleSerializer(serializers.ModelSerializer):
 
-    pond_images = PrepPondImageSerializer(many=True, read_only=True)
+    cycle_pond_images = PrepPondImageSerializer(many=True, read_only=True)
     seed_images = SeedImageSerializer(many=True, read_only=True)
     cycle_harvests = serializers.SerializerMethodField(read_only=True)
     total_harvested_amt = serializers.SerializerMethodField(read_only=True)
@@ -105,7 +105,7 @@ class CycleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ['id', 'Pond', 'species', 'species_pl_stage', 'seed_company', 'invest_amount', 'pondPrep_cost',
-                  'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'pond_images', 'seed_images',
+                  'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
                   'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from', 'total_harvested_amt', 'total_avg_fcr', 'is_active']
 
     def create(self, validated_data):
@@ -189,7 +189,7 @@ class CycleSerializer(serializers.ModelSerializer):
                 else:
                     CyclePondImage.objects.filter(pk=delete_id).delete()
         if len(image_datas.getlist('pond_images')) != 0:
-            for image_data in image_datas.getlist('pond_images'):
+            for image_data in image_datas.getlist('cycle_pond_images'):
                 name = image_data.name
                 CyclePondImage.objects.create(images=instance, image_name=name, image=image_data)
         if len(int_Simage_id) != 0:
