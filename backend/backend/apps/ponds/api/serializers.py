@@ -230,7 +230,7 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
                     datas.append(dic)
                 df = pd.DataFrame(datas)
                 df['Date'] = pd.to_datetime(df['time']).dt.date
-                df = df.groupby(['Date'], as_index=False).agg({'abw':'mean'})
+                df = df.fillna(0).groupby(['Date'], as_index=False).agg(abw=('abw','sum'))
                 return df
             else:
                 return None
@@ -257,15 +257,14 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                     datas.append(dic)
                     cycle_id = dic['cycle']
                 df = pd.DataFrame(datas)
-                print(df )
                 df['Date'] = pd.to_datetime(df['time']).dt.date
-                data = []
-                # cycle_data = Cycle.objects.filter(id=cycle_id)
-                # larva = CycleSerializer(cycle_data, many=True).data
-                # larva_count=larva[0]['numbers_of_larva']
-                df = df.groupby(['Date'], as_index=False).agg({'total_feed':'mean' })
-
-
+                # Getting a bench mark of the total larvae considering mortality
+                cycle_data = Cycle.objects.filter(id=cycle_id)
+                larva = CycleSerializer(cycle_data, many=True).data
+                larva_count=0
+                if larva != []:
+                    larva_count=larva[0]['numbers_of_larva']*0.8
+                df = df.fillna(0).groupby(['Date'], as_index=False).agg(total_feed=('total_feed','sum'), abw=('abw','mean'))
                 # for i in df:
                 #     abw = i[1]['abw']
                 
