@@ -230,16 +230,8 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
                     datas.append(dic)
                 df = pd.DataFrame(datas)
                 df['Date'] = pd.to_datetime(df['time']).dt.date
-                df = df.groupby('Date')
-                data = []
-                for i in df:
-                    abw = i[1]['abw']
-                    date = list(i[1]['Date'])
-                    date = date[0]
-                    print(type(date))
-                    means = abw.mean()
-                    data.append({'date': date, 'abw_average': means})
-                return data
+                df = df.groupby(['Date'], as_index=False).agg({'abw':'mean'})
+                return df
             else:
                 return None
         except Ponds.DoesNotExist:
@@ -265,24 +257,27 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                     datas.append(dic)
                     cycle_id = dic['cycle']
                 df = pd.DataFrame(datas)
+                print(df )
                 df['Date'] = pd.to_datetime(df['time']).dt.date
-                df = df.groupby('Date')
                 data = []
-                cycle_data = Cycle.objects.filter(id=cycle_id)
-                larva = CycleSerializer(cycle_data, many=True).data
-                larva_count=larva[0]['numbers_of_larva']
-                for i in df:
-                    abw = i[1]['abw']
-                    
-                    average=larva_count*0.8*abw
-                    date = list(i[1]['Date'])
-                    total_feed = i[1]['total_feed']
-                    date = date[0]
+                # cycle_data = Cycle.objects.filter(id=cycle_id)
+                # larva = CycleSerializer(cycle_data, many=True).data
+                # larva_count=larva[0]['numbers_of_larva']
+                df = df.groupby(['Date'], as_index=False).agg({'total_feed':'mean' })
+
+
+                # for i in df:
+                #     abw = i[1]['abw']
+                
+                #     average=larva_count*0.8*abwKKI
+                #     date = list(i[1]['Date'])
+                #     total_feed = i[1]['total_feed']
+                #     date = date[0]
                    
-                    means = average.mean()
-                    fcr_data = list(total_feed/means)
-                    data.append({'date': date, 'fcr_average': fcr_data[0]})
-                return data
+                #     means = average.mean()
+                #     fcr_data = list(total_feed/means)
+                #     data.append({'date': date, 'fcr_average': fcr_data[0]})
+                return df
             else:
                 return None
         except Ponds.DoesNotExist:

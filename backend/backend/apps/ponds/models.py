@@ -69,7 +69,7 @@ def get_default_info():
 class PondGraphs(models.Model):
     farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='grphs_of_a_farm')
     pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='graphs_of_pond', null=True)
-    time = models.DateTimeField(auto_now=True, null=True)
+    time = models.DateTimeField(null=True)
     abw = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
