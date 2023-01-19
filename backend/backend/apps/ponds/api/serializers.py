@@ -6,6 +6,7 @@ from accounts.models import User
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
 import pandas as pd
+import numpy as np
 
 
 class PondImageSerializer(serializers.ModelSerializer):
@@ -261,21 +262,16 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                 # Getting a bench mark of the total larvae considering mortality
                 cycle_data = Cycle.objects.filter(id=cycle_id)
                 larva = CycleSerializer(cycle_data, many=True).data
-                larva_count=0
+                larva_count=1
                 if larva != []:
                     larva_count=larva[0]['numbers_of_larva']*0.8
-                df = df.fillna(0).groupby(['Date'], as_index=False).agg(total_feed=('total_feed','sum'), abw=('abw','mean'))
-                # for i in df:
-                #     abw = i[1]['abw']
-                
-                #     average=larva_count*0.8*abwKKI
-                #     date = list(i[1]['Date'])
-                #     total_feed = i[1]['total_feed']
-                #     date = date[0]
-                   
-                #     means = average.mean()
-                #     fcr_data = list(total_feed/means)
-                #     data.append({'date': date, 'fcr_average': fcr_data[0]})
+                df = df.fillna(1).groupby(['Date'], as_index=False).agg(total_feed=('total_feed','sum'), abw=('abw','mean'))
+                # try:
+                    # df['fcr'] = df.total_feed/(df.abw*larva_count)
+                df['fcr']  = df['total_feed'].div(df['abw']*larva_count).replace(np.inf, 0)
+                # except:
+                #     df['fcr'] = 0
+           
                 return df
             else:
                 return None
