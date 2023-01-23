@@ -145,4 +145,4 @@ class MeasurementcycleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Measurement
-        fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'price_per_kg',  'measure_images']
+        fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'price_per_kg',  'measure_images', 'lot']
