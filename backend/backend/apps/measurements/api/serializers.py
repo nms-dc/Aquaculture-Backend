@@ -142,7 +142,14 @@ class MasterSerializer(serializers.ModelSerializer):
 
 
 class MeasurementcycleSerializer(serializers.ModelSerializer):
+    measure_images = serializers.SerializerMethodField()
+    
+    def get_measure_images(self, obj):
+        data = MeasurementPics.objects.filter(images = obj)
+        serialize = MeasurementPicsSerializer(data, many=True).data
+        return serialize
 
     class Meta:
         model = Measurement
-        fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'price_per_kg',  'measure_images', 'lot']
+        fields = '__all__'
+
