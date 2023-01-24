@@ -1,5 +1,5 @@
 from django.contrib import admin
-from measurements.models import Measurement, MeasurementMaster
+from measurements.models import Measurement, MeasurementMaster, MeasurementPics
 
 
 class MeasurementAdmin(admin.ModelAdmin):
@@ -40,3 +40,4 @@ class MeasurementmasterAdmin(admin.ModelAdmin):
 
 admin.site.register(Measurement, MeasurementAdmin)
 admin.site.register(MeasurementMaster, MeasurementmasterAdmin)
+admin.site.register(MeasurementPics)
