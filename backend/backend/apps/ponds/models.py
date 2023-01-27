@@ -5,13 +5,16 @@ from farms.models import Farms
 
 class PondConstructType(models.Model):
     construct_type = models.CharField(max_length=24, default=None, null=True)
-
+    def __str__(self):
+        return self.construct_type
 
 class PondType(models.Model):
     name = models.CharField(max_length=24, default=None)
     desc = models.CharField(max_length=24, default=None)
     pond_construct = models.ForeignKey(PondConstructType, on_delete=models.CASCADE, related_name='Pond_construct', null=True)
 
+    def __str__(self):
+        return self.name
 
 class Ponds(models.Model):
     pond_name = models.CharField(max_length=240, default=None)
