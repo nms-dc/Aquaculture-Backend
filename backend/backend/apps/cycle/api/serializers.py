@@ -6,6 +6,7 @@ from accounts.models import User
 from harvests.models import Harvests
 from harvests.api.serializers import HarvestSummarySerializer
 from ponds.models import Ponds
+import ponds.api.serializers as P
 import datetime
 from dateutil import parser
 from measurements.models import Measurement
@@ -129,6 +130,13 @@ class CycleSerializer(serializers.ModelSerializer):
         obj.active_cycle_date = cycle_instance.seeding_date
         obj.active_cycle_id = cycle_instance.id
         obj.save()
+        if validated_data['pond_transfered_from']:
+            data = Ponds.objects.filter(pond_name=validated_data['pond_transfered_from'])
+            if data.exists():
+                data.update(is_active_pond = False)
+                data.update(active_cycle_date = None)
+                data.update(active_cycle_id = None)           
+                
 
         for data in image_data.getlist('cycle_pond_images'):
             name = data.name
