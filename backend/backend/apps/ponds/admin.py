@@ -4,12 +4,12 @@ from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGrap
 
 class PondAdmin(admin.ModelAdmin):
     list_display = ('pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm')
-    list_filter = ('farm',)
+    list_filter = ('farm', 'pond_name')
     fieldsets = (
         (None, {'fields': ('pond_name', 'pond_length')}),
-        ('Personal info', {'fields': ('pond_depth', 'pond_construct_type', 'lat', 'lng', 'is_active_pond', 'active_cycle_id',
+        ('pond info', {'fields': ('pond_depth', 'pond_construct_type', 'lat', 'lng', 'is_active_pond', 'active_cycle_id',
                                       'active_cycle_date')}),
-        ('Company info', {'fields': ('pond_breadth', 'pond_area', 'pond_capacity', 'description', 'pond_number',
+        ('moreinfoAboutPond', {'fields': ('pond_breadth', 'pond_area', 'pond_capacity', 'description', 'pond_number',
                                      'current_stock_id')}),
     )
     add_fieldsets = (

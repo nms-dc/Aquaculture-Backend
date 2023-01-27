@@ -37,7 +37,7 @@ class FarmImage(models.Model):
 
     image = models.FileField(upload_to='farmimage_uploads', null=True)
     image_name = models.CharField(max_length=24, default=None, null=True)
-    images = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='farm_images', null=True, blank=True)
+    images = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='farm_images', verbose_name='farm', null=True, blank=True)
 
 
 class FarmCertification(models.Model):
@@ -46,7 +46,7 @@ class FarmCertification(models.Model):
     certificate_number = models.IntegerField(default=0, null=True)
     add_information = models.TextField(max_length=224, default=None, null=True)
     image = models.ImageField(upload_to='certificate_uploads', null=True)
-    certificates = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
+    certificates = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', verbose_name='Farm', null=True, blank=True)
 
 
 class FeedLots(models.Model):
@@ -78,3 +78,6 @@ class FarmAnalytics(models.Model):
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
+
+    class Meta:
+        verbose_name_plural = "FarmAnalytics"

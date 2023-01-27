@@ -7,11 +7,11 @@ from farms.models import Farms, FarmImage, FarmCertification, FeedLots, FarmAnal
 class FarmsAdmin(admin.ModelAdmin):
 
     list_display = ('farm_name', 'farm_area', 'farm_status', 'company_id')
-    list_filter = ('company_id',)
+    list_filter = ('company_id', 'farm_name', )
     fieldsets = (
         (None, {'fields': ('company_id', 'farm_name')}),
-        ('Personal info', {'fields': (('farm_area', 'phone'), 'description', 'farm_status', )}),
-        ('Company info', {'fields': ('city', 'country', 'town_village', 'zipcode', 'state', )}),
+        ('Farm info', {'fields': (('farm_area', 'phone'), 'description', 'farm_status', )}),
+        ('Address info', {'fields': ('city', 'country', 'town_village', 'zipcode', 'state', )}),
     )
     add_fieldsets = (
         (None, {
@@ -30,11 +30,10 @@ class FarmAnalyticsAdmin(admin.ModelAdmin):
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
     list_display = ('farm', 'no_of_cycles', 'harvest_amount',)
-    list_filter = ('farm', )
+    list_filter = ('farm', 'harvest_amount', )
     fieldsets = (
         (None, {'fields': ('farm', 'harvest_amount')}),
-        ('Personal info', {'fields': ('no_of_cycles', 'total_feed', )}),
-        ('Company info', {'fields': ('extra_info',)}),
+        ('FarmAnalytics info', {'fields': ('no_of_cycles', 'total_feed', 'extra_info', )}),
        )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -55,8 +54,7 @@ class FarmCertificatesAdmin(admin.ModelAdmin):
     list_filter = ('certificates',)
     fieldsets = (
         (None, {'fields': ('certificate_name', 'certificate_number')}),
-        ('Personal info', {'fields': ('add_information', 'image', )}),
-        ('Company info', {'fields': ('certificates',)}),
+        ('Cerificates info', {'fields': ('add_information', 'image', 'certificates', )}),
        )
 
     add_fieldsets = (
@@ -75,8 +73,7 @@ class FarmImagesAdmin(admin.ModelAdmin):
     list_display = ('image','images')
     list_filter = ('images',)
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
-        ('Personal info', {'fields': ('images',)}),
+        (None, {'fields': ('image_name', 'image', 'images', )}),
         )
 
     add_fieldsets = (
@@ -96,8 +93,7 @@ class FeedLotsAdmin(admin.ModelAdmin):
     list_filter = ('farm_id', )
     fieldsets = (
         (None, {'fields': ('farm_id', 'lot_number', 'company_purchased_from', 'date_purchased', 'date_shipped')}),
-        ('Personal info', {'fields': ('date_received', 'bag_is_used', 'feed_cost', 'currency',)}),
-        ('Company info', {'fields': ('Image', 'feed_lot_type')}),
+        ('FeedLots info', {'fields': ('date_received', 'bag_is_used', 'feed_cost', 'currency', 'Image', 'feed_lot_type')}),
        )
 
     add_fieldsets = (

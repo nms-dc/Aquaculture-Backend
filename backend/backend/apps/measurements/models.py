@@ -38,3 +38,9 @@ class MeasurementPics(models.Model):
     image_name = models.CharField(max_length=400, null=True)
     image = models.FileField(upload_to='measure_images', null=True)
     images = models.ForeignKey(Measurement, on_delete=models.CASCADE, related_name='measure_images', default=None, null=True)
+
+    def __str__(self):
+        return self.image_name
+
+    class Meta:
+        verbose_name_plural = "MeasurementPics"
