@@ -65,6 +65,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
+        print('measurement create validated data',validated_data)
+        print('image_data details',image_datas)
         measurement_instance = Measurement.objects.create(
             cycle=validated_data['cycle'],
             measurement_type=validated_data['measurement_type'],
@@ -98,6 +100,9 @@ class MeasurementSerializer(serializers.ModelSerializer):
             for id in trim_image_id:
                 int_image_id.append(int(id))
 
+        print('measurement update validated data',validated_data)
+        print('image_data details',image_datas)
+        print('measure_image_id',int_image_id)
         instance.cycle = validated_data.get('cycle', instance.cycle)
         instance.measurement_type = validated_data.get('measurement_type', instance.measurement_type)
         instance.value = validated_data.get('value', instance.value)

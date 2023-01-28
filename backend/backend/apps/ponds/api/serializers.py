@@ -138,6 +138,8 @@ class PondsSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         pond_image = self.context.get('view').request.FILES
+        print('pond create validated data',validated_data)
+        print('image_data details',pond_image)
         pond_instance = Ponds.objects.create(
             pond_name=validated_data['pond_name'],
             pond_type=validated_data['pond_type'],
@@ -166,7 +168,9 @@ class PondsSerializer(serializers.ModelSerializer):
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_image_id.append(int(id))
-
+        print('pond update validated data',validated_data)
+        print('image_data details',image_datas)
+        print('pond_image_id',int_image_id)
         instance.pond_name = validated_data.get('pond_name', instance.pond_name)
         instance.pond_type = validated_data.get('pond_type', instance.pond_type)
         instance.pond_construct_type = validated_data.get('pond_construct_type', instance.pond_construct_type)

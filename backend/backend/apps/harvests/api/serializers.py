@@ -52,6 +52,8 @@ class HarvestSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
+        print('harvest create validated data',validated_data)
+        print('image_data details',image_data)
         harvest_instance = Harvests.objects.create(
             harvest_type=validated_data['harvest_type'],
             total_kgs=validated_data['total_kgs'],
@@ -118,6 +120,9 @@ class HarvestSerializer(serializers.ModelSerializer):
             for id in trim_image_id:
                 int_log_id.append(int(id))
 
+        print('havest update validated data',validated_data)
+        print('image_data details',image_datas)
+        print('animal_image_id',int_animal_id,'pond_image_id',int_pond_id,'log_image_id',int_log_id)
         instance.harvest_type = validated_data.get('harvest_type', instance.harvest_type)
         instance.total_kgs = validated_data.get('total_kgs',  instance.total_kgs)
         instance.temperature = validated_data.get('temperature', instance.temperature)
@@ -160,8 +165,8 @@ class HarvestSerializer(serializers.ModelSerializer):
         '''this if block should come after the deletion block which is the abouve if block
             then only this data will get delete after insertion of data base if we put the below
             if block above into the deletion if which above if block this new image also will get deleted'''
-        if len(image_datas.getlist('ani_images')) != 0:
-            for image_data in image_datas.getlist('ani_images'):
+        if len(image_datas.getlist('animal_images')) != 0:
+            for image_data in image_datas.getlist('animal_images'):
                 name = image_data.name
                 HarvestAnimalImages.objects.create(images=instance, image_name=name, image=image_data)
         if len(int_pond_id) != 0:
