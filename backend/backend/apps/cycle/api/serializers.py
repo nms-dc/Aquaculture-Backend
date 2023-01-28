@@ -197,9 +197,6 @@ class CycleSerializer(serializers.ModelSerializer):
         if len(int_Pimage_id) != 0:
             for delete_id in pondimage_with_same_profile_instance:
                 if delete_id in int_Pimage_id:
-                    '''if the id is there in database we should not delete'''
-                    pass
-                else:
                     CyclePondImage.objects.filter(pk=delete_id).delete()
         if len(image_datas.getlist('cycle_pond_images')) != 0:
             for image_data in image_datas.getlist('cycle_pond_images'):
@@ -208,9 +205,6 @@ class CycleSerializer(serializers.ModelSerializer):
         if len(int_Simage_id) != 0:
             for delete_id in seedimage_with_same_profile_instance:
                 if delete_id in int_Simage_id:
-                    '''if the id is there in database we should not delete'''
-                    pass
-                else:
                     CycleSeedImage.objects.filter(pk=delete_id).delete()
         if len(image_datas.getlist('seed_images')) != 0:
             for image_data in image_datas.getlist('seed_images'):
