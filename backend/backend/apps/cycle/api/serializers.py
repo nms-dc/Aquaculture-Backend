@@ -111,6 +111,8 @@ class CycleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
+        print('cycle create validated data',validated_data)
+        print('image_data details',image_data)
         cycle_instance = Cycle.objects.create(
             species=validated_data['species'],
             species_pl_stage=validated_data['species_pl_stage'],
@@ -172,6 +174,9 @@ class CycleSerializer(serializers.ModelSerializer):
         def numOfDays(date1, date2):
             return (date2 - date1).days
         doc = numOfDays(created_date, current_date)
+        print('cycle update validated data',validated_data)
+        print('image_data details',image_datas)
+        print('pond_image_id',int_Pimage_id,'seed_image_id',int_Simage_id)
         instance.Pond = validated_data.get('Pond', instance.Pond)
         instance.species = validated_data.get('species', instance.species)
         instance.species_pl_stage = validated_data.get('species_pl_stage', instance.species_pl_stage)
@@ -196,7 +201,7 @@ class CycleSerializer(serializers.ModelSerializer):
                     pass
                 else:
                     CyclePondImage.objects.filter(pk=delete_id).delete()
-        if len(image_datas.getlist('pond_images')) != 0:
+        if len(image_datas.getlist('cycle_pond_images')) != 0:
             for image_data in image_datas.getlist('cycle_pond_images'):
                 name = image_data.name
                 CyclePondImage.objects.create(images=instance, image_name=name, image=image_data)

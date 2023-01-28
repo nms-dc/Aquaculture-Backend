@@ -120,7 +120,8 @@ class FarmSerializer(serializers.ModelSerializer):
         image_datas = self.context.get('view').request.FILES
         token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
         user = User.objects.get(email=token)
-
+        print('farm create validated data',validated_data)
+        print('image_data details',image_datas)
         Farm_instance = Farms.objects.create(
                 farm_name=validated_data['farm_name'],
                 farm_area=validated_data['farm_area'],
@@ -162,6 +163,10 @@ class FarmSerializer(serializers.ModelSerializer):
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_certi_id.append(int(id))
+        
+        print('farm update validated data',validated_data)
+        print('image_data details',image_datas)
+        print('farm_image_id',int_image_id,'certificate_image_id',int_certi_id)
         instance.farm_name = validated_data.get('farm_name', instance.farm_name)
         instance.farm_area = validated_data.get('farm_area', instance.farm_area)
         instance.address_line_one = validated_data.get('address_line_one', instance.address_line_one)
