@@ -117,9 +117,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
         if len(int_image_id) != 0:
             for delete_id in measureimage_with_same_profile_instance:
                 if delete_id in int_image_id:
-                    '''if the id is there in database we should not delete'''
-                    pass
-                else:
                     MeasurementPics.objects.filter(pk=delete_id).delete()
         if len(image_datas.getlist('measure_images')) != 0:
             for image_data in image_datas.getlist('measure_images'):

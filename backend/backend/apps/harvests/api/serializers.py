@@ -157,9 +157,6 @@ class HarvestSerializer(serializers.ModelSerializer):
         if len(int_animal_id) != 0:
             for delete_id in ani_image_with_same_profile_instance:
                 if delete_id in int_animal_id:
-                    '''if the id is there in database we should not delete'''
-                    pass
-                else:
                     HarvestAnimalImages.objects.filter(pk=delete_id).delete()
 
         '''this if block should come after the deletion block which is the abouve if block
@@ -171,10 +168,6 @@ class HarvestSerializer(serializers.ModelSerializer):
                 HarvestAnimalImages.objects.create(images=instance, image_name=name, image=image_data)
         if len(int_pond_id) != 0:
             for delete_id in pondimage_with_same_profile_instance:
-                if delete_id in int_pond_id:
-                    '''if the id is there in database we should not delete'''
-                    pass
-                else:
                     HarvestPondImages.objects.filter(pk=delete_id).delete()
 
         '''this if block should come after the deletion block which is the abouve if block
@@ -187,9 +180,6 @@ class HarvestSerializer(serializers.ModelSerializer):
         if len(int_log_id) != 0:
             for delete_id in log_image_with_same_profile_instance:
                 if delete_id in int_log_id:
-                    '''if the id is there in database we should not delete'''
-                    pass
-                else:
                     HarvestLogisticImages.objects.filter(pk=delete_id).delete()
 
         '''this if block should come after the deletion block which is the abouve if block

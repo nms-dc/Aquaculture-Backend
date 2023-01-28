@@ -188,9 +188,6 @@ class PondsSerializer(serializers.ModelSerializer):
         if len(int_image_id) != 0:
             for delete_id in pondimage_with_same_profile_instance:
                 if delete_id in int_image_id:
-                    '''if the id is there in database we should not delete'''
-                    pass
-                else:
                     PondImage.objects.filter(pk=delete_id).delete()
 
         if len(image_datas.getlist('pond_images')) != 0:
