@@ -39,7 +39,9 @@ class MeasurementSerializer(serializers.ModelSerializer):
 
     def get_lot_number(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        if measurement_type_var == '1' or measurement_type_var == '11':
+        # do a filter of measurement master on measurement_type_var
+        # if measurement_type == feeds or measurement_type == probiotics 
+        if measurement_type_var == '4' or measurement_type_var == '8':
             data = FeedLots.objects.filter(id=measurement_type_var).values_list('lot_number', flat=True).first()
             return data
         else:
@@ -47,7 +49,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
 
     def get_company_name(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        if measurement_type_var == '1' or measurement_type_var == '11':
+        if measurement_type_var == '4' or measurement_type_var == '8':
             c = Company.objects.filter(id=measurement_type_var)
             com = CompanySerializers(c, many=True).data
             for i in com:
