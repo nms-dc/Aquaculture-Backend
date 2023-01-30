@@ -9,8 +9,8 @@ from ponds.models import Ponds
 import ponds.api.serializers as P
 import datetime
 from dateutil import parser
-from measurements.models import Measurement
-from measurements.api.serializers import MeasurementSerializer, MeasurementcycleSerializer
+from measurements.models import Measurement, MeasurementMaster
+from measurements.api.serializers import MeasurementSerializer, MeasurementcycleSerializer, MasterSerializer
 
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
@@ -223,8 +223,13 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
                 serializer = MeasurementcycleSerializer(ponds, many=True).data
                 data = []
                 for i in serializer:
-                    dic = dict(i)
-                    data.append(dic)
+                    dic = dict(i)                    
+                    master_id = (dic['measurement_type'])
+                    measure_data = MeasurementMaster.objects.filter(id = master_id)
+                    measure_serialize = MasterSerializer(measure_data, many=True).data
+                    measurment_type=measure_serialize[0]['measurement_type']
+                    dic['measurement_type'] = measurment_type
+                    data.append(dic)            
                 data = sorted(data, key=lambda d: d['time'])
                 data.reverse()
                 return data
