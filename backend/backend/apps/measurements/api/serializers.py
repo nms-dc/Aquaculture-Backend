@@ -26,8 +26,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
     measurement_description = serializers.SerializerMethodField(read_only=True)
     # lot = serializers.SerializerMethodField(read_only=True)
-    lot_number = serializers.SerializerMethodField(read_only=True)
-    company_name = serializers.SerializerMethodField(read_only=True)
+    # lot_number = serializers.SerializerMethodField(read_only=True)
+    # company_name = serializers.SerializerMethodField(read_only=True)
 
     def get_measurement_description(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
@@ -37,33 +37,33 @@ class MeasurementSerializer(serializers.ModelSerializer):
         else:
             return None
 
-    def get_lot_number(self, obj):
-        measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        # do a filter of measurement master on measurement_type_var
-        # if measurement_type == feeds or measurement_type == probiotics 
-        if measurement_type_var == '4' or measurement_type_var == '8':
-            data = FeedLots.objects.filter(id=measurement_type_var).values_list('lot_number', flat=True).first()
-            return data
-        else:
-            return None
+    # def get_lot_number(self, obj):
+    #     measurement_type_var = self.context['request'].data.get('measurement_type', None)
+    #     # do a filter of measurement master on measurement_type_var
+    #     # if measurement_type == feeds or measurement_type == probiotics 
+    #     if measurement_type_var == '4' or measurement_type_var == '8':
+    #         data = FeedLots.objects.filter(id=measurement_type_var).values_list('lot_number', flat=True).first()
+    #         return data
+    #     else:
+    #         return None
 
-    def get_company_name(self, obj):
-        measurement_type_var = self.context['request'].data.get('measurement_type', None)
-        if measurement_type_var == '4' or measurement_type_var == '8':
-            c = Company.objects.filter(id=measurement_type_var)
-            com = CompanySerializers(c, many=True).data
-            for i in com:
-                c_dic = dict(i)
-                c_name = c_dic['company_name']
-                print(c_name)
-            return c_name
-        else:
-            return None
+    # def get_company_name(self, obj):
+    #     measurement_type_var = self.context['request'].data.get('measurement_type', None)
+    #     if measurement_type_var == '4' or measurement_type_var == '8':
+    #         c = Company.objects.filter(id=measurement_type_var)
+    #         com = CompanySerializers(c, many=True).data
+    #         for i in com:
+    #             c_dic = dict(i)
+    #             c_name = c_dic['company_name']
+    #             print(c_name)
+    #         return c_name
+    #     else:
+    #         return None
 
     class Meta:
         model = Measurement
         fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'measurement_description',
-                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'lot_number', 'company_name', 'is_probiotic_mixed']
+                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'is_probiotic_mixed']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
