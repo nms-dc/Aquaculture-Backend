@@ -50,9 +50,8 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
     def get_measure(self, obj):
         try:
-
             if Measurement.objects.filter(cycle=obj).exists():
-                measured = Ponds.objects.filter(cycle=obj)
+                measured = Measurement.objects.filter(cycle=obj)
                 serializer = MeasurementSerializer(measured, many=True).data
                 return serializer
             else:
