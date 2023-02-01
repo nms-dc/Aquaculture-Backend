@@ -79,6 +79,8 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
+        print('cycle create validated data',validated_data)
+        print('image_data details',image_data)
         user_instance = User.objects.create(
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
@@ -92,7 +94,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
             website=validated_data['website'],
             email=validated_data['email'],
         )
-        for data in image_data.getlist('image'):
+        for data in image_data.getlist('user_images'):
             name = data.name
             Image.objects.create(images=user_instance, image_name=name, image=data)
             print(user_instance)
@@ -100,6 +102,8 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         image_data = self.context.get('view').request.FILES
+        print('cycle update validated data',validated_data)
+        print('image_data details',image_data)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.phone_no = validated_data.get('phone_no', instance.phone_no)
@@ -114,13 +118,13 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
         instance.save()
 
         userimage_with_same_profile_instance = Image.objects.filter(images=instance.pk).values_list('id', flat=True)
-        if len(image_data.getlist('image')) == 0:
-            pass
-        else:
-            for image_id in userimage_with_same_profile_instance:
-                Image.objects.filter(pk=image_id).delete()
-            for data in image_data.getlist('image'):
-                name = data.name
-                Image.objects.create(images=instance, image_name=name, image=data)
+            
+        if len(image_data.getlist('user_images')) != 0:
+            for delete_id in userimage_with_same_profile_instance:
+                Image.objects.filter(pk=delete_id).delete()
+            for image_data in image_data.getlist('user_images'):
+                name = image_data.name
+                Image.objects.create(images=instance, image_name=name, image=image_data)
 
         return instance
+

@@ -1,3 +1,4 @@
+
 from email.policy import default
 from pyexpat import model
 from django.db import models
@@ -25,6 +26,7 @@ class Measurement(models.Model):
     price_per_kg = models.IntegerField(null=True)
     measurement_type = models.ForeignKey(MeasurementMaster, on_delete=models.CASCADE, default=None, null=True)
     is_probiotic_mixed = models.BooleanField(default=False)
+    notes = models.CharField(max_length=2000, null=True, blank=True)
 
 
 class Nutrition(models.Model):
@@ -44,3 +46,4 @@ class MeasurementPics(models.Model):
 
     class Meta:
         verbose_name_plural = "MeasurementPics"
+		
