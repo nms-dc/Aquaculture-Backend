@@ -21,6 +21,13 @@ class MeasurementPicsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MasterSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MeasurementMaster
+        fields = '__all__'
+
+
 class MeasurementSerializer(serializers.ModelSerializer):
     nutrition_data = NutritionSerializer(many=True, read_only=True)
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
@@ -63,8 +70,9 @@ class MeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
         fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'measurement_description',
-                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'is_probiotic_mixed']
+                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'is_probiotic_mixed', 'notes']
 
+    
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
         print('measurement create validated data',validated_data)
@@ -77,6 +85,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
             lot=validated_data['lot'],
             #company=validated_data['company'],
             price_per_kg=validated_data['price_per_kg'],
+            notes=validated_data['notes']
             )
 
         for data in image_datas.getlist('measure_images'):
@@ -102,9 +111,9 @@ class MeasurementSerializer(serializers.ModelSerializer):
             for id in trim_image_id:
                 int_image_id.append(int(id))
 
-        print('measurement update validated data',validated_data)
-        print('image_data details',image_datas)
-        print('measure_image_id',int_image_id)
+        #print('measurement update validated data',validated_data)
+        #print('image_data details',image_datas)
+        #print('measure_image_id',int_image_id)
         instance.cycle = validated_data.get('cycle', instance.cycle)
         instance.measurement_type = validated_data.get('measurement_type', instance.measurement_type)
         instance.value = validated_data.get('value', instance.value)
@@ -112,6 +121,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
         #instance.company = validated_data.get('company', instance.company)
         instance.lot = validated_data.get('lot', instance.lot)
         instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
+        instance.notes = validated_data.get('notes', instance.notes)
         instance.save()
 
         measureimage_with_same_profile_instance = MeasurementPics.objects.filter(images=instance.pk).values_list('id', flat=True)
@@ -138,13 +148,6 @@ class MeasurementTypeSerializer(serializers.ModelSerializer):
         fields = ['id', 'measurement_type', 'measurement_description', 'measurement_types']
 
 
-class MasterSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = MeasurementMaster
-        fields = ['id', 'measurement_type', 'measurement_description']
-
-
 class MeasurementcycleSerializer(serializers.ModelSerializer):
     measure_images = serializers.SerializerMethodField()
     
@@ -156,4 +159,3 @@ class MeasurementcycleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
         fields = '__all__'
-
