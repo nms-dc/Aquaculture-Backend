@@ -1,3 +1,4 @@
+
 import datetime
 from itertools import cycle
 from rest_framework import serializers
@@ -37,7 +38,7 @@ class CycleHarvestRelationSerializer(serializers.ModelSerializer):
                 return serializer
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except Harvests.DoesNotExist:
             return None
 
     class Meta:
@@ -50,13 +51,14 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
     def get_measure(self, obj):
         try:
+
             if Measurement.objects.filter(cycle=obj).exists():
                 measured = Measurement.objects.filter(cycle=obj)
-                serializer = MeasurementSerializer(measured, many=True).data
+                serializer = MeasurementcycleSerializer(measured, many=True).data
                 return serializer
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except Measurement.DoesNotExist:
             return None
 
     class Meta:
@@ -80,7 +82,7 @@ class CycleSerializer(serializers.ModelSerializer):
                 return serializer
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except Cycle.DoesNotExist:
             return None
 
     def get_total_harvested_amt(self, obj):
@@ -127,7 +129,6 @@ class CycleSerializer(serializers.ModelSerializer):
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True
-        # obj.active_cycle_date = datetime.date.today()
         obj.active_cycle_date = cycle_instance.seeding_date
         obj.active_cycle_id = cycle_instance.id
         obj.save()
@@ -218,9 +219,11 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
     def get_measurements(self, obj):
         try:
             if Measurement.objects.filter(cycle=obj).exists():
-                ponds = Measurement.objects.filter(cycle=obj)
-                serializer = MeasurementcycleSerializer(ponds, many=True).data
+                measurement = Measurement.objects.filter(cycle=obj)
+                serializer = MeasurementcycleSerializer(measurement, many=True).data
                 data = []
+                print(obj)
+                print(serializer)
                 for i in serializer:
                     dic = dict(i)                    
                     master_id = (dic['measurement_type'])
@@ -234,7 +237,7 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
                 return data
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except Measurement.DoesNotExist:
             return None
 
     class Meta:

@@ -28,12 +28,6 @@ class LogImageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class AddAnimalSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = AddAnimal
-#         fields = '__all__'
-
-
 class HarvestSummarySerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -105,21 +99,18 @@ class HarvestSerializer(serializers.ModelSerializer):
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_animal_id.append(int(id))
-
         data = self.context['request'].data.get('pond_images_id', None)
         int_pond_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_pond_id.append(int(id))
-
         data = self.context['request'].data.get('log_images_id', None)
         int_log_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_log_id.append(int(id))
-
         print('havest update validated data',validated_data)
         print('image_data details',image_datas)
         print('animal_image_id',int_animal_id,'pond_image_id',int_pond_id,'log_image_id',int_log_id)
@@ -158,10 +149,6 @@ class HarvestSerializer(serializers.ModelSerializer):
             for delete_id in ani_image_with_same_profile_instance:
                 if delete_id in int_animal_id:
                     HarvestAnimalImages.objects.filter(pk=delete_id).delete()
-
-        '''this if block should come after the deletion block which is the abouve if block
-            then only this data will get delete after insertion of data base if we put the below
-            if block above into the deletion if which above if block this new image also will get deleted'''
         if len(image_datas.getlist('animal_images')) != 0:
             for image_data in image_datas.getlist('animal_images'):
                 name = image_data.name
@@ -169,10 +156,6 @@ class HarvestSerializer(serializers.ModelSerializer):
         if len(int_pond_id) != 0:
             for delete_id in pondimage_with_same_profile_instance:
                     HarvestPondImages.objects.filter(pk=delete_id).delete()
-
-        '''this if block should come after the deletion block which is the abouve if block
-            then only this data will get delete after insertion of data base if we put the below
-            if block above into the deletion if which above if block this new image also will get deleted'''
         if len(image_datas.getlist('pond_images')) != 0:
             for image_data in image_datas.getlist('pond_images'):
                 name = image_data.name
@@ -181,10 +164,6 @@ class HarvestSerializer(serializers.ModelSerializer):
             for delete_id in log_image_with_same_profile_instance:
                 if delete_id in int_log_id:
                     HarvestLogisticImages.objects.filter(pk=delete_id).delete()
-
-        '''this if block should come after the deletion block which is the abouve if block
-            then only this data will get delete after insertion of data base if we put the below
-            if block above into the deletion if which above if block this new image also will get deleted'''
         if len(image_datas.getlist('log_images')) != 0:
             for image_data in image_datas.getlist('log_images'):
                 name = image_data.name

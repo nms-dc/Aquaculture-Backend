@@ -10,6 +10,4 @@ router.register('get-master', MasterView)
 
 urlpatterns = [
      path('', include(router.urls)),
-     # path('pk/get-notifications', notifications),
-     # path('pk/get-measurements', measurements),
 ]

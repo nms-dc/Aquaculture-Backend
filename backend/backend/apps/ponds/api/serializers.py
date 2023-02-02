@@ -36,7 +36,7 @@ class PondSummarySerializer(serializers.ModelSerializer):
                     return 0
             else:
                 return 0
-        except Ponds.DoesNotExist:
+        except Cycle.DoesNotExist:
             return None
 
     class Meta:
@@ -59,7 +59,7 @@ class PondSummaryOnlySerializer(serializers.ModelSerializer):
                     return 0
             else:
                 return 0
-        except Ponds.DoesNotExist:
+        except Cycle.DoesNotExist:
             return None
 
     class Meta:
@@ -79,7 +79,7 @@ class PondCycleRelationSerializer(serializers.ModelSerializer):
                 return serializer
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except Cycle.DoesNotExist:
             return None
 
     class Meta:
@@ -162,7 +162,6 @@ class PondsSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         image_datas = self.context.get('view').request.FILES
         data = self.context['request'].data.get('pond_images_id', None)
-        '''filtering 'farm_image_id' and converting it into an integer list'''
         int_image_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
@@ -199,14 +198,12 @@ class PondsSerializer(serializers.ModelSerializer):
 
 
 class PondTypeSerializer(serializers.ModelSerializer):
-    '''pond_types = PondsSerializer(many=True, read_only = True)'''
     class Meta:
         model = PondType
         fields = ['id', 'name', 'desc']
 
 
 class PondConstructTypeSerializer(serializers.ModelSerializer):
-    '''Pond_construct = PondTypeSerializer(many=True,read_only = True)'''
     class Meta:
         model = PondConstructType
         fields = ['id', 'construct_type']
@@ -224,8 +221,8 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
     def get_abw_data(self, obj):
         try:
             if PondGraphs.objects.filter(pond=obj).exists():
-                ponds = PondGraphs.objects.filter(pond=obj)
-                serializer = PondGraphSerializer(ponds, many=True).data
+                pondgraphs = PondGraphs.objects.filter(pond=obj)
+                serializer = PondGraphSerializer(pondgraphs, many=True).data
                 datas = []
                 for i in serializer:
                     dic = dict(i)
@@ -236,7 +233,7 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
                 return df
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except PondGraphs.DoesNotExist:
             return None
 
     class Meta:
@@ -250,8 +247,8 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
     def get_fcr_data(self, obj):
         try:
             if PondGraphs.objects.filter(pond=obj).exists():
-                ponds = PondGraphs.objects.filter(pond=obj)
-                serializer = PondGraphSerializer(ponds, many=True).data
+                pondgraphs = PondGraphs.objects.filter(pond=obj)
+                serializer = PondGraphSerializer(pondgraphs, many=True).data
                 datas = []
                 cycle_id = 0
                 for i in serializer:
@@ -260,7 +257,6 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                     cycle_id = dic['cycle']
                 df = pd.DataFrame(datas)
                 df['Date'] = pd.to_datetime(df['time']).dt.date
-                # Getting a bench mark of the total larvae considering mortality
                 cycle_data = Cycle.objects.filter(id=cycle_id)
                 larva = CycleSerializer(cycle_data, many=True).data
                 larva_count=1
@@ -272,7 +268,7 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                 return df
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except PondGraphs.DoesNotExist:
             return None
 
     class Meta:
