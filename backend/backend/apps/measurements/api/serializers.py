@@ -32,9 +32,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
     nutrition_data = NutritionSerializer(many=True, read_only=True)
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
     measurement_description = serializers.SerializerMethodField(read_only=True)
-    # lot = serializers.SerializerMethodField(read_only=True)
-    # lot_number = serializers.SerializerMethodField(read_only=True)
-    # company_name = serializers.SerializerMethodField(read_only=True)
 
     def get_measurement_description(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
@@ -83,7 +80,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
             value=validated_data['value'],
             time=validated_data['time'],
             lot=validated_data['lot'],
-            #company=validated_data['company'],
             price_per_kg=validated_data['price_per_kg'],
             notes=validated_data['notes']
             )
@@ -104,21 +100,19 @@ class MeasurementSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         image_datas = self.context.get('view').request.FILES
         data = self.context['request'].data.get('measure_images_id', None)
-        '''filtering 'farm_image_id' and converting it into an integer list'''
         int_image_id = []
         if data:
             trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_image_id.append(int(id))
 
-        #print('measurement update validated data',validated_data)
-        #print('image_data details',image_datas)
-        #print('measure_image_id',int_image_id)
+        print('measurement update validated data',validated_data)
+        print('image_data details',image_datas)
+        print('measure_image_id',int_image_id)
         instance.cycle = validated_data.get('cycle', instance.cycle)
         instance.measurement_type = validated_data.get('measurement_type', instance.measurement_type)
         instance.value = validated_data.get('value', instance.value)
         instance.time = validated_data.get('time', instance.time)
-        #instance.company = validated_data.get('company', instance.company)
         instance.lot = validated_data.get('lot', instance.lot)
         instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
         instance.notes = validated_data.get('notes', instance.notes)

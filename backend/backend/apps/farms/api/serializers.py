@@ -107,7 +107,7 @@ class FarmSerializer(serializers.ModelSerializer):
 
             else:
                 return None
-        except Ponds.DoesNotExist:
+        except FeedLots.DoesNotExist:
             return None
         return 'hello world'
 
@@ -177,7 +177,6 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.zipcode = validated_data.get('zipcode', instance.zipcode)
         instance.district = validated_data.get('district', instance.district)
-        # instance.user = user
         instance.save()
 
         certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
@@ -188,11 +187,6 @@ class FarmSerializer(serializers.ModelSerializer):
                 if delete_id in int_certi_id:
                     FarmCertification.objects.filter(pk=delete_id).delete()
 
-        print('length_image',len(int_certi_id))
-                    
-        '''this if block should come after the deletion block which is the abouve if block
-            then only this data will get delete after insertion of data base if we put the below
-            if block above into the deletion if which above if block this new image also will get deleted'''
         if len(image_datas.getlist('certificate')) != 0:
             for certify_data in image_datas.getlist('certificate'):
                 name = certify_data.name
@@ -201,12 +195,7 @@ class FarmSerializer(serializers.ModelSerializer):
             for delete_id in image_with_same_profile_instance:
                 if delete_id in int_image_id:
                     FarmImage.objects.filter(pk=delete_id).delete()
-              
-                    
-
-        '''this if block should come after the deletion block which is the abouve if block
-            then only this data will get delete after insertion of data base if we put the below
-            if block above into the deletion if which above if block this new image also will get deleted'''
+ 
         if len(image_datas.getlist('farm_images')) != 0:
             for image_data in image_datas.getlist('farm_images'):
                 name = image_data.name
@@ -227,9 +216,7 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
 
     def get_feeds(self, obj):
         farm = Farms.objects.filter(farm_name=obj)
-        '''this data will be in django list format to convert that into ordered dict use for loop'''
         serializers = FarmSerializer(farm, many=True).data
-        '''to convert ordered dict to formal dict use for loop'''
         result = []
 
         for feed in serializers:
@@ -257,12 +244,9 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
 class FeedProSerializer(serializers.ModelSerializer):
 
     feeds = serializers.SerializerMethodField()
-
     def get_feeds(self, obj):
         farm = Farms.objects.filter(farm_name=obj)
-        '''this data will be in django list format to convert that into ordered dict use for loop'''
         serializers = FarmSerializer(farm, many=True).data
-        '''to convert ordered dict to formal dict use for loop'''
         result = []
 
         for feed in serializers:
@@ -293,9 +277,7 @@ class FeedAllSerializer(serializers.ModelSerializer):
 
     def get_feeds(self, obj):
         farm = Farms.objects.filter(farm_name=obj)
-        '''this data will be in django list format to convert that into ordered dict use for loop'''
         serializers = FarmSerializer(farm, many=True).data
-        '''to convert ordered dict to formal dict use for loop'''
         result = []
 
         for feed in serializers:
