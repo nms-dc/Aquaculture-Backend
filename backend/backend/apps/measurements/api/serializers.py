@@ -81,7 +81,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
             time=validated_data['time'],
             lot=validated_data['lot'],
             price_per_kg=validated_data['price_per_kg'],
-            notes=validated_data['notes']
+            notes=validated_data['notes'],
+            is_probiotic_mixed=validated_data['is_probiotic_mixed']
             )
 
         for data in image_datas.getlist('measure_images'):
@@ -116,6 +117,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
         instance.lot = validated_data.get('lot', instance.lot)
         instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
         instance.notes = validated_data.get('notes', instance.notes)
+        instance.is_probiotic_mixed = validated_data.get('is_probiotic_mixed', instance.is_probiotic_mixed)
         instance.save()
 
         measureimage_with_same_profile_instance = MeasurementPics.objects.filter(images=instance.pk).values_list('id', flat=True)
