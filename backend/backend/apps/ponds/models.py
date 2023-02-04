@@ -64,6 +64,9 @@ class PondImage(models.Model):
     image_name = models.CharField(max_length=24, default=None, null=True)
     images = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_images', null=True)
 
+    def __str__(self):
+        return str(self.image_name)
+
 
 def get_default_info():
     return {'measurement_id': None}
@@ -78,6 +81,9 @@ class PondGraphs(models.Model):
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
     cycle = models.ForeignKey('cycle.Cycle', on_delete=models.CASCADE, null=True, related_name='cycle_id')
 
+    def __str__(self):
+        return str(self.id)
+
     class Meta:
         verbose_name_plural = "PondGraphs"
 
@@ -89,6 +95,9 @@ class PondAnalytics(models.Model):
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
+
+    def __str__(self):
+        return str(self.id)
 
     class Meta:
         verbose_name_plural = "PondAnalytics"

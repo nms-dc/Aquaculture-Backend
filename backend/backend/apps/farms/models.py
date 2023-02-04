@@ -27,7 +27,7 @@ class Farms(models.Model):
     district = models.CharField(max_length=24, default=None, null=True)
 
     def __str__(self):
-        return self.farm_name
+        return self.description
     
     class Meta:
         verbose_name_plural = "Farms"
@@ -39,6 +39,8 @@ class FarmImage(models.Model):
     image_name = models.CharField(max_length=24, default=None, null=True)
     images = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='farm_images', null=True, blank=True)
 
+    def __str__(self):
+        return str(self.image)
 
 class FarmCertification(models.Model):
 
@@ -48,6 +50,9 @@ class FarmCertification(models.Model):
     image = models.ImageField(upload_to='certificate_uploads', null=True)
     certificates = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
 
+
+    def __str__(self):
+        return str(self.certificate_name)
 
 class FeedLots(models.Model):
     LOT_TYPE = (
@@ -67,6 +72,8 @@ class FeedLots(models.Model):
     Image = models.FileField(upload_to='FeedLots_images', null=True)
     feed_lot_type = models.CharField(max_length=400, choices=LOT_TYPE, default='F', null=True)
 
+    def __str__(self):
+        return str(self.feed_lot_type)
 
 def get_default_info():
     return {'measurement_id': None}
@@ -79,5 +86,8 @@ class FarmAnalytics(models.Model):
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
 
+    def __str__(self):
+       return str(self.id)
+    
     class Meta:
         verbose_name_plural = "FarmAnalytics"

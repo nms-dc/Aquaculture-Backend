@@ -21,8 +21,14 @@ class Seeds(models.Model):
     purchased_by_companyid = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True)
     seed_company_id = models.IntegerField(null=True)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class SeedImage(models.Model):
     image = models.FileField(upload_to='seedpicture_uploads', null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, null=True)
     fish_ids = models.ForeignKey(Seeds, on_delete=models.CASCADE, related_name='fish_id', default=None, null=True)
+
+    def __str__(self):
+        return str(self.id)
