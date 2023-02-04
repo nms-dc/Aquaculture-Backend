@@ -9,6 +9,8 @@ class Country(models.Model):
     createdAt = models.DateField(auto_now=True)
     updatedAt = models.DateField(auto_now=True)
     country_name = models.CharField(max_length=400, null=True)
+    def __str__(self):
+        return str(self.id)
 
 
 class Currency(models.Model):
@@ -20,3 +22,5 @@ class Currency(models.Model):
     iso_code = models.IntegerField(null=True)
     symbol = models.CharField(max_length=400, null=True)
     currency = models.CharField(max_length=400, null=True, default='ruppes')
+    def __str__(self):
+        return str(self.id)

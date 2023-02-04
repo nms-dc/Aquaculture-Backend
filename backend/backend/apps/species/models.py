@@ -16,6 +16,9 @@ class Species(models.Model):
     createdAt = models.DateTimeField(auto_now=True)
     updatedAt = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class SpeciesCategory(models.Model):
     name = models.CharField(max_length=250, null=True)
@@ -25,3 +28,6 @@ class SpeciesCategory(models.Model):
     desc = models.CharField(max_length=250, null=True)
     image_url = models.URLField()
     species_category = models.ForeignKey(Species, on_delete=models.CASCADE, related_name='species_category', default=None, null=True)
+
+    def __str__(self):
+        return str(self.name)

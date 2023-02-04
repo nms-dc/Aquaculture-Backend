@@ -13,6 +13,9 @@ class MeasurementMaster(models.Model):
     measurement_type = models.CharField(max_length=400, null=True)
     measurement_description = models.CharField(max_length=400, null=True)
 
+    def __str__(self):
+        return str(self.measurement_type)
+
 
 class Measurement(models.Model):
     cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, default=None, null=True)
@@ -24,12 +27,18 @@ class Measurement(models.Model):
     is_probiotic_mixed = models.BooleanField(default=False)
     notes = models.CharField(max_length=2000, null=True, blank=True)
 
+    def __str__(self):
+        return str(self.id)
+
 
 class Nutrition(models.Model):
     nutrition = models.CharField(max_length=400, null=True)
     nutrition_type = models.CharField(max_length=400, null=True)
     nutrition_description = models.CharField(max_length=400, null=True)
     feed_data = models.ForeignKey(Measurement, on_delete=models.CASCADE, related_name='nutrition_data', default=None, null=True)
+
+    def __str__(self):
+        return str(self.nutrition)
 
 
 class MeasurementPics(models.Model):
