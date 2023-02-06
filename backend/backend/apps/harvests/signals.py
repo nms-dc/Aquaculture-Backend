@@ -40,7 +40,7 @@ def compute_harvest_analytics(sender, instance, created, *args, **kwargs):
 
     already_exists_farm = FarmAnalytics.objects.filter(farm=instance.cycle.Pond.farm)
     if already_exists_farm.exists():
-        farm_analytics_instance = already_exists_pond.first()
+        farm_analytics_instance = already_exists_farm.first()
         farm_analytics_instance.harvest_amount += instance_total_kgs
         farm_analytics_instance.save()
     elif not already_exists_farm.exists():
