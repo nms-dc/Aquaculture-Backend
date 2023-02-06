@@ -148,7 +148,7 @@ class MeasurementcycleSerializer(serializers.ModelSerializer):
     measure_images = serializers.SerializerMethodField()
     
     def get_measure_images(self, obj):
-        data = MeasurementPics.objects.filter(images = obj)
+        data = MeasurementPics.objects.filter(images = obj.id)
         serialize = MeasurementPicsSerializer(data, many=True).data
         return serialize
 

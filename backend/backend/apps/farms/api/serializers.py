@@ -37,7 +37,7 @@ class FarmPondRelationSerializer(serializers.ModelSerializer):
     def get_ponds(self, obj):
         try:
             if Ponds.objects.filter(farm=obj).exists():
-                ponds = Ponds.objects.filter(farm=obj)
+                ponds = Ponds.objects.filter(farm=obj.id)
                 serializer = PondSummaryOnlySerializer(ponds, many=True).data
                 return serializer
             else:
@@ -54,7 +54,7 @@ class FarmCycleRelationSerializer(serializers.ModelSerializer):
     ponds = serializers.SerializerMethodField()
 
     def get_ponds(self, obj):
-        pond = Ponds.objects.filter(farm=obj)
+        pond = Ponds.objects.filter(farm=obj.id)
         serializer = PondSummarySerializer(pond, many=True).data
         return serializer
 
@@ -79,7 +79,7 @@ class FarmSerializer(serializers.ModelSerializer):
         return total_completed_cycle
 
     def get_total_harvested_amt(self, obj):
-        already_exists_farm = FarmAnalytics.objects.filter(farm=obj)
+        already_exists_farm = FarmAnalytics.objects.filter(farm=obj.id)
         if already_exists_farm.exists():
             farm_analytics_instance = already_exists_farm.first()
             return farm_analytics_instance.harvest_amount
@@ -87,7 +87,7 @@ class FarmSerializer(serializers.ModelSerializer):
             return 0.0
 
     def get_fcr(self, obj):
-        already_exists_farm = FarmAnalytics.objects.filter(farm=obj)
+        already_exists_farm = FarmAnalytics.objects.filter(farm=obj.id)
         if already_exists_farm.exists():
             farm_analytics_instance = already_exists_farm.first()
             if farm_analytics_instance.total_feed > 0:
@@ -101,7 +101,7 @@ class FarmSerializer(serializers.ModelSerializer):
     def get_feed_data(self, obj):
         try:
             if FeedLots.objects.filter(farm_id=obj).exists():
-                ponds = FeedLots.objects.filter(farm_id=obj)
+                ponds = FeedLots.objects.filter(farm_id=obj.id)
                 serializer = FeedLotsSerializer(ponds, many=True).data
                 return serializer
 
@@ -215,7 +215,7 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
     feeds = serializers.SerializerMethodField()
 
     def get_feeds(self, obj):
-        farm = Farms.objects.filter(farm_name=obj)
+        farm = Farms.objects.filter(id=obj.id)
         serializers = FarmSerializer(farm, many=True).data
         result = []
 
@@ -245,7 +245,7 @@ class FeedProSerializer(serializers.ModelSerializer):
 
     feeds = serializers.SerializerMethodField()
     def get_feeds(self, obj):
-        farm = Farms.objects.filter(farm_name=obj)
+        farm = Farms.objects.filter(id=obj.id)
         serializers = FarmSerializer(farm, many=True).data
         result = []
 
@@ -276,7 +276,7 @@ class FeedAllSerializer(serializers.ModelSerializer):
     feeds = serializers.SerializerMethodField()
 
     def get_feeds(self, obj):
-        farm = Farms.objects.filter(farm_name=obj)
+        farm = Farms.objects.filter(id=obj.id)
         serializers = FarmSerializer(farm, many=True).data
         result = []
         for feed in serializers:
