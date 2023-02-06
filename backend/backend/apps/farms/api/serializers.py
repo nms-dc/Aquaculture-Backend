@@ -279,18 +279,18 @@ class FeedAllSerializer(serializers.ModelSerializer):
         farm = Farms.objects.filter(farm_name=obj)
         serializers = FarmSerializer(farm, many=True).data
         result = []
-
         for feed in serializers:
             dic = dict(feed)
             feed_data = dic['feed_data']
-            for data in feed_data:
-                dic_data = dict(data)
-                if dic_data:
-                    c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
-                    c = c.company_name
-                    dic_data['company_name'] = c
-                    
-                result.append(dic_data)
+            if feed_data is not None:
+                for data in feed_data:
+                    dic_data = dict(data)
+                    if dic_data:
+                        c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
+                        c = c.company_name
+                        dic_data['company_name'] = c
+                        
+                    result.append(dic_data)
 
         return result
 

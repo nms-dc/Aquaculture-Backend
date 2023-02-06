@@ -27,7 +27,7 @@ class Farms(models.Model):
     district = models.CharField(max_length=24, default=None, null=True)
 
     def __str__(self):
-        return self.description
+        return self.farm_name
     
     class Meta:
         verbose_name_plural = "Farms"
