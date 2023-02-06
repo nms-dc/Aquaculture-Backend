@@ -221,7 +221,7 @@ class PondGraphRelationSerializer(serializers.ModelSerializer):
     def get_abw_data(self, obj):
         try:
             if PondGraphs.objects.filter(pond=obj).exists():
-                pondgraphs = PondGraphs.objects.filter(pond=obj)
+                pondgraphs = PondGraphs.objects.filter(pond=obj.id)
                 serializer = PondGraphSerializer(pondgraphs, many=True).data
                 datas = []
                 for i in serializer:
@@ -247,7 +247,7 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
     def get_fcr_data(self, obj):
         try:
             if PondGraphs.objects.filter(pond=obj).exists():
-                pondgraphs = PondGraphs.objects.filter(pond=obj)
+                pondgraphs = PondGraphs.objects.filter(pond=obj.id)
                 serializer = PondGraphSerializer(pondgraphs, many=True).data
                 datas = []
                 cycle_id = 0

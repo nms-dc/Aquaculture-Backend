@@ -32,7 +32,7 @@ class CycleHarvestRelationSerializer(serializers.ModelSerializer):
 
     def get_harvest(self, obj):
         try:
-            if Harvests.objects.filter(cycle=obj).exists():
+            if Harvests.objects.filter(cycle=obj.id).exists():
                 harvests = Harvests.objects.filter(cycle=obj)
                 serializer = HarvestSummarySerializer(harvests, many=True).data
                 return serializer
@@ -52,7 +52,7 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
     def get_measure(self, obj):
         try:
 
-            if Measurement.objects.filter(cycle=obj).exists():
+            if Measurement.objects.filter(cycle=obj.id).exists():
                 measured = Measurement.objects.filter(cycle=obj)
                 serializer = MeasurementcycleSerializer(measured, many=True).data
                 return serializer
@@ -219,7 +219,7 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
     def get_measurements(self, obj):
         try:
             if Measurement.objects.filter(cycle=obj).exists():
-                measurement = Measurement.objects.filter(cycle=obj)
+                measurement = Measurement.objects.filter(cycle=obj.id)
                 serializer = MeasurementcycleSerializer(measurement, many=True).data
                 data = []
                 print(obj)
