@@ -66,7 +66,7 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
                                      extra_info={'measurement_id': instance.id})
     already_exists_farm = FarmAnalytics.objects.filter(farm=instance.cycle.Pond.farm)
     if already_exists_farm.exists() and measure_type == default_list[0]:
-        farm_analytics_instance = already_exists_pond.first()
+        farm_analytics_instance = already_exists_farm.first()
         farm_analytics_instance.total_feed = farm_analytics_instance.total_feed + instance_value
         farm_analytics_instance.save()
     elif not already_exists_farm.exists() and measure_type == default_list[0]:
