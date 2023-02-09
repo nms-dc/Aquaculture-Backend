@@ -1,6 +1,6 @@
 from itertools import cycle
 from rest_framework import serializers
-from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics, FeedLotImage
 from ponds.models import Ponds
 from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSummaryOnlySerializer
 from accounts.models import User
@@ -203,11 +203,87 @@ class FarmSerializer(serializers.ModelSerializer):
         return instance
 
 
+class FeedImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedLotImage
+        fields = '__all__'
+
+
 class FeedLotsSerializer(serializers.ModelSerializer):
+    #this field should be the same name with the related name of the foreign key reference
+    feed_images = FeedImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = FeedLots
-        fields = '__all__'
+        fields = '__all__' #['id', 'farm_id', 'lot_number', 'company_purchased_from', 'weight_of_each_bag_at_purchase', 'date_purchased',
+        #           'date_shipped', 'date_received', 'bag_is_used', 'feed_cost', 'currency', 'feed_lot_type', 'feed_images']
+    
+    
+    def create(self, validated_data):
+        image_datas  = self.context.get('view').request.FILES
+        print('feed create validated data',validated_data)
+        print('image_data details',image_datas)
+        Feed_instance = FeedLots.objects.create(
+                farm_id=validated_data['farm_id'],
+                lot_number=validated_data['lot_number'],
+                company_purchased_from=validated_data['company_purchased_from'],
+                weight_of_each_bag_at_purchase=validated_data['weight_of_each_bag_at_purchase'],
+                date_purchased=validated_data['date_purchased'],
+                date_shipped=validated_data['date_shipped'],
+                date_received=validated_data['date_received'],
+                bag_is_used=validated_data['bag_is_used'],
+                feed_cost=validated_data['feed_cost'],
+                currency=validated_data['currency'],
+                feed_lot_type=validated_data['feed_lot_type'],
+            )
+
+        for image_data in image_datas.getlist('feed_images'):
+            name = image_data.name
+            FeedLotImage.objects.create(images=Feed_instance, image_name=name, image=image_data)
+
+        return Feed_instance
+    
+    def update(self, instance, validated_data):
+        image_datas = self.context.get('view').request.FILES
+        '''filtering the required data from the user payload request
+        #here the farm_image_id is not a field defined in models from the user payload added extra'''
+        data = self.context['request'].data.get('feed_image_id', None)
+        '''#filtering 'feed_image_id' and converting it into an integer list'''
+        int_image_id = []
+        print('feed_image_id',data)
+        if data:
+            trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
+            for id in trim_image_id:
+                int_image_id.append(int(id))
+        
+        print('feed update validated data',validated_data)
+        print('image_data details',image_datas)
+        print('farm_image_id',int_image_id)
+        instance.farm_id = validated_data.get('farm_id', instance.farm_id)
+        instance.lot_number = validated_data.get('lot_number', instance.lot_number)
+        instance.company_purchased_from = validated_data.get('company_purchased_from', instance.company_purchased_from)
+        instance.weight_of_each_bag_at_purchase = validated_data.get('weight_of_each_bag_at_purchase', instance.weight_of_each_bag_at_purchase)
+        instance.date_purchased = validated_data.get('date_purchased', instance.date_purchased)
+        instance.date_shipped = validated_data.get('date_shipped', instance.date_shipped)
+        instance.date_received = validated_data.get('date_received', instance.date_received)
+        instance.bag_is_used = validated_data.get('bag_is_used', instance.bag_is_used)
+        instance.feed_cost = validated_data.get('feed_cost', instance.feed_cost)
+        instance.currency = validated_data.get('currency', instance.currency)
+        instance.feed_lot_type = validated_data.get('feed_lot_type', instance.feed_lot_type)
+        instance.save()
+
+        image_with_same_profile_instance = FeedLotImage.objects.filter(images=instance.pk).values_list('id', flat=True)
+
+        if len(int_image_id) != 0:
+            for delete_id in image_with_same_profile_instance:
+                if delete_id in int_image_id:
+                    FeedLotImage.objects.filter(pk=delete_id).delete()
+ 
+        if len(image_datas.getlist('feed_images')) != 0:
+            for image_data in image_datas.getlist('feed_images'):
+                name = image_data.name
+                FeedLotImage.objects.create(images=instance, image_name=name, image=image_data)
+        return instance
 
 
 class FeedlotFilterSerializer(serializers.ModelSerializer):

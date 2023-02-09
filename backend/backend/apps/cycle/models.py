@@ -69,6 +69,8 @@ class CycleAnalytics(models.Model):
     total_feed = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
 
-
+    def __str__(self):
+        return str(self.extra_info)
+    
     class Meta:
         verbose_name_plural = "CycleAnalytics"    

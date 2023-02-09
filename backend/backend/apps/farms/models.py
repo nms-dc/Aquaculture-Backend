@@ -27,7 +27,7 @@ class Farms(models.Model):
     district = models.CharField(max_length=24, default=None, null=True)
 
     def __str__(self):
-        return self.farm_name
+        return str(self.id)
     
     class Meta:
         verbose_name_plural = "Farms"
@@ -69,7 +69,7 @@ class FeedLots(models.Model):
     bag_is_used = models.BooleanField(default=False)
     feed_cost = models.IntegerField(default=0, null=True)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
-    Image = models.FileField(upload_to='FeedLots_images', null=True)
+    #Image = models.FileField(upload_to='FeedLots_images', null=True)
     feed_lot_type = models.CharField(max_length=400, choices=LOT_TYPE, default='F', null=True)
 
     def __str__(self):
@@ -77,6 +77,16 @@ class FeedLots(models.Model):
 
 def get_default_info():
     return {'measurement_id': None}
+
+
+class FeedLotImage(models.Model):
+
+    image = models.FileField(upload_to='feedlot_uploads', null=True)
+    image_name = models.CharField(max_length=24, default=None, null=True)
+    images = models.ForeignKey(FeedLots, on_delete=models.CASCADE, related_name='feed_images', null=True, blank=True)
+
+    def __str__(self):
+        return str(self.id)
 
 
 class FarmAnalytics(models.Model):
