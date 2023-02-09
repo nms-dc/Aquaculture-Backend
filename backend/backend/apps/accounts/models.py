@@ -1,5 +1,5 @@
 
-
+from accounts.emails import ClaimAcceptedEmailTemplate , ClaimPendingEmailTemplate
 from django.db import models
 import datetime
 import re
@@ -8,6 +8,8 @@ from django.utils import timezone
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+
+
 
 
 def create_username(email: str) -> str:
@@ -124,10 +126,28 @@ class User(AbstractBaseUser):
         # Simplest possible answer: All admins are staff but not normal user
         return self.is_verified
 
+    def save(self, *args, **kwargs):
+        if self.is_verified == False:        
+            # ClaimPendingEmailTemplate.send_email(
+            #     subject="Success! Your Request profile verification has been received.",
+            #     email_receivers=[self.email],
+            #     instance=self,
+            # )
+            print(self.is_verified,'verified pending')
+            super(User, self).save(*args, **kwargs)
+        elif self.is_verified == True:        
+            # ClaimAcceptedEmailTemplate.send_email(
+            #     subject="Success! Your Request profile verification has been received.",
+            #     email_receivers=[self.email],
+            #     instance=self,
+            # )
+            print(self.is_verified,'verification completed')
+            super(User, self).save(*args, **kwargs)
+            
+ 
 
 class Image(models.Model):
 
     image_name = models.CharField(max_length=400, null=True)
     image = models.FileField(upload_to='user_images', null=True)
     images = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_images', default=None, null=True)
-
