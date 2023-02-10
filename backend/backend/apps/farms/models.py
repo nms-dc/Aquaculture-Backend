@@ -1,5 +1,5 @@
 from django.db import models
-from company.models import Company
+from company.models import Company, CompanyFeedType
 from common.models import Currency
 
 
@@ -54,6 +54,7 @@ class FarmCertification(models.Model):
     def __str__(self):
         return str(self.certificate_name)
 
+
 class FeedLots(models.Model):
     LOT_TYPE = (
         ('F', 'Feed'),
@@ -71,6 +72,8 @@ class FeedLots(models.Model):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     #Image = models.FileField(upload_to='FeedLots_images', null=True)
     feed_lot_type = models.CharField(max_length=400, choices=LOT_TYPE, default='F', null=True)
+    company_feed_type = models.ForeignKey(CompanyFeedType, on_delete=models.CASCADE, null=True, blank=True)
+    
 
     def __str__(self):
         return str(self.feed_lot_type)
