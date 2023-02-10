@@ -93,7 +93,7 @@ class FeedLotsAdmin(admin.ModelAdmin):
     list_filter = ('farm_id', )
     fieldsets = (
         (None, {'fields': ('farm_id', 'lot_number', 'company_purchased_from', 'date_purchased', 'date_shipped')}),
-        ('FeedLots info', {'fields': ('date_received', 'bag_is_used', 'feed_cost', 'currency', 'Image', 'feed_lot_type')}),
+        ('FeedLots info', {'fields': ('date_received', 'bag_is_used', 'feed_cost', 'currency', 'feed_lot_type')}),
        )
 
     add_fieldsets = (
