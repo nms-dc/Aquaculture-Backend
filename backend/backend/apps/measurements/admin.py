@@ -24,7 +24,7 @@ class MeasurementmasterAdmin(admin.ModelAdmin):
     list_display = ('measurement_type', 'measurement_description' )
     list_filter = ('measurement_type', )
     fieldsets = (
-        (None, {'fields': ('measurement_type', 'measurement_description')}),
+        (None, {'fields': ('measurement_type', 'measurement_description', 'measurement_logo')}),
         )
     add_fieldsets = (
         (None, {
