@@ -2,15 +2,25 @@ from company.models import Company, CompanyFeedType
 from rest_framework import serializers
 
 
-class CompanySerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Company
-        fields = '__all__'
 
 class CompanyFeedTypeSerializers(serializers.ModelSerializer):
     class Meta:
         model = CompanyFeedType
         fields = '__all__'
+
+
+class CompanySerializers(serializers.ModelSerializer):
+    types= serializers.SerializerMethodField()
+    
+    def get_types(self, obj):
+        data = CompanyFeedType.objects.filter(company = obj.id)
+        serialize = CompanyFeedTypeSerializers(data, many=True).data
+        return serialize
+    
+    class Meta:
+        model = Company
+        fields = '__all__'
+
 
 
 class getFeedTypeSerializers(serializers.ModelSerializer):
