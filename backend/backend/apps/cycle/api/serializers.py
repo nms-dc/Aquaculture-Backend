@@ -112,8 +112,15 @@ class CycleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
-        print('cycle create validated data',validated_data)
-        print('image_data details',image_data)
+        #print('cycle create validated data',validated_data)
+        #print('image_data details',image_data)
+        cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'])
+        cycle_data = CycleSerializer(cycle, many=True).data
+        if cycle_data:
+            seeding_date = cycle_data[0]['seeding_date']
+        else:
+            seeding_date = validated_data['seeding_date']
+        
         cycle_instance = Cycle.objects.create(
             species=validated_data['species'],
             species_pl_stage=validated_data['species_pl_stage'],
@@ -124,7 +131,7 @@ class CycleSerializer(serializers.ModelSerializer):
             seed_company=validated_data['seed_company'],
             numbers_of_larva=validated_data['numbers_of_larva'],
             seeding_qty=validated_data['seeding_qty'],
-            seeding_date=validated_data['seeding_date'],
+            seeding_date=seeding_date,
             pond_transfered_from=validated_data['pond_transfered_from']
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
@@ -135,9 +142,18 @@ class CycleSerializer(serializers.ModelSerializer):
         if validated_data['pond_transfered_from']:
             data = Ponds.objects.filter(pond_name=validated_data['pond_transfered_from'])
             if data.exists():
-                data.update(is_active_pond = False)
-                data.update(active_cycle_date = None)
-                data.update(active_cycle_id = None)           
+                if cycle_data:
+                    print(cycle_data)
+                    larva_count = cycle_data[0]['numbers_of_larva'] - validated_data['numbers_of_larva']
+                    if larva_count <= 0:
+                        cycle.update(numbers_of_larva = 0)
+                        data.update(is_active_pond = False)
+                        data.update(active_cycle_date = None)
+                        data.update(active_cycle_id = None)
+                    else:
+                        cycle.update(numbers_of_larva = larva_count)
+                    
+                      
                 
 
         for data in image_data.getlist('cycle_pond_images'):

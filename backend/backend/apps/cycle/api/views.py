@@ -20,7 +20,7 @@ class CyleView(viewsets.ModelViewSet):
     serializer_class = CycleSerializer
     authentication_classes = []
     permission_classes = [AllowAny]
-    http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
+    http_method_names = ['post', 'get', 'patch', 'retrieve', 'put', 'delete']
 
     @action(detail=True, methods=['get'], url_path='get-harvest-summary',)
     @csrf_exempt

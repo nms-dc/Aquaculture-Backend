@@ -6,8 +6,8 @@ from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSu
 from accounts.models import User
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
-from company.models import Company
-from company.api.serializers import CompanySerializers
+from company.models import Company, CompanyFeedType
+from company.api.serializers import CompanySerializers, CompanyFeedTypeSerializers
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -235,6 +235,7 @@ class FeedLotsSerializer(serializers.ModelSerializer):
                 feed_cost=validated_data['feed_cost'],
                 currency=validated_data['currency'],
                 feed_lot_type=validated_data['feed_lot_type'],
+                company_feed_type = validated_data['company_feed_type'],
             )
 
         for image_data in image_datas.getlist('feed_images'):
@@ -270,6 +271,7 @@ class FeedLotsSerializer(serializers.ModelSerializer):
         instance.feed_cost = validated_data.get('feed_cost', instance.feed_cost)
         instance.currency = validated_data.get('currency', instance.currency)
         instance.feed_lot_type = validated_data.get('feed_lot_type', instance.feed_lot_type)
+        instance.company_feed_type = validated_data.get('company_feed_type', instance.company_feed_type)
         instance.save()
 
         image_with_same_profile_instance = FeedLotImage.objects.filter(images=instance.pk).values_list('id', flat=True)
@@ -304,10 +306,13 @@ class FeedlotFilterSerializer(serializers.ModelSerializer):
                     c_name = None
                     if dic_data['feed_lot_type'] == 'F':
                         c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
+                        company_type = CompanyFeedType.objects.filter(id = dic_data['company_feed_type'])
+                        serialize_type = CompanyFeedTypeSerializers(company_type, many=True).data
                         if c != 0:
                             c_name = c.company_name
                         re_data = {'id': dic_data['id'], 'lotnumber': dic_data['lot_number'],
-                                   'company_id': dic_data['company_purchased_from'], 'company_purchased_from': c_name}
+                                   'company_id': dic_data['company_purchased_from'], 'company_purchased_from': c_name,
+                                   'company_type':serialize_type}
                         result.append(re_data)
 
         return result
@@ -333,11 +338,13 @@ class FeedProSerializer(serializers.ModelSerializer):
                 c_name = None
                 if dic_data['feed_lot_type'] == 'P':
                     c = Company.objects.filter(id=dic_data['company_purchased_from']).first()
-                    print(c)
-                    if c is not None:
+                    company_type = CompanyFeedType.objects.filter(id = dic_data['company_feed_type'])
+                    serialize_type = CompanyFeedTypeSerializers(company_type, many=True).data
+                    if c != 0:
                         c_name = c.company_name
                     re_data = {'id': dic_data['id'], 'lotnumber': dic_data['lot_number'],
-                               'company_id': dic_data['company_purchased_from'], 'company_purchased_from': c_name}
+                                'company_id': dic_data['company_purchased_from'], 'company_purchased_from': c_name,
+                                'company_type':serialize_type}
                     result.append(re_data)
 
         return result
