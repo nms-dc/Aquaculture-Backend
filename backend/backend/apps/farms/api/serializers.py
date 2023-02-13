@@ -373,8 +373,8 @@ class FeedAllSerializer(serializers.ModelSerializer):
                         c_name = c.company_name
                         dic_data['company_name'] = c_name
                         company_type_query = CompanyFeedType.objects.filter(id = dic_data['company_feed_type']).first()
-                        company_type = company_type_query.feed_type
-                        dic_data['company_feed_type'] = company_type
+                        if company_type_query != None:
+                            dic_data['company_feed_type'] = company_type_query.feed_type
                         
                     result.append(dic_data)
 
