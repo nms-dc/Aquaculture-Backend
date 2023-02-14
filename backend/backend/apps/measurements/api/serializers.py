@@ -36,7 +36,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
     def get_measurement_description(self, obj):
         measurement_type_var = self.context['request'].data.get('measurement_type', None)
         if measurement_type_var:
-            return MeasurementMaster.objects.filter(id=int(measurement_type_var)).values_list('measurement_description',
+            return MeasurementMaster.objects.filter(measurement_type=measurement_type_var).values_list('measurement_description',
                                                                                               flat=True).first()
         else:
             return None
