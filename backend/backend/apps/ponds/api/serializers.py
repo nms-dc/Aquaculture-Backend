@@ -48,6 +48,10 @@ class PondSummarySerializer(serializers.ModelSerializer):
 class PondSummaryOnlySerializer(serializers.ModelSerializer):
     pond_images = PondImageSerializer(many=True)
     cycle_harvests_count = serializers.SerializerMethodField(read_only=True)
+    str_pond_type = serializers.SerializerMethodField(read_only=True)
+    def get_str_pond_type(self, obj):
+        type_id = obj.pond_type
+        return str(type_id)
 
     def get_cycle_harvests_count(self, obj):
         try:
@@ -65,7 +69,7 @@ class PondSummaryOnlySerializer(serializers.ModelSerializer):
     class Meta:
         model = Ponds
         fields = ["id", "pond_name", "description", "pond_images", "pond_type", "is_active_pond", "doc",
-                  "cycle_harvests_count"]
+                  "cycle_harvests_count", "str_pond_type"]
 
 
 class PondCycleRelationSerializer(serializers.ModelSerializer):
