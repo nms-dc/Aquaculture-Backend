@@ -37,7 +37,7 @@ class Cycle(models.Model):
     seed_transfer_date = models.DateField(default=None, null=True)
     is_active = models.BooleanField(default=True)
     pond_transfered_from = models.ForeignKey(Ponds, on_delete=models.CASCADE,related_name='pond_availability', default=None, null=True)
-
+    seeding_transfer_date =  models.DateField(default=None, null=True)
 
     def __str__(self):
         return str(self.species)
