@@ -108,7 +108,8 @@ class CycleSerializer(serializers.ModelSerializer):
         model = Cycle
         fields = ['id', 'Pond', 'species', 'species_pl_stage', 'seed_company', 'invest_amount', 'pondPrep_cost',
                   'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
-                  'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from', 'total_harvested_amt', 'total_avg_fcr', 'is_active']
+                  'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from', 'total_harvested_amt',
+                   'total_avg_fcr', 'is_active', 'seeding_transfer_date']
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
@@ -135,7 +136,8 @@ class CycleSerializer(serializers.ModelSerializer):
             seeding_qty=validated_data['seeding_qty'],
             seeding_date=seeding_date,
             pond_transfered_from=validated_data['pond_transfered_from'],
-            is_active = validated_data['is_active']
+            is_active = validated_data['is_active'],
+            seeding_transfer_date = validated_data['seeding_transfer_date']
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True
@@ -205,6 +207,7 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.doc = doc
         instance.pond_transfered_from = validated_data.get('pond_transfered_from', instance.pond_transfered_from)
+        instance.seeding_transfer_date = validated_data.get('seeding_transfer_date', instance.seeding_transfer_date)
         instance.save()
 
         pondimage_with_same_profile_instance = CyclePondImage.objects.filter(images=instance.pk).values_list('id', flat=True)
