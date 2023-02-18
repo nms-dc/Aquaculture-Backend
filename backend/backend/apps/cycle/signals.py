@@ -2,7 +2,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from measurements.models import Measurement, MeasurementMaster
 from cycle.models import Cycle
-from farms.models import FarmAnalytics
+from farms.models import FarmAnalytics, FeedLots
 #from cycle.api.serializers import MeasurementSerializer
 
 @receiver(post_save, sender=Cycle)
@@ -18,7 +18,8 @@ def copy_measurements(sender, instance, created, *args, **kwargs):
             print(measure_data)
             for measurement in measure_data:
                 # if measurement['measurement_type_id'] == 1  or measurement['measurement_type_id'] ==8:
-                master = MeasurementMaster.objects.filter(id =measurement['measurement_type_id'] ).first()
+                master = MeasurementMaster.objects.filter(id=measurement['measurement_type_id'] ).first()
+                lots = FeedLots.objects.filter(id=measurement['lot_id']).first()
                 print('measurement_type',master)
                 if master.measurement_type=='feeds'  or master.measurement_type=='abw':
                     Measurement.objects.create(
@@ -26,7 +27,7 @@ def copy_measurements(sender, instance, created, *args, **kwargs):
                         measurement_type=master,
                         value=measurement['value'],
                         time=measurement['time'],
-                        lot=measurement['lot_id'],
+                        lot=lots,
                         price_per_kg=measurement['price_per_kg'],
                         notes=measurement['notes'],
                         is_probiotic_mixed=measurement['is_probiotic_mixed']
