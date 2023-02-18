@@ -1,5 +1,5 @@
 
-from accounts.emails import ClaimAcceptedEmailTemplate , ClaimPendingEmailTemplate
+# from accounts.emails import ClaimAcceptedEmailTemplate , ClaimPendingEmailTemplate
 from django.db import models
 import datetime
 import re
