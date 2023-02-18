@@ -376,6 +376,7 @@ class FeedAllSerializer(serializers.ModelSerializer):
                         if company_type_query != None:
                             dic_data['company_feed_type'] = company_type_query.feed_type
                             dic_data['company_feed_type_id'] = company_type_query.id 
+                            
                     result.append(dic_data)
 
         return result
