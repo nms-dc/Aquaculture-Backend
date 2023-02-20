@@ -124,7 +124,7 @@ class CycleSerializer(serializers.ModelSerializer):
             seeding_date = cycle_data[0]['seeding_date']
         else:
             seeding_date = validated_data['seeding_date']
-        
+        print('is_active_beforecalling signal',is_active)
         cycle_instance = Cycle.objects.create(
             species=validated_data['species'],
             species_pl_stage=validated_data['species_pl_stage'],
@@ -144,6 +144,7 @@ class CycleSerializer(serializers.ModelSerializer):
         obj.is_active_pond = True
         obj.active_cycle_date = cycle_instance.seeding_date
         obj.active_cycle_id = cycle_instance.id
+        obj.save()  
 
         print('cycle_data.exists', cycle_data)
         print('is_active', is_active)
@@ -162,7 +163,7 @@ class CycleSerializer(serializers.ModelSerializer):
                 data.update(active_cycle_id = None)
             else:
                 cycle.update(numbers_of_larva = larva_count)
-        obj.save()       
+     
                       
         for data in image_data.getlist('cycle_pond_images'):
             name = data.name
