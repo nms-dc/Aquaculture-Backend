@@ -115,19 +115,13 @@ class CycleSerializer(serializers.ModelSerializer):
         image_data = self.context.get('view').request.FILES
         print('cycle create validated data',validated_data)
         print('image_data details',image_data)
-        cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'])
+        cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'], is_active = True)
         cycle_data = CycleSerializer(cycle, many=True).data
-        is_active=False
-        print('cycle_data',cycle_data)
         if cycle_data:
-            is_active = cycle_data[0]['is_active']
-            print('is_active_inside IF loop', is_active)
-        if cycle_data and is_active:
             seeding_date = cycle_data[0]['seeding_date']
         else:
             seeding_date = validated_data['seeding_date']
 
-        print('is_active_beforecalling signal',is_active)
         cycle_instance = Cycle.objects.create(
             species=validated_data['species'],
             species_pl_stage=validated_data['species_pl_stage'],
@@ -140,7 +134,8 @@ class CycleSerializer(serializers.ModelSerializer):
             seeding_qty=validated_data['seeding_qty'],
             seeding_date=seeding_date,
             pond_transfered_from=validated_data['pond_transfered_from'],
-            is_active = validated_data['is_active'],
+            # is_active = validated_data['is_active'],
+            is_active = True,
             seeding_transfer_date = validated_data['seeding_transfer_date']
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
@@ -149,14 +144,7 @@ class CycleSerializer(serializers.ModelSerializer):
         obj.active_cycle_id = cycle_instance.id
         obj.save()  
 
-        print('cycle_data.exists', cycle_data)
-        print('is_active', is_active)
-
-        if cycle_data and is_active:
-            print(is_active)
-            print('cycle_data[pond transfered from]', cycle_data[0]['numbers_of_larva'])
-            print('validated data current cycel data being sent', cycle_data[0]['numbers_of_larva'])
-
+        if cycle_data:
             larva_count = cycle_data[0]['numbers_of_larva'] - validated_data['numbers_of_larva']
             data = Ponds.objects.filter(id = validated_data['pond_transfered_from'].id)
             if larva_count <= 0:
@@ -215,8 +203,7 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.numbers_of_larva = validated_data.get('numbers_of_larva', instance.numbers_of_larva)
         instance.seeding_qty = validated_data.get('seeding_qty', instance.seeding_qty)
         instance.seeding_date = validated_data.get('seeding_date', instance.seeding_date)
-        # instance.is_active = validated_data.get('is_active', instance.is_active)
-        instance.is_active = True
+        instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.doc = doc
         instance.pond_transfered_from = validated_data.get('pond_transfered_from', instance.pond_transfered_from)
         instance.seeding_transfer_date = validated_data.get('seeding_transfer_date', instance.seeding_transfer_date)
