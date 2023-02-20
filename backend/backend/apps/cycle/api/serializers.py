@@ -146,6 +146,9 @@ class CycleSerializer(serializers.ModelSerializer):
         obj.save()
         if cycle_data and is_active:
             print(is_active)
+            print('cycle_data[pond transfered from]', cycle_data[0]['numbers_of_larva'])
+            print('validated data current cycel data being sent', cycle_data[0]['numbers_of_larva'])
+
             larva_count = cycle_data[0]['numbers_of_larva'] - validated_data['numbers_of_larva']
             data = Ponds.objects.filter(id = validated_data['pond_transfered_from'].id)
             if larva_count <= 0:
