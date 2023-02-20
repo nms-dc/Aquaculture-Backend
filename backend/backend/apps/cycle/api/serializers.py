@@ -215,7 +215,8 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.numbers_of_larva = validated_data.get('numbers_of_larva', instance.numbers_of_larva)
         instance.seeding_qty = validated_data.get('seeding_qty', instance.seeding_qty)
         instance.seeding_date = validated_data.get('seeding_date', instance.seeding_date)
-        instance.is_active = validated_data.get('is_active', instance.is_active)
+        # instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.is_active = True
         instance.doc = doc
         instance.pond_transfered_from = validated_data.get('pond_transfered_from', instance.pond_transfered_from)
         instance.seeding_transfer_date = validated_data.get('seeding_transfer_date', instance.seeding_transfer_date)

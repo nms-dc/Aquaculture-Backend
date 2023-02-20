@@ -12,7 +12,7 @@ class CycleAdmin(admin.ModelAdmin):
     list_filter = ('Pond', 'species')
     fieldsets = (
         (None, {'fields': ('species', 'species_pl_stage')}),
-        ('Cycle info', {'fields': ('invest_amount', 'pondPrep_cost', 'description', 'seed_company', 'Pond', )})
+        ('Cycle info', {'fields': ('invest_amount', 'pondPrep_cost', 'description', 'seed_company', 'Pond', 'is_active')})
         )
     ''' add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.'''
