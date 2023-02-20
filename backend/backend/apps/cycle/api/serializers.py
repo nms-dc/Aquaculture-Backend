@@ -117,13 +117,16 @@ class CycleSerializer(serializers.ModelSerializer):
         print('image_data details',image_data)
         cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'])
         cycle_data = CycleSerializer(cycle, many=True).data
+        is_active=False
         print('cycle_data',cycle_data)
         if cycle_data:
             is_active = cycle_data[0]['is_active']
+            print('is_active_inside IF loop', is_active)
         if cycle_data and is_active:
             seeding_date = cycle_data[0]['seeding_date']
         else:
             seeding_date = validated_data['seeding_date']
+
         print('is_active_beforecalling signal',is_active)
         cycle_instance = Cycle.objects.create(
             species=validated_data['species'],
