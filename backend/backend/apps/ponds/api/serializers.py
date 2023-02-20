@@ -100,20 +100,25 @@ class PondsSerializer(serializers.ModelSerializer):
     str_pond_type = serializers.SerializerMethodField(read_only=True)
 
     def get_completed_cycle_count(self, obj):
-        if obj.active_cycle_id is not None:
-            active_cycle_id = obj.active_cycle_id
-            cycles = Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
-            if cycles.exists():
-                completed_cycle_count = cycles.count()
-            else:
-                completed_cycle_count = 0
+        # if obj.active_cycle_id is not None:
+        #     active_cycle_id = obj.active_cycle_id
+        #     cycles = Cycle.objects.filter(Pond=obj).exclude(id=active_cycle_id)
+        #     if cycles.exists():
+        #         completed_cycle_count = cycles.count()
+        #     else:
+        #         completed_cycle_count = 0
+        # else:
+        #     active_cycle_id = obj.active_cycle_id
+        #     cycles = Cycle.objects.filter(Pond=obj)
+        #     if cycles.exists():
+        #         completed_cycle_count = cycles.count()
+        #     else:
+                # completed_cycle_count = 0
+        cycles = Cycle.objects.filter(Pond=obj, is_active=False)
+        if cycles.exists():
+            completed_cycle_count = cycles.count()
         else:
-            active_cycle_id = obj.active_cycle_id
-            cycles = Cycle.objects.filter(Pond=obj)
-            if cycles.exists():
-                completed_cycle_count = cycles.count()
-            else:
-                completed_cycle_count = 0
+            completed_cycle_count = 0
         return completed_cycle_count
 
     def get_total_harvested_amt(self, obj):

@@ -147,6 +147,7 @@ class CycleSerializer(serializers.ModelSerializer):
             data = Ponds.objects.filter(id = validated_data['pond_transfered_from'].id)
             if larva_count <= 0:
                 cycle.update(numbers_of_larva = 0)
+                cycle.update(is_active = False)
                 data.update(is_active_pond = False)
                 data.update(active_cycle_date = None)
                 data.update(active_cycle_id = None)
