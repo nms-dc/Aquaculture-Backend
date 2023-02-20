@@ -144,11 +144,11 @@ class CycleSerializer(serializers.ModelSerializer):
         obj.is_active_pond = True
         obj.active_cycle_date = cycle_instance.seeding_date
         obj.active_cycle_id = cycle_instance.id
-        obj.save()
-        print('cycle_data.exists', cycle_data.exists())
+
+        print('cycle_data.exists', cycle_data)
         print('is_active', is_active)
-        
-        if cycle_data.exists() and is_active:
+
+        if cycle_data and is_active:
             print(is_active)
             print('cycle_data[pond transfered from]', cycle_data[0]['numbers_of_larva'])
             print('validated data current cycel data being sent', cycle_data[0]['numbers_of_larva'])
@@ -162,7 +162,7 @@ class CycleSerializer(serializers.ModelSerializer):
                 data.update(active_cycle_id = None)
             else:
                 cycle.update(numbers_of_larva = larva_count)
-                    
+        obj.save()       
                       
         for data in image_data.getlist('cycle_pond_images'):
             name = data.name
