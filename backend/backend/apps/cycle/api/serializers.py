@@ -117,6 +117,7 @@ class CycleSerializer(serializers.ModelSerializer):
         print('image_data details',image_data)
         cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'])
         cycle_data = CycleSerializer(cycle, many=True).data
+        print('cycle_data',cycle_data)
         if cycle_data:
             is_active = cycle_data[0]['is_active']
         if cycle_data and is_active:
