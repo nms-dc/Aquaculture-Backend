@@ -113,8 +113,6 @@ class CycleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
-        print('cycle create validated data',validated_data)
-        print('image_data details',image_data)
         cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'], is_active = True)
         cycle_data = CycleSerializer(cycle, many=True).data
         if cycle_data:
@@ -190,9 +188,6 @@ class CycleSerializer(serializers.ModelSerializer):
         def numOfDays(date1, date2):
             return (date2 - date1).days
         doc = numOfDays(created_date, current_date)
-        print('cycle update validated data',validated_data)
-        print('image_data details',image_datas)
-        print('pond_image_id',int_Pimage_id,'seed_image_id',int_Simage_id)
         instance.Pond = validated_data.get('Pond', instance.Pond)
         instance.species = validated_data.get('species', instance.species)
         instance.species_pl_stage = validated_data.get('species_pl_stage', instance.species_pl_stage)
