@@ -113,17 +113,13 @@ class CycleSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
-        print('cycle create validated data',validated_data)
-        print('image_data details',image_data)
-        cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'])
+        cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'], is_active = True)
         cycle_data = CycleSerializer(cycle, many=True).data
         if cycle_data:
-            is_active = cycle_data[0]['is_active']
-        if cycle_data and is_active:
             seeding_date = cycle_data[0]['seeding_date']
         else:
             seeding_date = validated_data['seeding_date']
-        
+
         cycle_instance = Cycle.objects.create(
             species=validated_data['species'],
             species_pl_stage=validated_data['species_pl_stage'],
@@ -136,16 +132,17 @@ class CycleSerializer(serializers.ModelSerializer):
             seeding_qty=validated_data['seeding_qty'],
             seeding_date=seeding_date,
             pond_transfered_from=validated_data['pond_transfered_from'],
-            is_active = validated_data['is_active'],
+            # is_active = validated_data['is_active'],
+            is_active = True,
             seeding_transfer_date = validated_data['seeding_transfer_date']
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True
         obj.active_cycle_date = cycle_instance.seeding_date
         obj.active_cycle_id = cycle_instance.id
-        obj.save()
-        if cycle_data and is_active:
-            print(is_active)
+        obj.save()  
+
+        if cycle_data:
             larva_count = cycle_data[0]['numbers_of_larva'] - validated_data['numbers_of_larva']
             data = Ponds.objects.filter(id = validated_data['pond_transfered_from'].id)
             if larva_count <= 0:
@@ -155,7 +152,7 @@ class CycleSerializer(serializers.ModelSerializer):
                 data.update(active_cycle_id = None)
             else:
                 cycle.update(numbers_of_larva = larva_count)
-                    
+     
                       
         for data in image_data.getlist('cycle_pond_images'):
             name = data.name
@@ -191,9 +188,6 @@ class CycleSerializer(serializers.ModelSerializer):
         def numOfDays(date1, date2):
             return (date2 - date1).days
         doc = numOfDays(created_date, current_date)
-        print('cycle update validated data',validated_data)
-        print('image_data details',image_datas)
-        print('pond_image_id',int_Pimage_id,'seed_image_id',int_Simage_id)
         instance.Pond = validated_data.get('Pond', instance.Pond)
         instance.species = validated_data.get('species', instance.species)
         instance.species_pl_stage = validated_data.get('species_pl_stage', instance.species_pl_stage)
