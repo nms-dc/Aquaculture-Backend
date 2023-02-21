@@ -3,7 +3,13 @@ from measurements.models import Measurement, MeasurementMaster, MeasurementPics
 
 
 class MeasurementAdmin(admin.ModelAdmin):
-    list_display = ('cycle', 'value', 'time', 'lot')
+    def farm_name(self, obj):
+        return obj.cycle.Pond.farm.farm_name
+    
+    def pond_name(self, obj):
+        return obj.cycle.Pond.pond_name
+
+    list_display = ('farm_name','pond_name', 'measurement_type','cycle', 'value', 'time', 'lot')
     list_filter = ('cycle', )
     fieldsets = (
         (None, {'fields': ('cycle', 'value')}),

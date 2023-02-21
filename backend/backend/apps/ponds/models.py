@@ -44,7 +44,7 @@ class Ponds(models.Model):
     no_of_harvests = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.pond_name
+        return 'pond_id:'+str(self.id)
     
     class Meta:
         verbose_name_plural = "Ponds"
@@ -82,7 +82,7 @@ class PondGraphs(models.Model):
     cycle = models.ForeignKey('cycle.Cycle', on_delete=models.CASCADE, null=True, related_name='cycle_id')
 
     def __str__(self):
-        return str(self.id)
+        return "pond_graphs_id"+str(self.id)
 
     class Meta:
         verbose_name_plural = "PondGraphs"
@@ -97,7 +97,7 @@ class PondAnalytics(models.Model):
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
 
     def __str__(self):
-        return str(self.id)
+        return "pond_analytics_id:"+str(self.id)
 
     class Meta:
         verbose_name_plural = "PondAnalytics"

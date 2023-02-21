@@ -8,8 +8,8 @@ class CompanyAdmin(admin.ModelAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('company_name', 'address_one', 'address_two')
-    list_filter = ('company_name', 'address_one')
+    list_display = ('company_type','company_name', 'address_one', 'address_two')
+    list_filter = ('company_name', )
     fieldsets = (
         (None, {'fields': ('company_name', 'website')}),
         ('Company info', {'fields': ('pan_no', 'address_one', 'address_two', 'pincode', 'company_type')}),
