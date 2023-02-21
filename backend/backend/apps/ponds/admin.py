@@ -3,7 +3,10 @@ from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGrap
 
 
 class PondAdmin(admin.ModelAdmin):
-    list_display = ('pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm')
+
+    def farm_name(self,obj):
+        return obj.farm.farm_name
+    list_display = ('farm_name','pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm')
     list_filter = ('farm', 'pond_name')
     fieldsets = (
         (None, {'fields': ('pond_name', 'pond_length')}),
@@ -24,10 +27,14 @@ class PondAdmin(admin.ModelAdmin):
 
 
 class PondAnalyticsAdmin(admin.ModelAdmin):
-    list_display = ('farm', 'pond', 'no_of_cycles')
+
+    def farm_name(self,obj):
+        return obj.farm.farm_name
+
+    list_display = ('farm_name', 'pond')
     list_filter = ('pond',)
     fieldsets = (
-        (None, {'fields': ('pond', 'farm','no_of_cycles','harvest_amount','total_feed','extra_info')}),
+        (None, {'fields': ('pond', 'farm','harvest_amount','total_feed','extra_info')}),
     )
     add_fieldsets = (
         (None, {
@@ -41,13 +48,14 @@ class PondAnalyticsAdmin(admin.ModelAdmin):
 
 
 class PondGraphsAdmin(admin.ModelAdmin):
-    list_display = ('farm', 'pond', 'time','total_feed', 'abw')
-    list_filter = ('pond', )
+    def farm_name(self,obj):
+        return obj.farm.farm_name
+
+    list_display = ('farm_name', 'pond','total_feed', 'abw', 'time')
+    list_filter = ('farm', 'pond', )
     fieldsets = (
-        (None, {'fields': ('pond', 'farm')}),
-        ('Personal info', {'fields': ( 'abw', )}),
-        ('Company info', {'fields': ('total_feed', 'extra_info', )}),
-    )
+        (None, {'fields': ('pond', 'farm','total_feed', 'extra_info', 'abw')}),
+         )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -60,10 +68,16 @@ class PondGraphsAdmin(admin.ModelAdmin):
 
 
 class PondImageAdmin(admin.ModelAdmin):
-    list_display = ('image', 'image_name',)
+    def farm_name(self,obj):
+        return obj.images.farm.farm_name
+    
+    def pond_name(self,obj):
+        return obj.images.pond_name
+
+    list_display = ('farm_name','pond_name','image', 'image_name',)
     list_filter = ('image_name',)
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
+        (None, {'fields': ('image_name', 'image', 'images')}),
     )
     add_fieldsets = (
         (None, {

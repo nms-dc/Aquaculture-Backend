@@ -24,13 +24,18 @@ class FarmsAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
+
+
 class FarmAnalyticsAdmin(admin.ModelAdmin):
 
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('farm', 'no_of_cycles', 'harvest_amount',)
-    list_filter = ('farm', 'harvest_amount', )
+    def farm_name(self,obj):
+        return obj.farm.farm_name
+    
+    list_display = ('farm_name', 'no_of_cycles', 'harvest_amount', 'total_feed')
+    list_filter = ('farm',)
     fieldsets = (
         (None, {'fields': ('farm', 'harvest_amount')}),
         ('FarmAnalytics info', {'fields': ('no_of_cycles', 'total_feed', 'extra_info', )}),

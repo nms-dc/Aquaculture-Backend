@@ -4,11 +4,17 @@ from django.contrib.auth.models import Group
 
 
 class CycleAdmin(admin.ModelAdmin):
+    
+    def farm_name(self, obj):
+        return obj.Pond.farm.farm_name
+    
+    def pond_name(self, obj):
+        return obj.Pond.pond_name
 
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('Pond','species', 'species_pl_stage', 'invest_amount', 'seeding_date')
+    list_display = ('farm_name','pond_name','species', 'species_pl_stage', 'invest_amount', 'seeding_date')
     list_filter = ('Pond', 'species')
     fieldsets = (
         (None, {'fields': ('species', 'species_pl_stage')}),
@@ -29,10 +35,13 @@ class CycleAdmin(admin.ModelAdmin):
 
 class CycleAnalyticsAdmin(admin.ModelAdmin):
 
+    def farm_name(self, obj):
+        return obj.farm.farm_name
+
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('farm', 'pond', 'cycle',)
+    list_display = ('farm_name', 'pond', 'cycle',)
     list_filter = ('farm', 'pond')
     fieldsets = (
         (None, {'fields': ('farm', 'pond')}),
