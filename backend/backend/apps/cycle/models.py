@@ -40,7 +40,7 @@ class Cycle(models.Model):
     seeding_transfer_date =  models.DateField(default=None, null=True)
 
     def __str__(self):
-        return str(self.species)
+        return str(self.id)
 
 
 class CyclePondImage(models.Model):
