@@ -13,7 +13,8 @@ class MeasurementMaster(models.Model):
     measurement_type = models.CharField(max_length=400, null=True)
     measurement_description = models.CharField(max_length=400, null=True)
     measurement_logo = models.ImageField(upload_to='measure_type_images', default=None, null=True)
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return str(self.measurement_type)
 
@@ -27,6 +28,12 @@ class Measurement(models.Model):
     measurement_type = models.ForeignKey(MeasurementMaster, on_delete=models.CASCADE, default=None, null=True)
     is_probiotic_mixed = models.BooleanField(default=False)
     notes = models.CharField(max_length=2000, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    created_by_user = models.IntegerField()
+    updated_by_user = models.IntegerField()
+    measurement_lat = models.FloatField()
+    measurement_long = models.FloatField()
 
     def __str__(self):
         return str(self.id)
@@ -46,6 +53,8 @@ class MeasurementPics(models.Model):
     image_name = models.CharField(max_length=400, null=True)
     image = models.FileField(upload_to='measure_images', null=True)
     images = models.ForeignKey(Measurement, on_delete=models.CASCADE, related_name='measure_images', default=None, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.image_name
