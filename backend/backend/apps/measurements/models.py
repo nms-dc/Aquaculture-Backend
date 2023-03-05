@@ -28,13 +28,6 @@ class Measurement(models.Model):
     measurement_type = models.ForeignKey(MeasurementMaster, on_delete=models.CASCADE, default=None, null=True)
     is_probiotic_mixed = models.BooleanField(default=False)
     notes = models.CharField(max_length=2000, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    created_by_user = models.IntegerField()
-    updated_by_user = models.IntegerField()
-    measurement_lat = models.FloatField()
-    measurement_long = models.FloatField()
-
     def __str__(self):
         return str(self.id)
 
