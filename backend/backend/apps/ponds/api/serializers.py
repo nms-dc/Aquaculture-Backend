@@ -278,7 +278,7 @@ class PondGraphFCRSerializer(serializers.ModelSerializer):
                 larva_count=1
                 if larva != []:
                     larva_count=larva[0]['numbers_of_larva']*0.8
-                df = df.fillna(1).groupby(['Date'], as_index=False).agg(total_feed=('total_feed','sum'), abw=('abw','mean'))
+                df = df.fillna(0).groupby(['Date'], as_index=False).agg(total_feed=('total_feed','sum'), abw=('abw','mean'))
                 df['fcr']  = df['total_feed'].div(df['abw']*larva_count).replace(np.inf, 0)
            
                 return df
