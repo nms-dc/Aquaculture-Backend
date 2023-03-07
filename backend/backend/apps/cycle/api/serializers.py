@@ -73,6 +73,8 @@ class CycleSerializer(serializers.ModelSerializer):
     cycle_harvests = serializers.SerializerMethodField(read_only=True)
     total_harvested_amt = serializers.SerializerMethodField(read_only=True)
     total_avg_fcr = serializers.SerializerMethodField(read_only=True)
+    total_feed = serializers.SerializerMethodField(read_only=True)
+    total_probiotics = serializers.SerializerMethodField(read_only=True)
 
     def get_cycle_harvests(self, obj):
         try:
@@ -92,6 +94,22 @@ class CycleSerializer(serializers.ModelSerializer):
             return cycle_analytics_instance.harvest_amount
         else:
             return 0.0
+        
+    def get_total_feed(self, obj):
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
+        if already_exists_cycle.exists():
+            cycle_analytics_instance = already_exists_cycle.first()
+            return cycle_analytics_instance.total_feed
+        else:
+            return 0.0
+        
+    def get_total_probiotics(self, obj):
+        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
+        if already_exists_cycle.exists():
+            cycle_analytics_instance = already_exists_cycle.first()
+            return cycle_analytics_instance.total_probiotics
+        else:
+            return 0.0
 
     def get_total_avg_fcr(self, obj):
         already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
@@ -109,7 +127,7 @@ class CycleSerializer(serializers.ModelSerializer):
         fields = ['id', 'Pond', 'species', 'species_pl_stage', 'seed_company', 'invest_amount', 'pondPrep_cost',
                   'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
                   'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from', 'total_harvested_amt',
-                   'total_avg_fcr', 'is_active', 'seeding_transfer_date']
+                   'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', 'seeding_transfer_date']
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES

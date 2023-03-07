@@ -35,7 +35,7 @@ def compute_graph(sender, instance, created, *args, **kwargs):
 
 @receiver(post_save, sender=Measurement)
 def compute_analytics(sender, instance, created, *args, **kwargs):
-    default_list = ['feeds']
+    default_list = ['feeds', 'probiotics']
     measure_type = instance.measurement_type.measurement_type
     if instance.value is None :
         instance_value = 0
@@ -51,6 +51,19 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
                                       pond=instance.cycle.Pond,
                                       cycle=instance.cycle,
                                       total_feed=instance_value,
+                                      total_probiotics=0,
+                                      harvest_amount=0,
+                                      extra_info={'measurement_id': instance.id})
+    if already_exists_cycle.exists() and measure_type == default_list[1]:
+        cycle_analytics_instance = already_exists_cycle.first()
+        cycle_analytics_instance.total_probiotics += instance_value
+        cycle_analytics_instance.save()
+    elif not already_exists_cycle.exists() and measure_type == default_list[1]:
+        CycleAnalytics.objects.create(farm=instance.cycle.Pond.farm,
+                                      pond=instance.cycle.Pond,
+                                      cycle=instance.cycle,
+                                      total_feed=instance_value,
+                                      total_probiotics=instance_value,
                                       harvest_amount=0,
                                       extra_info={'measurement_id': instance.id})
     already_exists_pond = PondAnalytics.objects.filter(pond=instance.cycle.Pond, farm=instance.cycle.Pond.farm)

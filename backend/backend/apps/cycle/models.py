@@ -67,6 +67,7 @@ class CycleAnalytics(models.Model):
     cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='cycle_analytics', default=None, null=True)
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
+    total_probiotics = models.FloatField(null=True, blank=True)
     extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
 
     def __str__(self):

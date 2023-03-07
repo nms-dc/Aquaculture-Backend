@@ -13,6 +13,7 @@ class MeasurementMaster(models.Model):
     measurement_type = models.CharField(max_length=400, null=True)
     measurement_description = models.CharField(max_length=400, null=True)
     measurement_logo = models.ImageField(upload_to='measure_type_images', default=None, null=True)
+    measurement_unit = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return str(self.measurement_type)
