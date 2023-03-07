@@ -224,6 +224,9 @@ class CycleSerializer(serializers.ModelSerializer):
             for image_data in image_datas.getlist('seed_images'):
                 name = image_data.name
                 CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data)
+        obj = Ponds.objects.get(pk=validated_data['Pond'].id)
+        obj.active_cycle_date = validated_data.get('seeding_date')
+        obj.save()  
         return instance
 
 
