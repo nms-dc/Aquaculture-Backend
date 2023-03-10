@@ -45,14 +45,14 @@ class CycleAnalyticsAdmin(admin.ModelAdmin):
     list_filter = ('farm', 'pond')
     fieldsets = (
         (None, {'fields': ('farm', 'pond')}),
-        ('Analytics info', {'fields': ('cycle', 'harvest_amount', 'total_feed', 'extra_info',)})        
+        ('Analytics info', {'fields': ('cycle', 'harvest_amount', 'total_feed', 'total_probiotics','extra_info',)})        
        )
     ''' add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.'''
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('farm', 'pond', 'cycle', 'harvest_amount'),
+            'fields': ('farm', 'pond', 'cycle', 'harvest_amount','total_feed','total_probiotics'),
         }),
     )
     search_fields = ('cycle', )
