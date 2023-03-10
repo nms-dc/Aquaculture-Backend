@@ -152,6 +152,11 @@ class MeasurementcycleSerializer(serializers.ModelSerializer):
         serialize = MeasurementPicsSerializer(data, many=True).data
         return serialize
 
+    def get_measurement_unit(self, obj):
+        data = MeasurementMaster.objects.filter(measurement_type = obj.measurement_type)
+        serialize = MasterSerializer(data, many=True).data
+        return serialize[0]['measurement_unit']
+    
     class Meta:
         model = Measurement
         fields = '__all__'
