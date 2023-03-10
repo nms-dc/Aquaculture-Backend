@@ -159,4 +159,5 @@ class MeasurementcycleSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Measurement
-        fields = '__all__'
+        fields = ['id', 'cycle', 'value', 'time', 'lot', 'price_per_kg', 'measurement_type', 'is_probiotic_mixed', 'notes', 'measure_images', 'measurement_unit']
+
