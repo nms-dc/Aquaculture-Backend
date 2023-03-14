@@ -62,6 +62,11 @@ class FarmCycleRelationSerializer(serializers.ModelSerializer):
         model = Farms
         fields = ["id", "farm_name", "description", "farm_images", "ponds"]
 
+class FarmCeritificateSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = FarmCertification
+        fields = '__all__'
+
 
 class FarmSerializer(serializers.ModelSerializer):
     certificate = CertifySerializer(many=True, read_only=True)
@@ -70,6 +75,12 @@ class FarmSerializer(serializers.ModelSerializer):
     feed_data = serializers.SerializerMethodField(read_only=True)
     completed_cycle_count = serializers.SerializerMethodField(read_only=True)
     total_harvested_amt = serializers.SerializerMethodField(read_only=True)
+    certificates = serializers.SerializerMethodField()
+
+    def get_certificates(self,obj):
+        certificate_data = FarmCertification.objects.filter(certificates = obj.id)
+        serialize = FarmCeritificateSerializers(certificate_data, many=True).data
+        return serialize
 
     def get_completed_cycle_count(self, obj):
         all_ponds = Ponds.objects.filter(farm=obj).values_list('id', flat=True)
@@ -114,7 +125,8 @@ class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
-                  "town_village", "location", "description", "farm_images", "certificate", 'user', 'zipcode', 'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt']
+                  "town_village", "location", "description", "farm_images", "certificate", 'user', 'zipcode', 
+                  'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt', 'certificates']
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -139,9 +151,9 @@ class FarmSerializer(serializers.ModelSerializer):
             name = image_data.name
             FarmImage.objects.create(images=Farm_instance, image_name=name, image=image_data)
 
-        for certify_data in image_datas.getlist('certificate'):
-            name = certify_data.name
-            FarmCertification.objects.create(certificates=Farm_instance, certificate_name=name, image=certify_data)
+        # for certify_data in image_datas.getlist('certificate'):
+        #     name = certify_data.name
+        #     FarmCertification.objects.create(certificates=Farm_instance, certificate_name=name, image=certify_data)
 
         return Farm_instance
 
@@ -182,15 +194,15 @@ class FarmSerializer(serializers.ModelSerializer):
         certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
         image_with_same_profile_instance = FarmImage.objects.filter(images=instance.pk).values_list('id', flat=True)
 
-        if len(int_certi_id) != 0:
-            for delete_id in certify_with_same_profile_instance:
-                if delete_id in int_certi_id:
-                    FarmCertification.objects.filter(pk=delete_id).delete()
+        # if len(int_certi_id) != 0:
+        #     for delete_id in certify_with_same_profile_instance:
+        #         if delete_id in int_certi_id:
+        #             FarmCertification.objects.filter(pk=delete_id).delete()
 
-        if len(image_datas.getlist('certificate')) != 0:
-            for certify_data in image_datas.getlist('certificate'):
-                name = certify_data.name
-                FarmCertification.objects.create(certificates=instance, certificate_name=name, image=certify_data)
+        # if len(image_datas.getlist('certificate')) != 0:
+        #     for certify_data in image_datas.getlist('certificate'):
+        #         name = certify_data.name
+        #         FarmCertification.objects.create(certificates=instance, certificate_name=name, image=certify_data)
         if len(int_image_id) != 0:
             for delete_id in image_with_same_profile_instance:
                 if delete_id in int_image_id:

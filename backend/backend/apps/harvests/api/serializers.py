@@ -35,11 +35,24 @@ class HarvestSummarySerializer(serializers.ModelSerializer):
         fields = ['id', 'harvest_type', 'harvest_date', 'harvest_notes']
 
 
+class AddAnimalSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = AddAnimal
+        fields = "__all__"
+
+
 class HarvestSerializer(serializers.ModelSerializer):
     ani_images = AnimalImageSerializer(many=True, read_only=True)
     pond_images = HarvestPondImageSerializer(many=True, read_only=True)
     log_images = LogImageSerializer(many=True, read_only=True)
+    Added_animals = serializers.SerializerMethodField()
 
+    def get_Added_animals(self, obj):
+        animal_data = AddAnimal.objects.all()
+        serialize = AddAnimalSerializers(animal_data, many=True).data
+        return serialize
+    
     class Meta:
         model = Harvests
         fields = '__all__'
