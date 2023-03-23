@@ -48,7 +48,7 @@ class FarmCertification(models.Model):
     certificate_number = models.IntegerField(default=0, null=True)
     add_information = models.TextField(max_length=224, default=None, null=True)
     image = models.ImageField(upload_to='certificate_uploads', null=True)
-    certificates = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
+    farm_id = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
 
 
     def __str__(self):
