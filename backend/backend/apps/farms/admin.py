@@ -55,17 +55,17 @@ class FarmAnalyticsAdmin(admin.ModelAdmin):
 
 class FarmCertificatesAdmin(admin.ModelAdmin):
 
-    list_display = ('certificates','certificate_name', 'certificate_number', )
-    list_filter = ('certificates',)
+    list_display = ('farm_id','certificate_name', 'certificate_number', )
+    list_filter = ('farm_id',)
     fieldsets = (
         (None, {'fields': ('certificate_name', 'certificate_number')}),
-        ('Cerificates info', {'fields': ('add_information', 'image', 'certificates', )}),
+        ('Cerificates info', {'fields': ('add_information', 'image', 'farm_id', )}),
        )
 
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('certificate_name', 'certificate_number', 'certificates', 'add_information'),
+            'fields': ('certificate_name', 'certificate_number', 'farm_id', 'add_information'),
         }),
     )
     search_fields = ('certificate_name',)
