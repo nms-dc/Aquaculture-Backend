@@ -7,13 +7,14 @@ from company.models import Company, CompanyFeedType
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 
 class CompanyView(viewsets.ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializers
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    #authentication_classes = []
+    permission_classes = [IsAuthenticated]
     http_method_names = ['get','post']
     @action(detail=True, methods=['get'], url_path='types',)
     @csrf_exempt
@@ -54,7 +55,7 @@ class CompanyView(viewsets.ModelViewSet):
 class CompanyFeedView(viewsets.ModelViewSet):
     queryset = CompanyFeedType.objects.all()
     serializer_class = CompanyFeedTypeSerializers
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    #authentication_classes = []
+    permission_classes = [IsAuthenticated]
     http_method_names = ['get','post', 'patch', 'delete']
 

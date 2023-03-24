@@ -11,6 +11,9 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from accounts.api.serializers import UserRegistrationSerializer, UserBasicInfoSerializer, UserProfileInfoSerializer
 from rest_framework import viewsets
+from django.conf import settings
+from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
 
 @csrf_exempt
@@ -32,7 +35,11 @@ def user_login_view(request):
         if user is not None:
             login(request, user)
             user_data = UserBasicInfoSerializer(instance=user).data
-            return Response(user_data)
+            # data['token']=token
+            id=user_data['id']
+            token = Token.objects.get(user=id).key
+            print(token)
+            return Response({'user_auth_token':token})
         else:
             user_data['message'] = "login failed"
             return Response(user_data, status=status.HTTP_401_UNAUTHORIZED)
@@ -55,6 +62,8 @@ def user_registration_view(request):
             data['last_name'] = user.last_name
             data['username'] = user.username
             data['is_verified'] = user.is_verified
+            token = Token.objects.get(user=user).key
+            data['token']=token
         else:
             data = serialize.errors
         return Response(data)
@@ -80,6 +89,6 @@ def user_terms_accept(request):
 class user_profile_view(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileInfoSerializer
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    #authentication_classes = []
+    permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']

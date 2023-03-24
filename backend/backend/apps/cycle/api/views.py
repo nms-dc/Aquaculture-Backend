@@ -13,13 +13,14 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer, CycleHarvestRelationSerializer, CycleMeasureRelationSerializer, CycleMeasureSerializers
+from rest_framework.permissions import IsAuthenticated
 
 
 class CyleView(viewsets.ModelViewSet):
     queryset = Cycle.objects.all()
     serializer_class = CycleSerializer
     authentication_classes = []
-    permission_classes = [AllowAny]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put', 'delete']
 
     @action(detail=True, methods=['get'], url_path='get-harvest-summary',)

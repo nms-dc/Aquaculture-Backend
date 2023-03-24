@@ -1,3 +1,4 @@
+
 """
 Django settings for backend project.
 
@@ -14,8 +15,8 @@ import os
 import sys
 from pathlib import Path
 from corsheaders.defaults import default_headers
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
+# import sentry_sdk
+# from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -52,10 +53,11 @@ ALLOWED_HOSTS = ['*']
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+         'rest_framework.permissions.IsAuthenticated',
     ]
 }
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -199,7 +201,7 @@ MINIO_ACCESS_URL = os.getenv("MINIO_ACCESS_URL")
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+'''
 # sentry
 sentry_sdk.init(
     dsn=f"{SENTRY_SDK_ENDPOINT_URL}",
@@ -216,6 +218,7 @@ sentry_sdk.init(
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True
 )
+'''
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
