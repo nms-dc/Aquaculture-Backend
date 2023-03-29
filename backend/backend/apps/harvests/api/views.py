@@ -18,7 +18,7 @@ class HarvestView(viewsets.ModelViewSet):
     queryset = Harvests.objects.all()
     serializer_class = HarvestSerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
 
 
@@ -26,5 +26,5 @@ class AnimalView(viewsets.ModelViewSet):
     queryset = AddAnimal.objects.all()
     serializer_class = AddAnimalSerializers
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']

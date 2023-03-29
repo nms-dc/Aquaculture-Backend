@@ -16,11 +16,11 @@ class SpeciesView(viewsets.ModelViewSet):
     queryset = Species.objects.all()
     serializer_class = SpeciesSerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 
 class SpeciesCategoryView(viewsets.ModelViewSet):
     queryset = SpeciesCategory.objects.all()
     serializer_class = SpeciesCategorySerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]

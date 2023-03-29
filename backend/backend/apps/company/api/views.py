@@ -56,6 +56,6 @@ class CompanyFeedView(viewsets.ModelViewSet):
     queryset = CompanyFeedType.objects.all()
     serializer_class = CompanyFeedTypeSerializers
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['get','post', 'patch', 'delete']
 

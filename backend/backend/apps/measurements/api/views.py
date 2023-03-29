@@ -12,12 +12,12 @@ class MeasureView(viewsets.ModelViewSet):
     queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
 
 
 class MasterView(viewsets.ModelViewSet):
     queryset = MeasurementMaster.objects.all()
     serializer_class = MasterSerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['get']

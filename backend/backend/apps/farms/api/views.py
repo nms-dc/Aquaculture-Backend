@@ -24,7 +24,7 @@ class FarmView(viewsets.ModelViewSet):
     queryset = Farms.objects.all()
     serializer_class = FarmSerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
 
     @action(detail=True, methods=['get'], url_path='get-farm-summary',)
@@ -118,7 +118,7 @@ class FeedLotsView(viewsets.ModelViewSet):
     queryset = FeedLots.objects.all()
     serializer_class = FeedLotsSerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
 
     @action(detail=True, methods=['get'], url_path='F',)
@@ -140,4 +140,4 @@ class CertifyView(viewsets.ModelViewSet):
 
     queryset = FarmCertification.objects.all()
     serializer_class = FarmCeritificateSerializers
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
