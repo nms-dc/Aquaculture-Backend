@@ -78,7 +78,7 @@ class FarmSerializer(serializers.ModelSerializer):
     certificates = serializers.SerializerMethodField()
 
     def get_certificates(self,obj):
-        certificate_data = FarmCertification.objects.filter(certificates = obj.id)
+        certificate_data = FarmCertification.objects.filter(farm_id = obj.id)
         serialize = FarmCeritificateSerializers(certificate_data, many=True).data
         return serialize
 
@@ -130,8 +130,6 @@ class FarmSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
-        token = self.context.get('request').META.get('HTTP_AQUA_AUTH_TOKEN')
-        user = User.objects.get(email=token)
         print('farm create validated data',validated_data)
         print('image_data details',image_datas)
         Farm_instance = Farms.objects.create(
@@ -144,7 +142,7 @@ class FarmSerializer(serializers.ModelSerializer):
                 description=validated_data['description'],
                 zipcode=validated_data['zipcode'],
                 district=validated_data['district'],
-                user=user
+                user=validated_data['user']
             )
 
         for image_data in image_datas.getlist('farm_images'):
@@ -191,7 +189,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.district = validated_data.get('district', instance.district)
         instance.save()
 
-        certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
+        #certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
         image_with_same_profile_instance = FarmImage.objects.filter(images=instance.pk).values_list('id', flat=True)
 
         # if len(int_certi_id) != 0:

@@ -13,13 +13,14 @@ from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from cycle.models import Cycle
+from rest_framework.permissions import IsAuthenticated
 
 
 class PondView(viewsets.ModelViewSet):
     queryset = Ponds.objects.all()
     serializer_class = PondsSerializer
     authentication_classes = []
-    permission_classes = [AllowAny]
+    #permission_classes = [IsAuthenticated]
 
     @action(detail=True, methods=['get'], url_path='get-pond-summary',)
     @csrf_exempt
@@ -54,7 +55,7 @@ class PondMasterView(viewsets.ModelViewSet):
     queryset = PondConstructType.objects.all()
     serializer_class = PondConstructTypeSerializer
     authentication_classes = []
-    permission_classes = [AllowAny]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['get']
 
 
@@ -62,7 +63,7 @@ class PondTypeView(viewsets.ModelViewSet):
     queryset = PondType.objects.all()
     serializer_class = PondTypeSerializer
     authentication_classes = []
-    permission_classes = [AllowAny]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['get']
 
 
@@ -70,5 +71,5 @@ class PondgraphView(viewsets.ModelViewSet):
     queryset = PondGraphs.objects.all()
     serializer_class = PondGraphSerializer
     authentication_classes = []
-    permission_classes = [AllowAny]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['get', 'post', 'patch']

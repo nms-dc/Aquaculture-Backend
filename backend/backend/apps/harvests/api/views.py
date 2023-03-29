@@ -11,19 +11,20 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from rest_framework.permissions import AllowAny
 from harvests.models import Harvests, AddAnimal
 from harvests.api.serializers import HarvestSerializer, AddAnimalSerializers
+from rest_framework.permissions import IsAuthenticated
 
 
 class HarvestView(viewsets.ModelViewSet):
     queryset = Harvests.objects.all()
     serializer_class = HarvestSerializer
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    #authentication_classes = []
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
 
 
 class AnimalView(viewsets.ModelViewSet):
     queryset = AddAnimal.objects.all()
     serializer_class = AddAnimalSerializers
-    authentication_classes = []
-    permission_classes = [AllowAny]
+    #authentication_classes = []
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
