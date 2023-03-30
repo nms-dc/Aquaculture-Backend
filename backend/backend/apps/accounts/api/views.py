@@ -37,9 +37,9 @@ def user_login_view(request):
             user_data = UserBasicInfoSerializer(instance=user).data
             # data['token']=token
             id=user_data['id']
-            token = Token.objects.get(user=id).key
-            print(token)
-            return Response({'user_auth_token':token})
+            #token = Token.objects.get(user=id).key
+            #print(token)
+            return Response({'user_auth_details':user_data})
         else:
             user_data['message'] = "login failed"
             return Response(user_data, status=status.HTTP_401_UNAUTHORIZED)
@@ -90,5 +90,37 @@ class user_profile_view(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileInfoSerializer
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['post', 'get', 'patch', 'retrieve', 'put']
+
+
+
+@api_view(['post', 'get'])
+@csrf_exempt
+def validate_email(request):
+
+    if request.method == 'POST': 
+        dic = request.data
+        mail = dic['email']
+        filtering = User.objects.filter(email = mail)
+        print(mail, filtering)
+        if filtering:
+            return Response('valid email found')
+        else:
+            return Response('no email found')
+
+
+@api_view(['post', 'get'])
+@csrf_exempt
+def change_password(request):
+
+    if request.method == 'POST': 
+        dic = request.data
+        mail = dic['email']
+        user = User.objects.get(email = mail)
+        passwd1=dic['password1']
+        passwd2=dic['password2']
+        if passwd1 == passwd2:
+            user.set_password(dic['password1'])
+            user.save()
+            return Response('password changed successfully')
