@@ -54,9 +54,11 @@ class FarmAnalyticsAdmin(admin.ModelAdmin):
 
 
 class FarmCertificatesAdmin(admin.ModelAdmin):
+    def farm_name(self,obj):
+        return obj.farm_id
 
-    list_display = ('farm_id','certificate_name', 'certificate_number', )
-    list_filter = ('farm_id',)
+    list_display = ('farm_name','certificate_name', 'certificate_number', )
+    list_filter = ('certificate_name',)
     fieldsets = (
         (None, {'fields': ('certificate_name', 'certificate_number')}),
         ('Cerificates info', {'fields': ('add_information', 'image', 'farm_id', )}),
@@ -75,8 +77,12 @@ class FarmCertificatesAdmin(admin.ModelAdmin):
 
 class FarmImagesAdmin(admin.ModelAdmin):
 
-    list_display = ('image','images')
-    list_filter = ('images',)
+    def farm_name(self,obj):
+        return obj.images.farm_name
+
+
+    list_display = ('farm_name','image',)
+    list_filter = ('image_name',)
     fieldsets = (
         (None, {'fields': ('image_name', 'image', 'images', )}),
         )
@@ -84,7 +90,7 @@ class FarmImagesAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('image_name', 'images',),
+            'fields': ('image_name', 'farm_name',),
         }),
     )
     search_fields = ('image_name',)
@@ -94,8 +100,11 @@ class FarmImagesAdmin(admin.ModelAdmin):
 
 class FeedLotsAdmin(admin.ModelAdmin):
 
-    list_display = ('farm_id', 'lot_number',)
-    list_filter = ('farm_id', )
+    def farm_name(self,obj):
+        return obj.farm_id.farm_name
+
+    list_display = ('farm_name', 'lot_number',"feed_lot_type", "company_feed_type")
+    list_filter = ('feed_lot_type', )
     fieldsets = (
         (None, {'fields': ('farm_id', 'lot_number', 'company_purchased_from', 'date_purchased', 'date_shipped')}),
         ('FeedLots info', {'fields': ('date_received', 'bag_is_used', 'feed_cost', 'currency', 'feed_lot_type')}),
@@ -104,7 +113,7 @@ class FeedLotsAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('farm_id', 'company_purchased_from', 'lot_number', 'currency'),
+            'fields': ('farm_name', 'company_purchased_from', 'lot_number', 'currency'),
         }),
     )
     search_fields = ('lot_number',)

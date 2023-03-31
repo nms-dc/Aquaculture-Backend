@@ -44,6 +44,31 @@ class MeasurementmasterAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
+class MeasurementpicsAdmin(admin.ModelAdmin):
+
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm.farm_name
+    
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond.pond_name
+
+    list_display = ("farm_name","pond_name",'image_name', )
+    list_filter = ('image_name', )
+    fieldsets = (
+        (None, {'fields': ('image_name', 'image', )}),
+        )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('image_name', ),
+        }),
+    )
+    search_fields = ('image_name',)
+    ordering = ('image_name',)
+
+    filter_horizontal = ()
+
+
 admin.site.register(Measurement, MeasurementAdmin)
 admin.site.register(MeasurementMaster, MeasurementmasterAdmin)
-admin.site.register(MeasurementPics)
+admin.site.register(MeasurementPics, MeasurementpicsAdmin)
