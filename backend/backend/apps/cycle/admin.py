@@ -10,11 +10,14 @@ class CycleAdmin(admin.ModelAdmin):
     
     def pond_name(self, obj):
         return obj.Pond.pond_name
+    
+    def cycle_name(self, obj):
+        return f"cycle_id:{obj.id}"
 
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('farm_name','pond_name','species', 'species_pl_stage', 'invest_amount', 'seeding_date')
+    list_display = ('farm_name','pond_name',"cycle_name",'species', 'species_pl_stage', 'invest_amount', 'seeding_date')
     list_filter = ('Pond', 'species')
     fieldsets = (
         (None, {'fields': ('species', 'species_pl_stage')}),
@@ -37,11 +40,15 @@ class CycleAnalyticsAdmin(admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.farm.farm_name
+    
+    def pond_name(self, obj):
+        return obj.pond.pond_name
+
 
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('farm_name', 'pond', 'cycle',)
+    list_display = ('farm_name', 'pond_name', 'cycle','harvest_amount', 'total_feed', 'total_probiotics')
     list_filter = ('farm', 'pond')
     fieldsets = (
         (None, {'fields': ('farm', 'pond')}),

@@ -14,7 +14,7 @@ class CompanyView(viewsets.ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializers
     #authentication_classes = []
-    permission_classes = [IsAuthenticated]
+    #permission_classes = [IsAuthenticated]
     http_method_names = ['get','post']
     @action(detail=True, methods=['get'], url_path='types',)
     @csrf_exempt

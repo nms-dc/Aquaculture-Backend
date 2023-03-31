@@ -30,8 +30,11 @@ class PondAnalyticsAdmin(admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm.farm_name
+    
+    def pond_name(self,obj):
+        return obj.pond.pond_name
 
-    list_display = ('farm_name', 'pond')
+    list_display = ('farm_name', 'pond_name')
     list_filter = ('pond',)
     fieldsets = (
         (None, {'fields': ('pond', 'farm','harvest_amount','total_feed','extra_info')}),
@@ -50,8 +53,11 @@ class PondAnalyticsAdmin(admin.ModelAdmin):
 class PondGraphsAdmin(admin.ModelAdmin):
     def farm_name(self,obj):
         return obj.farm.farm_name
+    
+    def pond_name(self,obj):
+        return obj.pond.pond_name
 
-    list_display = ('farm_name', 'pond','total_feed', 'abw', 'time')
+    list_display = ('farm_name', 'pond_name','total_feed', 'abw', 'time')
     list_filter = ('farm', 'pond', )
     fieldsets = (
         (None, {'fields': ('pond', 'farm','total_feed', 'extra_info', 'abw')}),
@@ -82,7 +88,7 @@ class PondImageAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('image_name', 'image_name', 'images',),
+            'fields': ('image_name', 'image_name', 'pond_name',),
         }),
     )
     search_fields = ('image_name',)
