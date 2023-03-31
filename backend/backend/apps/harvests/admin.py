@@ -57,18 +57,20 @@ class AddAnimalAdmin(admin.ModelAdmin):
 
 class AnimalImagesAdmin(admin.ModelAdmin):
 
-    # def farm_name(self, obj):
-    #     return obj.images.cycle.farm
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm.farm_name
     
-    # def pond_name(self, obj):
-    #     return obj.images.cycle.Pond.pond_name
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond.pond_name
     
+    def cycle_id(self, obj):
+        return obj.images.cycle
 
-    list_display = ( 'image_name', 'image', )
+    list_display = ( "farm_name","pond_name", "cycle_id", 'image_name', 'image', )
     list_filter = ('image_name',)
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
+        (None, {'fields': ('image_name', 'image', "images")}),
     )
     add_fieldsets = (
         (None, {
@@ -83,18 +85,20 @@ class AnimalImagesAdmin(admin.ModelAdmin):
 
 class PondImagesAdmin(admin.ModelAdmin):
 
-    # def farm_name(self, obj):
-    #     return obj.images.cycle.Pond.farm.farm_name
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm.farm_name
     
-    # def pond_name(self, obj):
-    #     return obj.images.cycle.Pond.pond_name
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond.pond_name
     
+    def cycle_id(self, obj):
+        return obj.images.cycle
 
-    list_display = ('image_name', 'image', )
+    list_display = ( "farm_name","pond_name", "cycle_id", 'image_name', 'image', )
     list_filter = ('image_name',)
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
+        (None, {'fields': ('image_name', 'image', "images")}),
     )
     add_fieldsets = (
         (None, {
@@ -109,18 +113,20 @@ class PondImagesAdmin(admin.ModelAdmin):
 
 class LogisticImagesAdmin(admin.ModelAdmin):
 
-    # def farm_name(self, obj):
-    #     return obj.images.cycle.Pond.farm.farm_name
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm.farm_name
     
-    # def pond_name(self, obj):
-    #     return obj.images.cycle.Pond.pond_name
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond.pond_name
     
+    def cycle_id(self, obj):
+        return obj.images.cycle
 
-    list_display = ('image_name', 'image', )
+    list_display = ( "farm_name","pond_name", "cycle_id", 'image_name', 'image', )
     list_filter = ('image_name',)
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
+        (None, {'fields': ('image_name', 'image',"images")}),
     )
     add_fieldsets = (
         (None, {

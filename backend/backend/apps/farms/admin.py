@@ -55,7 +55,7 @@ class FarmAnalyticsAdmin(admin.ModelAdmin):
 
 class FarmCertificatesAdmin(admin.ModelAdmin):
     def farm_name(self,obj):
-        return obj.farm_id
+        return obj.farm_id.farm_name
 
     list_display = ('farm_name','certificate_name', 'certificate_number', )
     list_filter = ('certificate_name',)
