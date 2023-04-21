@@ -13,7 +13,7 @@ class PondAdmin(admin.ModelAdmin):
         ('pond info', {'fields': ('pond_depth', 'pond_construct_type', 'lat', 'lng', 'is_active_pond', 'active_cycle_id',
                                       'active_cycle_date')}),
         ('moreinfoAboutPond', {'fields': ('pond_breadth', 'pond_area', 'pond_capacity', 'description', 'pond_number',
-                                     'current_stock_id')}),
+                                    )}),
     )
     add_fieldsets = (
         (None, {
@@ -75,10 +75,10 @@ class PondGraphsAdmin(admin.ModelAdmin):
 
 class PondImageAdmin(admin.ModelAdmin):
     def farm_name(self,obj):
-        return obj.images.farm.farm_name
+        return "farm_id need to assign"#obj.images.farm.farm_name
     
     def pond_name(self,obj):
-        return obj.images.pond_name
+        return "pond_id need to assign"#obj.images.farm.farm_name
 
     list_display = ('farm_name','pond_name','image', 'image_name',)
     list_filter = ('image_name',)

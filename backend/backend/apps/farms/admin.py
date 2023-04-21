@@ -1,22 +1,22 @@
 from django.contrib import admin
-from farms.models import Farms, FarmImage, FarmCertification, FeedLots, FarmAnalytics
+from farms.models import Farms, FarmImage, FarmCertification, FeedLots, FarmAnalytics, FeedLotTypes
 
 
 # Register your models here.
 
 class FarmsAdmin(admin.ModelAdmin):
 
-    list_display = ('farm_name', 'farm_area', 'farm_status', 'company_id')
+    list_display = ('farm_name', 'farm_area', 'company_id')
     list_filter = ('company_id', 'farm_name', )
     fieldsets = (
         (None, {'fields': ('company_id', 'farm_name')}),
-        ('Farm info', {'fields': (('farm_area', 'phone'), 'description', 'farm_status', )}),
+        ('Farm info', {'fields': (('farm_area', 'phone'), 'description',)}),
         ('Address info', {'fields': ('city', 'country', 'town_village', 'zipcode', 'state', )}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('company_id', 'farm_area', 'farm_status', 'farm_name'),
+            'fields': ('company_id', 'farm_area', 'farm_name'),
         }),
     )
     search_fields = ('farm_name',)
@@ -126,3 +126,4 @@ admin.site.register(FarmImage, FarmImagesAdmin)
 admin.site.register(FarmCertification, FarmCertificatesAdmin)
 admin.site.register(FeedLots, FeedLotsAdmin)
 admin.site.register(FarmAnalytics, FarmAnalyticsAdmin)
+admin.site.register(FeedLotTypes)

@@ -99,6 +99,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     is_terms_accepted = models.BooleanField(default=False)
+    user_image = models.FileField(upload_to="user_image",null=True, blank=True)
 
     objects = UserManager()
 
@@ -132,19 +133,9 @@ class User(AbstractBaseUser):
 
     def save(self, *args, **kwargs):
         if self.is_verified == False:        
-            # ClaimPendingEmailTemplate.send_email(
-            #     subject="Success! Your Request profile verification has been received.",
-            #     email_receivers=[self.email],
-            #     instance=self,
-            # )
             print(self.is_verified,'verified pending')
             super(User, self).save(*args, **kwargs)
-        elif self.is_verified == True:        
-            # ClaimAcceptedEmailTemplate.send_email(
-            #     subject="Success! Your Request profile verification has been received.",
-            #     email_receivers=[self.email],
-            #     instance=self,
-            # )
+        elif self.is_verified == True:
             print(self.is_verified,'verification completed')
             super(User, self).save(*args, **kwargs)
             
@@ -155,8 +146,7 @@ def create_auth_token(sender, instance = None, created=False, **kwargs):
         Token.objects.create(user=instance)
  
 
-class Image(models.Model):
 
-    image_name = models.CharField(max_length=400, null=True)
-    image = models.FileField(upload_to='user_images', null=True)
-    images = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_images', default=None, null=True)
+class Roles(models.Model):
+    role = models.CharField(max_length=400, null=True)
+    role_description = models.CharField(max_length=400, null=True)

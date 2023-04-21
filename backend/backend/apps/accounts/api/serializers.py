@@ -1,13 +1,7 @@
 from rest_framework import serializers
-from accounts.models import User, create_username, Image
+from accounts.models import User, create_username
 from farms.models import Farms
-
-
-class UserImageSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Image
-        fields = '__all__'
+#from accounts.api.single_backup import userdata
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -58,24 +52,24 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
 
 
 class UserProfileInfoSerializer(serializers.ModelSerializer):
-    is_verified = serializers.BooleanField(read_only=True)
-    farm_id = serializers.SerializerMethodField()
-    user_images = UserImageSerializer(many=True, read_only=True)
+    # is_verified = serializers.BooleanField(read_only=True)
+    # farm_id = serializers.SerializerMethodField()
 
-    def get_farm_id(self, obj):
-        try:
-            if Farms.objects.filter(user=obj).exists():
-                farm = Farms.objects.filter(user=obj).first()
-                return farm.id
-            else:
-                return None
-        except Farms.DoesNotExist:
-            return None
+    # def get_farm_id(self, obj):
+    #     try:
+    #         if Farms.objects.filter(user=obj).exists():
+    #             farm = Farms.objects.filter(user=obj).first()
+    #             return farm.id
+    #         else:
+    #             return None
+    #     except Farms.DoesNotExist:
+    #         return None
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', 'user_images',
-                  'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'website', 'is_verified', 'is_terms_accepted', 'farm_id']
+        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', 
+                  'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'website', 'is_verified', 'is_terms_accepted']
+        #userdata()
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
@@ -94,11 +88,6 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
             website=validated_data['website'],
             email=validated_data['email'],
         )
-        for data in image_data.getlist('user_images'):
-            name = data.name
-            Image.objects.create(images=user_instance, image_name=name, image=data)
-            print(user_instance)
-        return user_instance
 
     def update(self, instance, validated_data):
         image_data = self.context.get('view').request.FILES
@@ -116,15 +105,6 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
         instance.website = validated_data.get('website', instance.website)
         instance.email = validated_data.get('email', instance.email)
         instance.save()
-
-        userimage_with_same_profile_instance = Image.objects.filter(images=instance.pk).values_list('id', flat=True)
-            
-        if len(image_data.getlist('user_images')) != 0:
-            for delete_id in userimage_with_same_profile_instance:
-                Image.objects.filter(pk=delete_id).delete()
-            for image_data in image_data.getlist('user_images'):
-                name = image_data.name
-                Image.objects.create(images=instance, image_name=name, image=image_data)
 
         return instance
 

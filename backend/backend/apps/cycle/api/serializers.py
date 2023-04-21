@@ -12,7 +12,7 @@ import datetime
 from dateutil import parser
 from measurements.models import Measurement, MeasurementMaster
 from measurements.api.serializers import MeasurementSerializer, MeasurementcycleSerializer, MasterSerializer
-
+from cycle.single_backup import farmdata
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,7 +67,7 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
 
 class CycleSerializer(serializers.ModelSerializer):
-
+    farmdata()
     cycle_pond_images = PrepPondImageSerializer(many=True, read_only=True)
     seed_images = SeedImageSerializer(many=True, read_only=True)
     cycle_harvests = serializers.SerializerMethodField(read_only=True)

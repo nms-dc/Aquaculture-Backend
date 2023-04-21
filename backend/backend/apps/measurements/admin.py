@@ -1,5 +1,6 @@
 from django.contrib import admin
 from measurements.models import Measurement, MeasurementMaster, MeasurementPics
+from import_export.admin import ExportActionMixin
 
 
 class MeasurementAdmin(admin.ModelAdmin):
@@ -9,7 +10,7 @@ class MeasurementAdmin(admin.ModelAdmin):
     def pond_name(self, obj):
         return obj.cycle.Pond.pond_name
 
-    list_display = ('farm_name','pond_name', 'measurement_type','cycle', 'value', 'time', 'lot')
+    list_display = ('farm_name','pond_name', 'measurement_type','cycle', 'value', 'time',)
     list_filter = ('cycle', )
     fieldsets = (
         (None, {'fields': ('cycle', 'value')}),
@@ -25,7 +26,7 @@ class MeasurementAdmin(admin.ModelAdmin):
     ordering = ('measurement_type',)
 
 
-class MeasurementmasterAdmin(admin.ModelAdmin):
+class MeasurementmasterAdmin(ExportActionMixin, admin.ModelAdmin):
 
     list_display = ('measurement_type', 'measurement_description', 'measurement_unit' )
     list_filter = ('measurement_type', )

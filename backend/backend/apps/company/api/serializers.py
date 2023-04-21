@@ -1,6 +1,6 @@
 from company.models import Company, CompanyFeedType
 from rest_framework import serializers
-
+#from company.single_backup import farmdata
 
 
 class CompanyFeedTypeSerializers(serializers.ModelSerializer):
@@ -11,7 +11,7 @@ class CompanyFeedTypeSerializers(serializers.ModelSerializer):
 
 class CompanySerializers(serializers.ModelSerializer):
     types= serializers.SerializerMethodField()
-    
+    #farmdata()
     def get_types(self, obj):
         data = CompanyFeedType.objects.filter(company = obj.id)
         serialize = CompanyFeedTypeSerializers(data, many=True).data

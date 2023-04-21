@@ -7,6 +7,7 @@ from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
 import pandas as pd
 import numpy as np
+#from ponds.single_backup import  uploaddata
 
 
 class PondImageSerializer(serializers.ModelSerializer):
@@ -92,6 +93,7 @@ class PondCycleRelationSerializer(serializers.ModelSerializer):
 
 
 class PondsSerializer(serializers.ModelSerializer):
+    #uploaddata()
 
     pond_images = PondImageSerializer(many=True, read_only=True)
     completed_cycle_count = serializers.SerializerMethodField(read_only=True)

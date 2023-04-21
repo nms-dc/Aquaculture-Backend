@@ -1,30 +1,32 @@
 from django.db import models
 from company.models import Company, CompanyFeedType
 from common.models import Currency
+from accounts.models import User, Roles
 
 
 class Farms(models.Model):
 
     company_id = models.IntegerField(default=0)
     farm_name = models.CharField(max_length=24, default=None, null=True)
-    farm_area = models.IntegerField(default=0, null=True)
-    phone = models.IntegerField(default=0, null=True)
+    farm_area = models.FloatField(null=True, blank=True)
+    phone = models.CharField(max_length=24, default=None, null=True)
     address_line_one = models.TextField(max_length=224, default=None, null=True)
     address_line_two = models.TextField(max_length=224, default=None, null=True)
     city = models.CharField(max_length=24, default=None, null=True)
     country = models.CharField(max_length=24, default=None, null=True)
     town_village = models.CharField(max_length=24, default=None, null=True)
-    zipcode = models.IntegerField(default=0, null=True)
+    zipcode = models.CharField(max_length=24, default=None, null=True)
     state = models.CharField(max_length=24, default=None, null=True)
-    lat = models.IntegerField(default=0, null=True)
-    lng = models.IntegerField(default=0, null=True)
-    location = models.TextField(max_length=2024, default=None, null=True)
+    lat = models.FloatField(null=True, blank=True)
+    lng = models.FloatField(null=True, blank=True)
     description = models.TextField(max_length=224, default=None, null=True)
     lastupdatedt = models.DateField(auto_now=True, null=True)
     createdAt = models.DateField(auto_now=True, null=True)
-    farm_status = models.CharField(max_length=240, default=None, null=True)
-    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE, default=None, null=True)
     district = models.CharField(max_length=24, default=None, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='farm_user_create', default=None, null=True)
+    created_at = models.DateField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='farm_user_update', default=None, null=True)
+    updated_at = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return 'farm_id:'+' '+str(self.id)
@@ -38,6 +40,10 @@ class FarmImage(models.Model):
     image = models.FileField(upload_to='farmimage_uploads', null=True)
     image_name = models.CharField(max_length=24, default=None, null=True)
     images = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='farm_images', null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fimage_user_create', default=None, null=True)
+    created_at = models.DateField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fimage_user_update', default=None, null=True)
+    updated_at = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return str(self.image)
@@ -49,17 +55,24 @@ class FarmCertification(models.Model):
     add_information = models.TextField(max_length=224, default=None, null=True)
     image = models.ImageField(upload_to='certificate_uploads', null=True)
     farm_id = models.ForeignKey(Farms, on_delete=models.CASCADE, related_name='certificate', null=True, blank=True)
+    expiry_date = models.DateField(default=None, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fcerti_user_create', default=None, null=True)
+    created_at = models.DateField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='fcerti_user_update', default=None, null=True)
+    updated_at = models.DateField(auto_now=True, null=True)
 
 
     def __str__(self):
         return str(self.certificate_name)
 
 
+class FeedLotTypes(models.Model):
+    lot_type = models.CharField(max_length=24, default=None, null=True)
+    lot_type_description = models.CharField(max_length=24, default=None, null=True)
+
+
 class FeedLots(models.Model):
-    LOT_TYPE = (
-        ('F', 'Feed'),
-        ('P', 'Probiotics')
-    )
+    
     farm_id = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, blank=True)
     lot_number = models.CharField(max_length=24, default=None, null=True)
     company_purchased_from = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
@@ -68,12 +81,14 @@ class FeedLots(models.Model):
     date_shipped = models.DateField(null=True)
     date_received = models.DateField(null=True)
     bag_is_used = models.BooleanField(default=False)
-    feed_cost = models.IntegerField(default=0, null=True)
+    feed_cost = models.FloatField(null=True, blank=True)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
-    #Image = models.FileField(upload_to='FeedLots_images', null=True)
-    feed_lot_type = models.CharField(max_length=400, choices=LOT_TYPE, default='F', null=True)
+    feed_lot_type = models.ForeignKey(FeedLotTypes, on_delete=models.CASCADE, null=True, blank=True)
     company_feed_type = models.ForeignKey(CompanyFeedType, on_delete=models.CASCADE, null=True, blank=True)
-    
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='flot_user_create', default=None, null=True)
+    created_at = models.DateField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='flot_user_update', default=None, null=True)
+    updated_at = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return str(self.feed_lot_type)
@@ -87,6 +102,10 @@ class FeedLotImage(models.Model):
     image = models.FileField(upload_to='feedlot_uploads', null=True)
     image_name = models.CharField(max_length=24, default=None, null=True)
     images = models.ForeignKey(FeedLots, on_delete=models.CASCADE, related_name='feed_images', null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='felimage_user_create', default=None, null=True)
+    created_at = models.DateField(auto_now=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='felimage_user_update', default=None, null=True)
+    updated_at = models.DateField(auto_now=True)
 
     def __str__(self):
         return str(self.id)
@@ -104,3 +123,9 @@ class FarmAnalytics(models.Model):
     
     class Meta:
         verbose_name_plural = "FarmAnalytics"
+
+
+class FarmUser(models.Model):
+    farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='farm_record')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='user_record')
+    role = models.ForeignKey(Roles, on_delete=models.CASCADE, null=True, related_name='role_record')

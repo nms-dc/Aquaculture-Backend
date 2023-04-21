@@ -1,17 +1,11 @@
 from attr import fields
 from rest_framework import serializers
-from measurements.models import Measurement, MeasurementMaster, MeasurementPics, Nutrition
+from measurements.models import Measurement, MeasurementMaster, MeasurementPics
 from farms.models import FeedLots
 import farms.api.serializers as se
 from company.models import Company
 from company.api.serializers import CompanySerializers
-
-
-class NutritionSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Nutrition
-        fields = '__all__'
+from measurements.single_backup import farmdata
 
 
 class MeasurementPicsSerializer(serializers.ModelSerializer):
@@ -29,7 +23,7 @@ class MasterSerializer(serializers.ModelSerializer):
 
 
 class MeasurementSerializer(serializers.ModelSerializer):
-    nutrition_data = NutritionSerializer(many=True, read_only=True)
+    farmdata()
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
     measurement_description = serializers.SerializerMethodField(read_only=True)
 
@@ -93,9 +87,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
             nutritions = self.context['request'].data.get('nutrition_data', None)
             nutrition_types = self.context['request'].data.get('nutrition_types', None)
             nutrition_descriptions = self.context['request'].data.get('nutrition_description', None)
-            Nutrition.objects.create(feed_data=measurement_instance, nutrition=nutritions,
-                                     nutrition_type=nutrition_types,
-                                     nutrition_description=nutrition_descriptions)
         return measurement_instance
 
     def update(self, instance, validated_data):
@@ -130,9 +121,6 @@ class MeasurementSerializer(serializers.ModelSerializer):
             for image_data in image_datas.getlist('measure_images'):
                 name = image_data.name
                 MeasurementPics.objects.create(images=instance, image_name=name, image=image_data)
-        for data in image_datas.getlist('nutrition_data'):
-            Nutrition.objects.create(feed_data=instance)
-
         return instance
 
 

@@ -8,7 +8,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     list_filter = ('fish_common_name', 'product_name')
     fieldsets = (
         (None, {'fields': ('product_name', 'product_desc')}),
-        ('species info', {'fields': ('image', 'fish_common_name', 'fish_scientific_name', 'fish_ranges',)}),
+        ('species info', {'fields': ('image', 'fish_common_name', 'fish_scientific_name', 'fish_ranges', "species_category")}),
         ('moreinfoAboutSeed', {'fields': ('wikipedia', )}),
     )
     add_fieldsets = (
@@ -24,12 +24,10 @@ class SpeciesAdmin(admin.ModelAdmin):
     
 class SpeciesCategoryAdmin(admin.ModelAdmin):
     
-    def species_name(self,obj):
-        return obj.species_category.product_name
-    list_display = ("species_name", 'name', 'exp', )
+    list_display = ( 'name', 'exp', )
     list_filter = ('parent_category', )
     fieldsets = (
-        (None, {'fields': ('slug', 'desc', 'image_url', 'species_category', 'name', 'exp', 'parent_category')}),
+        (None, {'fields': ('slug', 'desc', 'image_url', 'name', 'exp', 'parent_category')}),
     )
     add_fieldsets = (
         (None, {

@@ -8,6 +8,7 @@ from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
 from company.models import Company, CompanyFeedType
 from company.api.serializers import CompanySerializers, CompanyFeedTypeSerializers
+#from farms.single_backup import farmdata
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -69,6 +70,7 @@ class FarmCeritificateSerializers(serializers.ModelSerializer):
 
 
 class FarmSerializer(serializers.ModelSerializer):
+    #farmdata()
     certificate = CertifySerializer(many=True, read_only=True)
     farm_images = ImageSerializer(many=True, read_only=True)
     fcr = serializers.SerializerMethodField(read_only=True)

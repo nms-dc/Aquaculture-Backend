@@ -11,28 +11,26 @@ class CycleAdmin(admin.ModelAdmin):
     def pond_name(self, obj):
         return obj.Pond.pond_name
     
-    def cycle_name(self, obj):
-        return f"cycle_id:{obj.id}"
-
+    
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('farm_name','pond_name',"cycle_name",'species', 'species_pl_stage', 'invest_amount', 'seeding_date')
-    list_filter = ('Pond', 'species')
+    list_display = ('farm_name','pond_name', 'seeding_date')
+    list_filter = ('Pond', )
     fieldsets = (
-        (None, {'fields': ('species', 'species_pl_stage')}),
-        ('Cycle info', {'fields': ('invest_amount', 'pondPrep_cost', 'description', 'seed_company', 'Pond', 'numbers_of_larva', 'is_active')})
+        (None, {'fields': ('seeds',)}),
+        ('Cycle info', {'fields': ( 'pondPrep_cost', 'description',  'Pond', 'numbers_of_larva', 'is_active')})
         )
     ''' add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.'''
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('species', 'species_pl_stage', 'pondPrep_cost', 'invest_amount'),
+            'fields': ("description", "seeding_qty", "numbers_of_larva", 'pondPrep_cost', ),
         }),
     )
-    search_fields = ('species',)
-    ordering = ('species',)
+    search_fields = ('seeds',)
+    ordering = ('seeds',)
     filter_horizontal = ()
 
 

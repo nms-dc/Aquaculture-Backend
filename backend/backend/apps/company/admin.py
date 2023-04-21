@@ -8,7 +8,7 @@ class CompanyAdmin(admin.ModelAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('company_type','company_name', 'address_one', 'address_two')
+    list_display = ('company_name', 'address_one', 'address_two')
     list_filter = ('company_name', )
     fieldsets = (
         (None, {'fields': ('company_name', 'website')}),
@@ -29,19 +29,19 @@ class CompanyAdmin(admin.ModelAdmin):
 
 class CompanyFeedAdmin(admin.ModelAdmin):
 
-    list_display = ('company', 'feed_type')
-    list_filter = ('company',)
+    list_display = ('type', 'type_description')
+    list_filter = ('type',)
     fieldsets = (
-        (None, {'fields': ('company', 'feed_type')}),)
+        (None, {'fields': ('type', 'type_description')}),)
     
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('company', 'feed_type'),
+            'fields': ('type', 'type_description'),
         }),
     )
-    search_fields = ('company',)
-    ordering = ('company',)
+    search_fields = ('type',)
+    ordering = ('type',)
     filter_horizontal = ()
 
 admin.site.register(Company, CompanyAdmin)

@@ -1,6 +1,7 @@
 import datetime
 from django.db import models
 from farms.models import Farms
+from accounts.models import User
 
 
 class PondConstructType(models.Model):
@@ -35,13 +36,16 @@ class Ponds(models.Model):
     last_feed_datetime = models.DateField(auto_now=True, null=True)
     last_preparation_time = models.DateField(auto_now=True, null=True)
     last_stock_date = models.DateField(auto_now=True, null=True)
-    current_stock_id = models.IntegerField(default=0, null=True)
     estimated_harvest_date = models.DateField(auto_now=True, null=True)
     farm = models.ForeignKey('farms.Farms', on_delete=models.CASCADE, default=None, null=True)
     is_active_pond = models.BooleanField(default=False)
     active_cycle_id = models.IntegerField(null=True)
     active_cycle_date = models.DateField(null=True)
     no_of_harvests = models.IntegerField(default=0)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pond_user_create', default=None, null=True)
+    created_at = models.DateField(auto_now=True, null=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pond_user_update', default=None, null=True)
+    updated_at = models.DateField(auto_now=True, null=True)
 
     def __str__(self):
         return 'pond_id:'+str(self.id)
@@ -63,6 +67,10 @@ class PondImage(models.Model):
     image = models.FileField(upload_to='pond_images', null=True)
     image_name = models.CharField(max_length=24, default=None, null=True)
     images = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_images', null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pimage_user_create', default=None, null=True)
+    created_at = models.DateField(auto_now=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pimage_user_update', default=None, null=True)
+    updated_at = models.DateField(auto_now=True)
 
     def __str__(self):
         return str(self.image_name)
