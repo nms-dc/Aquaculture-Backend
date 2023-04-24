@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from accounts.models import User, create_username
+from accounts.models import User, create_username, Roles
 from farms.models import Farms
 #from accounts.api.single_backup import userdata
 
@@ -87,6 +87,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
             pincode=validated_data['pincode'],
             website=validated_data['website'],
             email=validated_data['email'],
+            user_image = validated_data["user_image"]
         )
 
     def update(self, instance, validated_data):
@@ -104,7 +105,14 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
         instance.pincode = validated_data.get('pincode', instance.pincode)
         instance.website = validated_data.get('website', instance.website)
         instance.email = validated_data.get('email', instance.email)
+        user_image = validated_data.get('user_image', instance.user_image)
         instance.save()
 
         return instance
 
+
+class RolesSerializers(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Roles
+        fields = "__all__"
