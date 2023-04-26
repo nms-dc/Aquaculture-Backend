@@ -5,7 +5,7 @@ from farms.models import FeedLots
 import farms.api.serializers as se
 from company.models import Company
 from company.api.serializers import CompanySerializers
-from measurements.single_backup import farmdata
+#from measurements.single_backup import farmdata
 
 
 class MeasurementPicsSerializer(serializers.ModelSerializer):
@@ -23,7 +23,7 @@ class MasterSerializer(serializers.ModelSerializer):
 
 
 class MeasurementSerializer(serializers.ModelSerializer):
-    farmdata()
+    #farmdata()
     measure_images = MeasurementPicsSerializer(many=True, read_only=True)
     measurement_description = serializers.SerializerMethodField(read_only=True)
 
@@ -74,19 +74,14 @@ class MeasurementSerializer(serializers.ModelSerializer):
             value=validated_data['value'],
             time=validated_data['time'],
             lot=validated_data['lot'],
-            price_per_kg=validated_data['price_per_kg'],
             notes=validated_data['notes'],
-            is_probiotic_mixed=validated_data['is_probiotic_mixed']
+            created_by=validated_data['created_by']
             )
 
         for data in image_datas.getlist('measure_images'):
             name = data.name
             MeasurementPics.objects.create(images=measurement_instance, image_name=name, image=data)
 
-        for data in image_datas.getlist('nutrition_data'):
-            nutritions = self.context['request'].data.get('nutrition_data', None)
-            nutrition_types = self.context['request'].data.get('nutrition_types', None)
-            nutrition_descriptions = self.context['request'].data.get('nutrition_description', None)
         return measurement_instance
 
     def update(self, instance, validated_data):
@@ -106,9 +101,8 @@ class MeasurementSerializer(serializers.ModelSerializer):
         instance.value = validated_data.get('value', instance.value)
         instance.time = validated_data.get('time', instance.time)
         instance.lot = validated_data.get('lot', instance.lot)
-        instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
         instance.notes = validated_data.get('notes', instance.notes)
-        instance.is_probiotic_mixed = validated_data.get('is_probiotic_mixed', instance.is_probiotic_mixed)
+        instance.created_by = validated_data.get('created_by', instance.created_by)
         instance.save()
 
         measureimage_with_same_profile_instance = MeasurementPics.objects.filter(images=instance.pk).values_list('id', flat=True)

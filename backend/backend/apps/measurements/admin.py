@@ -14,7 +14,7 @@ class MeasurementAdmin(admin.ModelAdmin):
     list_filter = ('cycle', )
     fieldsets = (
         (None, {'fields': ('cycle', 'value')}),
-        ('Measurement info', {'fields': (('time', 'lot'), 'price_per_kg', 'measurement_type', 'is_probiotic_mixed')}),
+        ('Measurement info', {'fields': (('time', 'lot'), 'measurement_type',)}),
     )
     add_fieldsets = (
         (None, {

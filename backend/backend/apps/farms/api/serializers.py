@@ -1,9 +1,9 @@
 from itertools import cycle
 from rest_framework import serializers
-from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics, FeedLotImage
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics, FeedLotImage, FarmUser
 from ponds.models import Ponds
 from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSummaryOnlySerializer
-from accounts.models import User
+from accounts.models import User, Roles
 from cycle.models import Cycle
 from cycle.api.serializers import CycleSerializer
 from company.models import Company, CompanyFeedType
@@ -68,10 +68,16 @@ class FarmCeritificateSerializers(serializers.ModelSerializer):
         model = FarmCertification
         fields = '__all__'
 
+class FarmUserSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = FarmUser
+        fields = '__all__'
+
 
 class FarmSerializer(serializers.ModelSerializer):
     #farmdata()
     certificate = CertifySerializer(many=True, read_only=True)
+    user_role = serializers.SerializerMethodField()
     farm_images = ImageSerializer(many=True, read_only=True)
     fcr = serializers.SerializerMethodField(read_only=True)
     feed_data = serializers.SerializerMethodField(read_only=True)
@@ -83,6 +89,11 @@ class FarmSerializer(serializers.ModelSerializer):
         certificate_data = FarmCertification.objects.filter(farm_id = obj.id)
         serialize = FarmCeritificateSerializers(certificate_data, many=True).data
         return serialize
+    
+    def get_user_role(self,obj):
+        role_data = FarmUser.objects.filter(farm=obj.id)
+        serialzer = FarmUserSerializers(role_data, many=True).data
+        return serialzer
 
     def get_completed_cycle_count(self, obj):
         all_ponds = Ponds.objects.filter(farm=obj).values_list('id', flat=True)
@@ -126,9 +137,9 @@ class FarmSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Farms
-        fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "state",
-                  "town_village", "location", "description", "farm_images", "certificate", 'user', 'zipcode', 
-                  'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt', 'certificates']
+        fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "city", "user_role",
+                   "state", "country", "town_village", "description", "farm_images", "certificate", 'zipcode', 
+                  'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt', 'certificates', "created_by"]
 
     def create(self, validated_data):
         image_datas = self.context.get('view').request.FILES
@@ -139,18 +150,26 @@ class FarmSerializer(serializers.ModelSerializer):
                 farm_area=validated_data['farm_area'],
                 address_line_one=validated_data['address_line_one'],
                 address_line_two=validated_data['address_line_two'],
+                city=validated_data['city'],
+                country=validated_data['country'],
                 state=validated_data['state'],
                 town_village=validated_data['town_village'],
                 description=validated_data['description'],
                 zipcode=validated_data['zipcode'],
                 district=validated_data['district'],
-                user=validated_data['user']
+                created_by = validated_data["created_by"]                
             )
 
         for image_data in image_datas.getlist('farm_images'):
             name = image_data.name
             FarmImage.objects.create(images=Farm_instance, image_name=name, image=image_data)
 
+        
+        FarmUser.objects.create(
+            farm = Farm_instance,
+            user = validated_data['created_by'],
+            role_id = 1
+        )
         # for certify_data in image_datas.getlist('certificate'):
         #     name = certify_data.name
         #     FarmCertification.objects.create(certificates=Farm_instance, certificate_name=name, image=certify_data)
@@ -184,6 +203,8 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.farm_area = validated_data.get('farm_area', instance.farm_area)
         instance.address_line_one = validated_data.get('address_line_one', instance.address_line_one)
         instance.address_line_two = validated_data.get('address_line_two', instance.address_line_two)
+        instance.city = validated_data.get('city', instance.city)
+        instance.country = validated_data.get('country', instance.country)
         instance.state = validated_data.get('state', instance.state)
         instance.town_village = validated_data.get('town_village', instance.town_village)
         instance.description = validated_data.get('description', instance.description)
@@ -191,7 +212,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.district = validated_data.get('district', instance.district)
         instance.save()
 
-        #certify_with_same_profile_instance = FarmCertification.objects.filter(certificates=instance.pk).values_list('id', flat=True)
+        certify_with_same_profile_instance = Farms.objects.filter(farm=instance.pk).values_list('id', flat=True)
         image_with_same_profile_instance = FarmImage.objects.filter(images=instance.pk).values_list('id', flat=True)
 
         # if len(int_certi_id) != 0:

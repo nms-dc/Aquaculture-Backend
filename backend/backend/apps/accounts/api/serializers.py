@@ -67,7 +67,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', 
+        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', "user_image",
                   'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'website', 'is_verified', 'is_terms_accepted']
         #userdata()
 
@@ -105,7 +105,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
         instance.pincode = validated_data.get('pincode', instance.pincode)
         instance.website = validated_data.get('website', instance.website)
         instance.email = validated_data.get('email', instance.email)
-        user_image = validated_data.get('user_image', instance.user_image)
+        instance.user_image = validated_data.get('user_image', instance.user_image)
         instance.save()
 
         return instance

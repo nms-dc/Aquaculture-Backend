@@ -18,6 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from ponds.api.serializers import PondSummaryOnlySerializer
 from measurements.models import MeasurementMaster, Measurement
 from rest_framework.permissions import IsAuthenticated
+from seeds.models import Seeds
 
 
 class FarmView(viewsets.ModelViewSet):
@@ -112,7 +113,11 @@ class FarmView(viewsets.ModelViewSet):
         result = FeedAllSerializer(instance=farm, context={'request': request}).data
         return Response({"result": result})
     
-
+    @action(detail=True, methods=["get"], url_path="get-seeds")
+    @csrf_exempt
+    def get_seeds(self, request, *args, **kwargs):
+        seed_data = Seeds.objects.all().values()
+        return Response({"seeds_details:": seed_data})
 
 class FeedLotsView(viewsets.ModelViewSet):
     queryset = FeedLots.objects.all()
