@@ -32,3 +32,4 @@ django-rest-auth==0.9.5
 # dj_rest_auth==2.2.5 
 #for aggregating and groupby dates on abw-data and fcr-data need pandas
 pandas
+django-import-export

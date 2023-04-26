@@ -8,6 +8,7 @@ from farms.models import FarmAnalytics
 
 @receiver(post_save, sender=Feeds)
 def compute_graph(sender, instance, created, *args, **kwargs):
+    print("feedgraph siganl executing")
     default_list = ['feeds']
     feed_type = instance.feed_type.type
     if instance.value is None :
@@ -35,6 +36,7 @@ def compute_graph(sender, instance, created, *args, **kwargs):
 
 @receiver(post_save, sender=Feeds)
 def compute_analytics(sender, instance, created, *args, **kwargs):
+    print("measurement siganl executing")
     default_list = ['feeds', 'probiotics']
     feed_type = instance.feed_type.type
     if instance.value is None :

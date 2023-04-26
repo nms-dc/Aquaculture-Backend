@@ -19,18 +19,18 @@ class SpeciesCategory(models.Model):
 # Create your models here.
 class Species(models.Model):
 
-    product_name = models.CharField(max_length=250, null=True)
-    product_desc = models.CharField(max_length=250, null=True)
-    image = models.FileField(upload_to='speciespicture_uploads', null=True)
-    fish_common_name = models.CharField(max_length=250, null=True)
-    fish_scientific_name = models.CharField(max_length=250, null=True)
-    fish_ranges = models.IntegerField(null=True)
-    wikipedia = models.CharField(max_length=250, null=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='species_user_create', default=None, null=True)
-    created_at = models.DateField(auto_now=True, null=True)
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='species_user_update', default=None, null=True)
-    updated_at = models.DateField(auto_now=True, null=True)
-    species_category = models.ForeignKey(SpeciesCategory, on_delete=models.CASCADE, related_name='species_category', default=None, null=True)
+    product_name = models.CharField(max_length=250, null=True, blank=True)
+    product_desc = models.CharField(max_length=250, null=True, blank=True)
+    image = models.FileField(upload_to='speciespicture_uploads', null=True, blank=True)
+    fish_common_name = models.CharField(max_length=250, null=True, blank=True)
+    fish_scientific_name = models.CharField(max_length=250, null=True, blank=True)
+    fish_ranges = models.IntegerField(null=True, blank=True)
+    wikipedia = models.CharField(max_length=250, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='species_user_create', default=None, null=True, blank=True)
+    created_at = models.DateField(auto_now=True, null=True, blank=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='species_user_update', default=None, null=True, blank=True)
+    updated_at = models.DateField(auto_now=True, null=True, blank=True)
+    species_category = models.ForeignKey(SpeciesCategory, on_delete=models.CASCADE, related_name='species_category', default=None, null=True, blank=True)
 
     def __str__(self):
         return str(self.id)

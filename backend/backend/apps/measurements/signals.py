@@ -8,6 +8,7 @@ from farms.models import FarmAnalytics
 
 @receiver(post_save, sender=Measurement)
 def compute_graph(sender, instance, created, *args, **kwargs):
+    print("measurement siganl executing")
     default_list = ['abw']
     measure_type = instance.measurement_type.measurement_type
     if instance.value is None :

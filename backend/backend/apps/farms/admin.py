@@ -11,7 +11,7 @@ class FarmsAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('company_id', 'farm_name')}),
         ('Farm info', {'fields': (('farm_area', 'phone'), 'description',)}),
-        ('Address info', {'fields': ('city', 'country', 'town_village', 'zipcode', 'state', )}),
+        ('Address info', {'fields': ('town_village', 'zipcode', 'state', "city", "country")}),
     )
     add_fieldsets = (
         (None, {

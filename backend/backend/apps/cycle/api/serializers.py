@@ -12,7 +12,7 @@ import datetime
 from dateutil import parser
 from measurements.models import Measurement, MeasurementMaster
 from measurements.api.serializers import MeasurementSerializer, MeasurementcycleSerializer, MasterSerializer
-from cycle.single_backup import farmdata
+#from cycle.single_backup import farmdata
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,7 +43,7 @@ class CycleHarvestRelationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cycle
-        fields = ["id", "species", "description", "species_pl_stage", "harvest"]
+        fields = ["id", "species", "description", "harvest"]
 
 
 class CycleMeasureRelationSerializer(serializers.ModelSerializer):
@@ -67,7 +67,7 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
 
 class CycleSerializer(serializers.ModelSerializer):
-    farmdata()
+    #farmdata()
     cycle_pond_images = PrepPondImageSerializer(many=True, read_only=True)
     seed_images = SeedImageSerializer(many=True, read_only=True)
     cycle_harvests = serializers.SerializerMethodField(read_only=True)
@@ -124,10 +124,9 @@ class CycleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cycle
-        fields = ['id', 'Pond', 'species', 'species_pl_stage', 'seed_company', 'invest_amount', 'pondPrep_cost',
-                  'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
-                  'numbers_of_larva', 'cycle_harvests', 'doc', 'pond_transfered_from', 'total_harvested_amt',
-                   'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', 'seeding_transfer_date']
+        fields = ['id', 'Pond',"seeds" 'pondPrep_cost', 'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
+                  'numbers_of_larva', 'cycle_harvests','pond_transfered_from', 'total_harvested_amt',
+                   'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', "species_weight"]
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
@@ -139,20 +138,17 @@ class CycleSerializer(serializers.ModelSerializer):
             seeding_date = validated_data['seeding_date']
 
         cycle_instance = Cycle.objects.create(
-            species=validated_data['species'],
-            species_pl_stage=validated_data['species_pl_stage'],
-            invest_amount=validated_data['invest_amount'],
             pondPrep_cost=validated_data['pondPrep_cost'],
             description=validated_data['description'],
             Pond=validated_data['Pond'],
-            seed_company=validated_data['seed_company'],
             numbers_of_larva=validated_data['numbers_of_larva'],
             seeding_qty=validated_data['seeding_qty'],
             seeding_date=seeding_date,
             pond_transfered_from=validated_data['pond_transfered_from'],
-            # is_active = validated_data['is_active'],
+            created_by = validated_data['created_by'],
             is_active = True,
-            seeding_transfer_date = validated_data['seeding_transfer_date']
+            species_weight = validated_data['species_weight'],
+            seeds=validated_data['seeds']
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True
@@ -208,19 +204,16 @@ class CycleSerializer(serializers.ModelSerializer):
             return (date2 - date1).days
         doc = numOfDays(created_date, current_date)
         instance.Pond = validated_data.get('Pond', instance.Pond)
-        instance.species = validated_data.get('species', instance.species)
-        instance.species_pl_stage = validated_data.get('species_pl_stage', instance.species_pl_stage)
-        instance.seed_company = validated_data.get('seed_company', instance.seed_company)
-        instance.invest_amount = validated_data.get('invest_amount', instance.invest_amount)
         instance.pondPrep_cost = validated_data.get('pondPrep_cost', instance.pondPrep_cost)
         instance.description = validated_data.get('description', instance.description)
         instance.numbers_of_larva = validated_data.get('numbers_of_larva', instance.numbers_of_larva)
         instance.seeding_qty = validated_data.get('seeding_qty', instance.seeding_qty)
         instance.seeding_date = validated_data.get('seeding_date', instance.seeding_date)
         instance.is_active = validated_data.get('is_active', instance.is_active)
-        instance.doc = doc
+        instance.created_by = validated_data.get('created_by', instance.created_by)
         instance.pond_transfered_from = validated_data.get('pond_transfered_from', instance.pond_transfered_from)
-        instance.seeding_transfer_date = validated_data.get('seeding_transfer_date', instance.seeding_transfer_date)
+        instance.species_weight = validated_data.get('species_weight', instance.species_weight)
+        instance.seeds = validated_data.get('seeds', instance.seeds)
         instance.save()
 
         pondimage_with_same_profile_instance = CyclePondImage.objects.filter(images=instance.pk).values_list('id', flat=True)

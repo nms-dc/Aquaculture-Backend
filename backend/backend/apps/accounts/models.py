@@ -76,9 +76,9 @@ class User(AbstractBaseUser):
         max_length=255,
         unique=True,
     )
-    first_name = models.CharField(max_length=255, default="Aqua")
-    last_name = models.CharField(max_length=255, default="User")
-    phone_no = models.CharField(max_length=20, blank=True,)
+    first_name = models.CharField(max_length=255, default="Aqua",  blank=True)
+    last_name = models.CharField(max_length=255, default="User", blank=True)
+    phone_no = models.CharField(max_length=20, blank=True)
     company_name = models.CharField(max_length=200, default='', blank=True)
     sic_gst_code = models.CharField(max_length=200, default='', blank=True)
     pan_no = models.CharField(max_length=200, default='', blank=True)
@@ -94,11 +94,11 @@ class User(AbstractBaseUser):
         ]
     )
     date_joined = models.DateTimeField('date joined', default=timezone.now)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_verified = models.BooleanField(default=False)
-    is_terms_accepted = models.BooleanField(default=False)
+    updated_at = models.DateTimeField(auto_now=True,  blank=True)
+    is_active = models.BooleanField(default=True, blank=True)
+    is_admin = models.BooleanField(default=False, blank=True)
+    is_verified = models.BooleanField(default=False, blank=True)
+    is_terms_accepted = models.BooleanField(default=False, blank=True)
     user_image = models.FileField(upload_to="user_image",null=True, blank=True)
 
     objects = UserManager()
@@ -148,5 +148,5 @@ def create_auth_token(sender, instance = None, created=False, **kwargs):
 
 
 class Roles(models.Model):
-    role = models.CharField(max_length=400, null=True)
-    role_description = models.CharField(max_length=400, null=True)
+    role = models.CharField(max_length=400, null=True, blank=True)
+    role_description = models.CharField(max_length=400, null=True, blank=True)
