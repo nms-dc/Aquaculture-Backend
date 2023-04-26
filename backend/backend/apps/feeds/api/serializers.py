@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from feeds.single_backup import farmdata
+#from feeds.single_backup import farmdata
 from feeds.models import FeedLots, Feeds, FeedType, FeedPics
 
 
@@ -12,7 +12,7 @@ class FeedImagessserializers(serializers.ModelSerializer):
 
 
 class Feedsserializers(serializers.ModelSerializer):
-    farmdata()
+    #farmdata()
     feed_image = serializers.SerializerMethodField()
     def get_feed_image(self,obj):
         feed_image = FeedPics.objects.filter(images = obj.id)
