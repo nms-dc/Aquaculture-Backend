@@ -38,8 +38,8 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
 
     def get_farm_id(self, obj):
         try:
-            if Farms.objects.filter(user=obj).exists():
-                farm = Farms.objects.filter(user=obj).first()
+            if Farms.objects.filter(created_by=obj).exists():
+                farm = Farms.objects.filter(created_by=obj).first()
                 return farm.id
             else:
                 return None
