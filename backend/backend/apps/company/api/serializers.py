@@ -10,12 +10,12 @@ class CompanyFeedTypeSerializers(serializers.ModelSerializer):
 
 
 class CompanySerializers(serializers.ModelSerializer):
-    types= serializers.SerializerMethodField()
+    #types= serializers.SerializerMethodField()
     #farmdata()
-    def get_types(self, obj):
-        data = CompanyFeedType.objects.filter(company = obj.id)
-        serialize = CompanyFeedTypeSerializers(data, many=True).data
-        return serialize
+    # def get_types(self, obj):
+    #     data = CompanyFeedType.objects.filter(company = obj.id)
+    #     serialize = CompanyFeedTypeSerializers(data, many=True).data
+    #     return serialize
     
     class Meta:
         model = Company
