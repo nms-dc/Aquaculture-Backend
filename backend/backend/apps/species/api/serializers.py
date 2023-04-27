@@ -16,4 +16,4 @@ class SpeciesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Species
         fields = ['id', 'product_name', 'product_desc', 'image', 'fish_common_name', 'fish_scientific_name', 'fish_ranges',
-                  'wikipedia', 'createdAt', 'updatedAt', 'species_cat']
+                  'wikipedia', 'created_at', 'updated_at', 'species_cat']

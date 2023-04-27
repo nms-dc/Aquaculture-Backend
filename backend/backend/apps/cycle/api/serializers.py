@@ -124,7 +124,7 @@ class CycleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cycle
-        fields = ['id', 'Pond',"seeds" 'pondPrep_cost', 'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
+        fields = ['id', 'Pond',"seeds", 'pondPrep_cost', 'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
                   'numbers_of_larva', 'cycle_harvests','pond_transfered_from', 'total_harvested_amt',
                    'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', "species_weight"]
 
@@ -148,7 +148,7 @@ class CycleSerializer(serializers.ModelSerializer):
             created_by = validated_data['created_by'],
             is_active = True,
             species_weight = validated_data['species_weight'],
-            seeds=validated_data['seeds']
+            seeds=validated_data['seeds'],
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True

@@ -61,7 +61,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
         fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'measurement_description',
-                  'price_per_kg', 'nutrition_data', 'measure_images', 'lot', 'is_probiotic_mixed', 'notes']
+                  'measure_images', 'notes']
 
     
     def create(self, validated_data):
