@@ -117,7 +117,7 @@ class FarmView(viewsets.ModelViewSet):
     @csrf_exempt
     def get_seeds(self, request, *args, **kwargs):
         seed_data = Seeds.objects.all().values()
-        return Response({"seeds_details:": seed_data})
+        return Response(seed_data)
 
 class FeedLotsView(viewsets.ModelViewSet):
     queryset = FeedLots.objects.all()
