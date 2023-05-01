@@ -35,6 +35,7 @@ urlpatterns = [
     path('api/v1/notifications/', include('notifications.api.urls', 'notifications_api')),
     path('api/v1/graphs/', include('graphs.api.urls', 'graphs_api')),
     path('api/v1/feeds/', include('feeds.api.urls', 'feeds_api')),
+    path('api/v1/seeds/', include('seeds.api.urls', 'seeds_api')),
     path('admin/', admin.site.urls),
     path('auth/',include('drf_social_oauth2.urls',namespace='drf')),
     path('schema', SpectacularAPIView.as_view(), name = 'api-schema'),

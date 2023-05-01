@@ -19,6 +19,7 @@ from ponds.api.serializers import PondSummaryOnlySerializer
 from measurements.models import MeasurementMaster, Measurement
 from rest_framework.permissions import IsAuthenticated
 from seeds.models import Seeds
+from company.models import Company
 
 
 class FarmView(viewsets.ModelViewSet):
@@ -117,7 +118,12 @@ class FarmView(viewsets.ModelViewSet):
     @csrf_exempt
     def get_seeds(self, request, *args, **kwargs):
         seed_data = Seeds.objects.all().values()
-        return Response(seed_data)
+        company = Company.objects.filter(id =seed_data[0]['seed_company_id_id'] ).values()
+        print(type(seed_data[0]))
+        seed_dict = seed_data[0]
+        seed_dict['seed_company_name'] = company[0]['company_name']
+        
+        return Response(seed_dict)
 
 class FeedLotsView(viewsets.ModelViewSet):
     queryset = FeedLots.objects.all()
