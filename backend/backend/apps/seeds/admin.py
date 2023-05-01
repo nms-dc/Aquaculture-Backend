@@ -8,7 +8,7 @@ class SeedAdmin(admin.ModelAdmin):
     list_filter = ('lot_number', 'qr_code_id')
     fieldsets = (
         (None, {'fields': ('lot_number', 'date_sold')}),
-        ('seed info', {'fields': ('number_of_eggs', 'date_received', 'date_hatched',)}),
+        ('seed info', {'fields': ('number_of_eggs', 'date_received', 'date_hatched', "species", "species_pl_stage", "farm")}),
         ('moreinfoAboutSeed', {'fields': ('qr_code_id', 'quality', 'weight', 'price', 'seed_company_id')}),
     )
     add_fieldsets = (
