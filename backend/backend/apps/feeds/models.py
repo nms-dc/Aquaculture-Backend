@@ -19,7 +19,7 @@ class Feeds(models.Model):
     time = models.DateTimeField(default=timezone.now, blank=True)
     lot = models.ForeignKey(FeedLots, on_delete=models.CASCADE, default=None, null=True, blank=True)
     price_per_kg = models.IntegerField(null=True, blank=True)
-    is_probiotic_mixed = models.BooleanField(default=False, blank=True)
+    is_probiotic_mixed = models.BooleanField(default=False, blank=True, null=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='feed_user_create', default=None, null=True, blank=True)
     created_at = models.DateField(auto_now=True, null=True, blank=True)
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='feed_user_update', default=None, null=True, blank=True)

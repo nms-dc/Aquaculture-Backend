@@ -38,12 +38,12 @@ def copy_measurements(sender, instance, created, *args, **kwargs):
                     Feeds.objects.create(
                         cycle=instance,
                         feed_type=master,
-                        value=feed_data['value'],
-                        time=feed_data['time'],
-                        price_per_kg=feed_data['price_per_kg'],
-                        is_probiotic_mixed=feed_data['price_per_kg'],
-                        created_by=feed_data['created_by'],
-                        updated_by=feed_data['updated_by']
+                        value=feed_data[0]['value'],
+                        time=feed_data[0]['time'],
+                        price_per_kg=feed_data[0]['price_per_kg'],
+                        is_probiotic_mixed=feed_data[0]['price_per_kg'],
+                        #created_by=feed_data[0]['created_by'],
+                        #updated_by=feed_data[0]['updated_by']
                     )
     else:
         print('measure_data-not found')

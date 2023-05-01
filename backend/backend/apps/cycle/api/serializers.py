@@ -126,7 +126,7 @@ class CycleSerializer(serializers.ModelSerializer):
         model = Cycle
         fields = ['id', 'Pond',"seeds", 'pondPrep_cost', 'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
                   'numbers_of_larva', 'cycle_harvests','pond_transfered_from', 'total_harvested_amt',
-                   'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', "species_weight"]
+                   'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', "species_weight", "created_by"]
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
