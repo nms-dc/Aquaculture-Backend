@@ -61,7 +61,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
         fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'measurement_description',
-                  'measure_images', 'notes']
+                  'measure_images', 'notes', 'created_by']
 
     
     def create(self, validated_data):
@@ -73,14 +73,13 @@ class MeasurementSerializer(serializers.ModelSerializer):
             measurement_type=validated_data['measurement_type'],
             value=validated_data['value'],
             time=validated_data['time'],
-            lot=validated_data['lot'],
             notes=validated_data['notes'],
             created_by=validated_data['created_by']
             )
 
         for data in image_datas.getlist('measure_images'):
             name = data.name
-            MeasurementPics.objects.create(images=measurement_instance, image_name=name, image=data)
+            MeasurementPics.objects.create(images=measurement_instance, image_name=name, image=data, created_by=validated_data['created_by'])
 
         return measurement_instance
 
@@ -100,9 +99,9 @@ class MeasurementSerializer(serializers.ModelSerializer):
         instance.measurement_type = validated_data.get('measurement_type', instance.measurement_type)
         instance.value = validated_data.get('value', instance.value)
         instance.time = validated_data.get('time', instance.time)
-        instance.lot = validated_data.get('lot', instance.lot)
         instance.notes = validated_data.get('notes', instance.notes)
         instance.created_by = validated_data.get('created_by', instance.created_by)
+        instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.save()
 
         measureimage_with_same_profile_instance = MeasurementPics.objects.filter(images=instance.pk).values_list('id', flat=True)
@@ -114,7 +113,7 @@ class MeasurementSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('measure_images')) != 0:
             for image_data in image_datas.getlist('measure_images'):
                 name = image_data.name
-                MeasurementPics.objects.create(images=instance, image_name=name, image=image_data)
+                MeasurementPics.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         return instance
 
 

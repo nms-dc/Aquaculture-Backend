@@ -162,7 +162,7 @@ class FarmSerializer(serializers.ModelSerializer):
 
         for image_data in image_datas.getlist('farm_images'):
             name = image_data.name
-            FarmImage.objects.create(images=Farm_instance, image_name=name, image=image_data)
+            FarmImage.objects.create(images=Farm_instance, image_name=name, image=image_data, created_by = validated_data["created_by"])
 
         
         FarmUser.objects.create(
@@ -210,6 +210,8 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.zipcode = validated_data.get('zipcode', instance.zipcode)
         instance.district = validated_data.get('district', instance.district)
+        instance.created_by = validated_data.get('created_by', instance.created_by)
+        instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.save()
 
         certify_with_same_profile_instance = Farms.objects.filter(farm=instance.pk).values_list('id', flat=True)
@@ -232,7 +234,7 @@ class FarmSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('farm_images')) != 0:
             for image_data in image_datas.getlist('farm_images'):
                 name = image_data.name
-                FarmImage.objects.create(images=instance, image_name=name, image=image_data)
+                FarmImage.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         return instance
 
 

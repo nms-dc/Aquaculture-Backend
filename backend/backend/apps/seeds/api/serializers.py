@@ -2,6 +2,7 @@
 from rest_framework import serializers
 #from feeds.single_backup import farmdata
 from seeds.models import SeedPlStage, SeedImage, Seeds, Species
+from company.models import Company
 
 
 class SeedImageserializers(serializers.ModelSerializer):
@@ -12,6 +13,12 @@ class SeedImageserializers(serializers.ModelSerializer):
 
 
 class Seedserializers(serializers.ModelSerializer):
+    company_name = serializers.SerializerMethodField()
+
+    def get_company_name(self,obj):
+        company_data = Company.objects.filter(company_name = obj.seed_company_id).values()
+        return company_data[0]["company_name"]
+
     
     class Meta:
         model = Seeds
@@ -34,12 +41,13 @@ class Seedserializers(serializers.ModelSerializer):
             farm=validated_data['farm'],
             seed_company_id=validated_data['seed_company_id'],
             species=validated_data['species'],
-            species_pl_stage=validated_data['species_pl_stage']
+            species_pl_stage=validated_data['species_pl_stage'],
+            created_by=validated_data['created_by']
             )
 
         for data in image_datas.getlist('feeds_images'):
             name = data.name
-            SeedImage.objects.create(fish_ids=measurement_instance, user=name, image=data)
+            SeedImage.objects.create(fish_ids=measurement_instance, user=name, image=data, created_by=validated_data['created_by'])
 
         return measurement_instance
 
@@ -68,6 +76,8 @@ class Seedserializers(serializers.ModelSerializer):
         instance.seed_company_id = validated_data.get('seed_company_id', instance.seed_company_id)
         instance.species = validated_data.get('species', instance.species)
         instance.species_pl_stage = validated_data.get('species_pl_stage', instance.species_pl_stage)
+        instance.created_by = validated_data.get('created_by', instance.created_by)
+        instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.save()
 
         feedimage_with_same_profile_instance = SeedImage.objects.filter(fish_ids=instance.pk).values_list('id', flat=True)
@@ -79,7 +89,7 @@ class Seedserializers(serializers.ModelSerializer):
         if len(image_datas.getlist('seed_images')) != 0:
             for image_data in image_datas.getlist('feeds_images'):
                 name = image_data.name
-                SeedImage.objects.create(fish_ids=instance, image=image_data)
+                SeedImage.objects.create(fish_ids=instance, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         return instance
 
 # class FeedLotsserializers(serializers.ModelSerializer):

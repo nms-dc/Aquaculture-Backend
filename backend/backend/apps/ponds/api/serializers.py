@@ -168,12 +168,13 @@ class PondsSerializer(serializers.ModelSerializer):
             pond_area=validated_data['pond_area'],
             pond_capacity=validated_data['pond_capacity'],
             description=validated_data['description'],
-            farm=validated_data['farm']
+            farm=validated_data['farm'],
+            created_by=validated_data['created_by']
             )
 
         for data in pond_image.getlist('pond_images'):
             name = data.name
-            PondImage.objects.create(images=pond_instance, image_name=name, image=data)
+            PondImage.objects.create(images=pond_instance, image_name=name, image=data, created_by=validated_data['created_by'])
 
         return pond_instance
 
@@ -198,6 +199,8 @@ class PondsSerializer(serializers.ModelSerializer):
         instance.pond_capacity = validated_data.get('pond_capacity', instance.pond_capacity)
         instance.description = validated_data.get('description', instance.description)
         instance.farm = validated_data.get('farm', instance.farm)
+        instance.created_by=validated_data.get('created_by',instance.created_by)
+        instance.updated_by=validated_data.get('updated_by',instance.updated_by)
         instance.save()
 
         pondimage_with_same_profile_instance = PondImage.objects.filter(images=instance.pk).values_list('id', flat=True)
@@ -210,7 +213,7 @@ class PondsSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('pond_images')) != 0:
             for image_data in image_datas.getlist('pond_images'):
                 name = image_data.name
-                PondImage.objects.create(images=instance, image_name=name, image=image_data)
+                PondImage.objects.create(images=instance, image_name=name, image=image_data, updated_by=validated_data.get('updated_by',instance.updated_by))
 
         return instance
 

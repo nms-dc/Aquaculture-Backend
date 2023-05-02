@@ -123,7 +123,7 @@ class FarmView(viewsets.ModelViewSet):
         seed_dict = seed_data[0]
         seed_dict['seed_company_name'] = company[0]['company_name']
         
-        return Response(seed_dict)
+        return Response([seed_dict])
 
 class FeedLotsView(viewsets.ModelViewSet):
     queryset = FeedLots.objects.all()

@@ -171,11 +171,11 @@ class CycleSerializer(serializers.ModelSerializer):
                       
         for data in image_data.getlist('cycle_pond_images'):
             name = data.name
-            CyclePondImage.objects.create(images=cycle_instance, image_name=name, image=data)
+            CyclePondImage.objects.create(images=cycle_instance, image_name=name, image=data, created_by = validated_data['created_by'])
 
         for data in image_data.getlist('seed_images'):
             name = data.name
-            CycleSeedImage.objects.create(images=cycle_instance, image_name=name, image=data)
+            CycleSeedImage.objects.create(images=cycle_instance, image_name=name, image=data, created_by = validated_data['created_by'])
 
         return cycle_instance
 
@@ -214,6 +214,7 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.pond_transfered_from = validated_data.get('pond_transfered_from', instance.pond_transfered_from)
         instance.species_weight = validated_data.get('species_weight', instance.species_weight)
         instance.seeds = validated_data.get('seeds', instance.seeds)
+        instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.save()
 
         pondimage_with_same_profile_instance = CyclePondImage.objects.filter(images=instance.pk).values_list('id', flat=True)
@@ -226,7 +227,7 @@ class CycleSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('cycle_pond_images')) != 0:
             for image_data in image_datas.getlist('cycle_pond_images'):
                 name = image_data.name
-                CyclePondImage.objects.create(images=instance, image_name=name, image=image_data)
+                CyclePondImage.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         if len(int_Simage_id) != 0:
             for delete_id in seedimage_with_same_profile_instance:
                 if delete_id in int_Simage_id:
@@ -234,7 +235,7 @@ class CycleSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('seed_images')) != 0:
             for image_data in image_datas.getlist('seed_images'):
                 name = image_data.name
-                CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data)
+                CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.active_cycle_date = validated_data.get('seeding_date')
         obj.save()  
