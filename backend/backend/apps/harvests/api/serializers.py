@@ -72,7 +72,8 @@ class HarvestSerializer(serializers.ModelSerializer):
             animal_count_1=validated_data['animal_count_1'],
             total_kg_1=validated_data['total_kg_1'],
             price_kg_1=validated_data['price_kg_1'],
-            is_chill_kill=validated_data['is_chill_kill']
+            is_chill_kill=validated_data['is_chill_kill'],
+            created_by = validated_data["created_by"]
         )
 
         if validated_data['harvest_type'] == 'F':
@@ -94,13 +95,13 @@ class HarvestSerializer(serializers.ModelSerializer):
 
         for data in image_data.getlist('ani_images'):
             name = data.name
-            HarvestAnimalImages.objects.create(images=harvest_instance, image_name=name, image=data)
+            HarvestAnimalImages.objects.create(images=harvest_instance, image_name=name, image=data, created_by = validated_data["created_by"])
         for data in image_data.getlist('pond_images'):
             name = data.name
-            HarvestPondImages.objects.create(images=harvest_instance, image_name=name, image=data)
+            HarvestPondImages.objects.create(images=harvest_instance, image_name=name, image=data, created_by = validated_data["created_by"])
         for data in image_data.getlist('log_images'):
             name = data.name
-            HarvestLogisticImages.objects.create(images=harvest_instance, image_name=name, image=data)
+            HarvestLogisticImages.objects.create(images=harvest_instance, image_name=name, image=data, created_by = validated_data["created_by"])
 
         return harvest_instance
 
@@ -138,6 +139,8 @@ class HarvestSerializer(serializers.ModelSerializer):
         instance.total_kg_1 = validated_data.get('total_kg_1', instance.total_kg_1)
         instance.price_kg_1 = validated_data.get('price_kg_1', instance.price_kg_1)
         instance.is_chill_kill = validated_data.get('is_chill_kill', instance.is_chill_kill)
+        instance.created_by = validated_data.get('created_by', instance.created_by)
+        instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.save()
 
         if validated_data['harvest_type'] == 'F':
@@ -165,14 +168,14 @@ class HarvestSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('animal_images')) != 0:
             for image_data in image_datas.getlist('animal_images'):
                 name = image_data.name
-                HarvestAnimalImages.objects.create(images=instance, image_name=name, image=image_data)
+                HarvestAnimalImages.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         if len(int_pond_id) != 0:
             for delete_id in pondimage_with_same_profile_instance:
                     HarvestPondImages.objects.filter(pk=delete_id).delete()
         if len(image_datas.getlist('pond_images')) != 0:
             for image_data in image_datas.getlist('pond_images'):
                 name = image_data.name
-                HarvestPondImages.objects.create(images=instance, image_name=name, image=image_data)
+                HarvestPondImages.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         if len(int_log_id) != 0:
             for delete_id in log_image_with_same_profile_instance:
                 if delete_id in int_log_id:
@@ -180,6 +183,6 @@ class HarvestSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('log_images')) != 0:
             for image_data in image_datas.getlist('log_images'):
                 name = image_data.name
-                HarvestLogisticImages.objects.create(images=instance, image_name=name, image=image_data)
+                HarvestLogisticImages.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
 
         return instance

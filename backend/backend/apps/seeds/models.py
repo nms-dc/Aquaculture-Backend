@@ -29,6 +29,8 @@ class Seeds(models.Model):
     seed_company_id = models.ForeignKey(Company, on_delete=models.CASCADE, default=None, null=True, blank=True)
     species = models.ForeignKey(Species, on_delete=models.CASCADE, default=None, null=True, blank=True)
     species_pl_stage = models.ForeignKey(SeedPlStage, on_delete=models.CASCADE, default=None, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seed_user_create', default=None, null=True, blank=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='seed_user_update', default=None, null=True, blank=True)
 
     def __str__(self):
         return str(self.id)

@@ -12,6 +12,7 @@ from accounts.models import User
 from species.models import Species
 from seeds.models import SeedPlStage
 
+
 class Cycle(models.Model):
     Pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_description', default=None, null=True,  blank=True)
     seeds = models.ForeignKey(Seeds, on_delete=models.CASCADE, related_name='seed_description', default=None, null=True,  blank=True)

@@ -34,12 +34,13 @@ class Feedsserializers(serializers.ModelSerializer):
             time=validated_data['time'],
             lot=validated_data['lot'],
             price_per_kg=validated_data['price_per_kg'],
-            is_probiotic_mixed=validated_data['is_probiotic_mixed']
+            is_probiotic_mixed=validated_data['is_probiotic_mixed'],
+            created_by = validated_data['created_by']
             )
 
         for data in image_datas.getlist('feeds_images'):
             name = data.name
-            FeedPics.objects.create(images=measurement_instance, image_name=name, image=data)
+            FeedPics.objects.create(images=measurement_instance, image_name=name, image=data, created_by = validated_data['created_by'])
 
         return measurement_instance
 
@@ -62,6 +63,8 @@ class Feedsserializers(serializers.ModelSerializer):
         instance.lot = validated_data.get('lot', instance.lot)
         instance.price_per_kg = validated_data.get('price_per_kg', instance.price_per_kg)
         instance.is_probiotic_mixed = validated_data.get('is_probiotic_mixed', instance.is_probiotic_mixed)
+        instance.created_by = validated_data.get('created_by', instance.created_by)
+        instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.save()
 
         feedimage_with_same_profile_instance = FeedPics.objects.filter(images=instance.pk).values_list('id', flat=True)
@@ -73,7 +76,7 @@ class Feedsserializers(serializers.ModelSerializer):
         if len(image_datas.getlist('feeds_images')) != 0:
             for image_data in image_datas.getlist('feeds_images'):
                 name = image_data.name
-                FeedPics.objects.create(images=instance, image_name=name, image=image_data)
+                FeedPics.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
         return instance
 
 class FeedLotsserializers(serializers.ModelSerializer):
