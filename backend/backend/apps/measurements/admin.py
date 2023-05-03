@@ -3,7 +3,7 @@ from measurements.models import Measurement, MeasurementMaster, MeasurementPics
 from import_export.admin import ExportActionMixin
 
 
-class MeasurementAdmin(admin.ModelAdmin):
+class MeasurementAdmin(ExportActionMixin, admin.ModelAdmin):
     def farm_name(self, obj):
         return obj.cycle.Pond.farm.farm_name
     
@@ -45,7 +45,7 @@ class MeasurementmasterAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class MeasurementpicsAdmin(admin.ModelAdmin):
+class MeasurementpicsAdmin(ExportActionMixin, admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.images.cycle.Pond.farm.farm_name

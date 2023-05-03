@@ -1,10 +1,11 @@
 from django.contrib import admin
 from farms.models import Farms, FarmImage, FarmCertification, FeedLots, FarmAnalytics, FeedLotTypes, FarmUser
+from import_export.admin import ExportActionMixin
 
 
 # Register your models here.
 
-class FarmsAdmin(admin.ModelAdmin):
+class FarmsAdmin(ExportActionMixin, admin.ModelAdmin):
 
     list_display = ('farm_name', 'farm_area', 'company_id')
     list_filter = ('company_id', 'farm_name', )
@@ -26,7 +27,7 @@ class FarmsAdmin(admin.ModelAdmin):
 
 
 
-class FarmAnalyticsAdmin(admin.ModelAdmin):
+class FarmAnalyticsAdmin(ExportActionMixin, admin.ModelAdmin):
 
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
@@ -53,7 +54,7 @@ class FarmAnalyticsAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FarmCertificatesAdmin(admin.ModelAdmin):
+class FarmCertificatesAdmin(ExportActionMixin, admin.ModelAdmin):
     def farm_name(self,obj):
         return obj.farm_id
 
@@ -75,7 +76,7 @@ class FarmCertificatesAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FarmImagesAdmin(admin.ModelAdmin):
+class FarmImagesAdmin(ExportActionMixin, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.images.farm_name
@@ -98,7 +99,7 @@ class FarmImagesAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FeedLotsAdmin(admin.ModelAdmin):
+class FeedLotsAdmin(ExportActionMixin, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm_id.farm_name

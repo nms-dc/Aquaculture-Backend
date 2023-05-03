@@ -12,6 +12,10 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
+from sendgrid import SendGridAPIClient
+#from typing import List, Dict
+from django.conf import settings
+
 
 
 
@@ -132,21 +136,32 @@ class User(AbstractBaseUser):
         return self.is_verified
 
     def save(self, *args, **kwargs):
-        if self.is_verified == False:        
-            print(self.is_verified,'verified pending')
-            super(User, self).save(*args, **kwargs)
-        elif self.is_verified == True:
-            print(self.is_verified,'verification completed')
-            super(User, self).save(*args, **kwargs)
-            
+        from django.core.mail import send_mail
+        if self.is_verified == True:
+            send_mail('hi subject maded by deductiveclouds',f'congrats your mail has been verified {self.email}','pugal.m@deductiveclouds.com',[self.email],fail_silently=False)
+            print('mail sent successfully')
+        else:
+
+            send_mail('hi subject maded by deductiveclouds',f'a new user logged in and his mail id is {self.email}','pugal.m@deductiveclouds.com',['narayana.s@deductiveclouds.com'],fail_silently=False)
+            print('mail sent successfully')
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance = None, created=False, **kwargs):
     #if new  user has  been created we want to generate a token
     if created:
         Token.objects.create(user=instance)
+        
  
 
 
 class Roles(models.Model):
     role = models.CharField(max_length=400, null=True, blank=True)
     role_description = models.CharField(max_length=400, null=True, blank=True)
+
+
+
+"""
+sending the email through the python shell
+
+send_mail('hi subject maded by pugal','the message is checking the email part','pugal.m@deductiveclouds.com',['www.pugal5938pugal@gmail.com'],fail_silently=False)
+
+"""

@@ -1,8 +1,9 @@
 from django.contrib import admin
 from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGraphs, PondAnalytics
+from import_export.admin import ExportActionMixin
 
 
-class PondAdmin(admin.ModelAdmin):
+class PondAdmin(ExportActionMixin, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm.farm_name
@@ -26,7 +27,7 @@ class PondAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondAnalyticsAdmin(admin.ModelAdmin):
+class PondAnalyticsAdmin(ExportActionMixin, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm.farm_name
@@ -50,7 +51,7 @@ class PondAnalyticsAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondGraphsAdmin(admin.ModelAdmin):
+class PondGraphsAdmin(ExportActionMixin, admin.ModelAdmin):
     def farm_name(self,obj):
         return obj.farm.farm_name
     
@@ -73,7 +74,7 @@ class PondGraphsAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondImageAdmin(admin.ModelAdmin):
+class PondImageAdmin(ExportActionMixin, admin.ModelAdmin):
     def farm_name(self,obj):
         return "farm_id need to assign"#obj.images.farm.farm_name
     
@@ -96,7 +97,7 @@ class PondImageAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondTypeAdmin(admin.ModelAdmin):
+class PondTypeAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('name', 'desc',)
     list_filter = ('pond_construct',)
     fieldsets = (
@@ -113,7 +114,7 @@ class PondTypeAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondConstructTypeAdmin(admin.ModelAdmin):
+class PondConstructTypeAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('construct_type', )
     list_filter = ('construct_type',)
     fieldsets = (

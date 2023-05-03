@@ -291,4 +291,14 @@ SITE_ID = 5
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+#allowing us to delete 50000 files at a single shot in admin panel and everywhere
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 50000
+
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = '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'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+DEFAULT_FROM_EMAIL = "pugal.m@deductiveclouds.com"

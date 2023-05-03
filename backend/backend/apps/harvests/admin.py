@@ -1,8 +1,9 @@
 from django.contrib import admin
 from harvests.models import Harvests, AddAnimal, HarvestAnimalImages,HarvestLogisticImages, HarvestPondImages
+from import_export.admin import ExportActionMixin
 
 
-class HarvestAdmin(admin.ModelAdmin):
+class HarvestAdmin(ExportActionMixin, admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.cycle.Pond.farm.farm_name
@@ -29,7 +30,7 @@ class HarvestAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class AddAnimalAdmin(admin.ModelAdmin):
+class AddAnimalAdmin(ExportActionMixin, admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.adding_animal.cycle.Pond.farm.farm_name
@@ -55,7 +56,7 @@ class AddAnimalAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class AnimalImagesAdmin(admin.ModelAdmin):
+class AnimalImagesAdmin(ExportActionMixin, admin.ModelAdmin):
 
     # def farm_name(self, obj):
     #     return obj.images.cycle.farm
@@ -81,7 +82,7 @@ class AnimalImagesAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondImagesAdmin(admin.ModelAdmin):
+class PondImagesAdmin(ExportActionMixin, admin.ModelAdmin):
 
     # def farm_name(self, obj):
     #     return obj.images.cycle.Pond.farm.farm_name
@@ -107,7 +108,7 @@ class PondImagesAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class LogisticImagesAdmin(admin.ModelAdmin):
+class LogisticImagesAdmin(ExportActionMixin, admin.ModelAdmin):
 
     # def farm_name(self, obj):
     #     return obj.images.cycle.Pond.farm.farm_name
