@@ -1,9 +1,10 @@
 from django.contrib import admin
 from seeds.models import SeedImage, Seeds, SeedPlStage
+from import_export.admin import ExportActionMixin
 
 # Register your models here.
 
-class SeedAdmin(admin.ModelAdmin):
+class SeedAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('lot_number', 'number_of_eggs', 'date_sold', 'qr_code_id','quality')
     list_filter = ('lot_number', 'qr_code_id')
     fieldsets = (
@@ -22,7 +23,7 @@ class SeedAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
     
-class SeedImageAdmin(admin.ModelAdmin):
+class SeedImageAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('image', 'user', )
     list_filter = ('fish_ids', )
     fieldsets = (

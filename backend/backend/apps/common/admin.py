@@ -1,8 +1,9 @@
 from django.contrib import admin
 from common.models import Country, Currency
+from import_export.admin import ExportActionMixin
 
 
-class CountryAdmin(admin.ModelAdmin):
+class CountryAdmin(ExportActionMixin, admin.ModelAdmin):
 
     list_display = ('alpha_2_code', 'alpha_3_code', 'country_name')
     list_filter = ('country_name', )
@@ -21,7 +22,7 @@ class CountryAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class CurrencyAdmin(admin.ModelAdmin):
+class CurrencyAdmin(ExportActionMixin, admin.ModelAdmin):
 
     list_display = ('coutry_id', 'currency', 'fraction_number')
     list_filter = ('coutry_id', )

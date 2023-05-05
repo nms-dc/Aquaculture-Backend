@@ -25,7 +25,7 @@ def logout_View(request):
 @api_view(['post', ])
 @csrf_exempt
 @permission_classes([AllowAny])
-@authentication_classes([])
+#@authentication_classes([])
 def user_login_view(request):
 
     if request.method == 'POST':

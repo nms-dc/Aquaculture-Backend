@@ -1,9 +1,10 @@
 from django.contrib import admin
 from species.models import Species, SpeciesCategory
+from import_export.admin import ExportActionMixin
 
 # Register your models here.
 
-class SpeciesAdmin(admin.ModelAdmin):
+class SpeciesAdmin(ExportActionMixin, admin.ModelAdmin):
     list_display = ('product_name', 'product_desc', 'image', )
     list_filter = ('fish_common_name', 'product_name')
     fieldsets = (
@@ -22,7 +23,7 @@ class SpeciesAdmin(admin.ModelAdmin):
     filter_horizontal = ()
 
     
-class SpeciesCategoryAdmin(admin.ModelAdmin):
+class SpeciesCategoryAdmin(ExportActionMixin, admin.ModelAdmin):
     
     list_display = ( 'name', 'exp', )
     list_filter = ('parent_category', )
