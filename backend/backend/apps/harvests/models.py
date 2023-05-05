@@ -21,7 +21,7 @@ class Harvests(models.Model):
     harvest_cost = models.FloatField(null=True, default=0, blank=True)
     cycle = models.ForeignKey('cycle.Cycle', on_delete=models.CASCADE, default=None, null=True, blank=True)
     animal_count_1 = models.IntegerField(null=True, default=0, blank=True)
-    harvest_quality = models.CharField(max_length=(100), null=True, default='good', blank=True)
+    harvest_quality = models.CharField(max_length=(256), null=True, default=None, blank=True)
     total_kg_1 = models.FloatField(null=True, default=0, blank=True)
     price_kg_1 = models.FloatField(null=True, default=0, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='harvest_user_create', default=None, null=True, blank=True)
