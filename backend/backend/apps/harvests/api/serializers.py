@@ -64,7 +64,7 @@ class HarvestSerializer(serializers.ModelSerializer):
         harvest_instance = Harvests.objects.create(
             harvest_type=validated_data['harvest_type'],
             total_kgs=validated_data['total_kgs'],
-            temperature=validated_data['temperature'],
+            temperature_celcius=validated_data['temperature_celcius'],
             sold_to=validated_data['sold_to'],
             harvest_notes=validated_data['harvest_notes'],
             harvest_cost=validated_data['harvest_cost'],
@@ -130,7 +130,7 @@ class HarvestSerializer(serializers.ModelSerializer):
         print('animal_image_id',int_animal_id,'pond_image_id',int_pond_id,'log_image_id',int_log_id)
         instance.harvest_type = validated_data.get('harvest_type', instance.harvest_type)
         instance.total_kgs = validated_data.get('total_kgs',  instance.total_kgs)
-        instance.temperature = validated_data.get('temperature', instance.temperature)
+        instance.temperature_celcius = validated_data.get('temperature_celcius', instance.temperature_celcius)
         instance.sold_to = validated_data.get('sold_to', instance.sold_to)
         instance.harvest_notes = validated_data.get('harvest_notes', instance.harvest_notes)
         instance.harvest_cost = validated_data.get('harvest_cost', instance.harvest_cost)
