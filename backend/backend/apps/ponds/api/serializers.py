@@ -152,7 +152,7 @@ class PondsSerializer(serializers.ModelSerializer):
         fields = ['id', 'pond_images', 'pond_name', 'pond_length', 'pond_breadth', 'pond_depth', 'pond_area',
                   'pond_capacity', 'description', 'pond_type', 'pond_construct_type', 'is_active_pond', 'location',
                   'active_cycle_id', 'active_cycle_date', 'farm', 'doc', 'completed_cycle_count', 'total_harvested_amt',
-                   'total_avg_fcr', 'str_pond_type']
+                   'total_avg_fcr', 'str_pond_type','created_by']
 
     def create(self, validated_data):
         pond_image = self.context.get('view').request.FILES
