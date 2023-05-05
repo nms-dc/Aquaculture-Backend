@@ -17,7 +17,7 @@ class HarvestAdmin(ExportActionMixin, admin.ModelAdmin):
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
         (None, {'fields': ('harvest_type', 'harvest_cost', "sold_to", "cycle", "animal_count_1")}),
-        ('Harvest info', {'fields': (('total_kgs'), 'temperature_celcius', 'harvest_notes', "total_kg_1", "price_kg_1")}),
+        ('Harvest info', {'fields': (('total_kgs'), 'temperature_celcius', 'harvest_notes','harvest_quality', "total_kg_1", "price_kg_1")}),
     )
     add_fieldsets = (
         (None, {
