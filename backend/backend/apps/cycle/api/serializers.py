@@ -12,6 +12,7 @@ import datetime
 from dateutil import parser
 from measurements.models import Measurement, MeasurementMaster
 from measurements.api.serializers import MeasurementSerializer, MeasurementcycleSerializer, MasterSerializer
+from feeds.models import Feeds, FeedType
 #from cycle.single_backup import farmdata
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
@@ -63,7 +64,46 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cycle
-        fields = ["id", "species", "description", "species_pl_stage", "measure"]
+        fields = ["id", "description", "measure"]
+
+
+class CycleFeedSerializer(serializers.ModelSerializer):
+    feeds = serializers.SerializerMethodField()
+
+    def get_feeds(self, obj):
+        try:
+            if Feeds.objects.filter(cycle=obj.id).exists():
+                feeds = Feeds.objects.filter(cycle=obj.id).values()
+                #serializer = HarvestSummarySerializer(harvests, many=True).data
+                return feeds
+            else:
+                return None
+        except Harvests.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Cycle
+        fields = ["id", "description", "feeds"]
+
+
+class CycleMeasureRelationSerializer(serializers.ModelSerializer):
+    measure = serializers.SerializerMethodField()
+
+    def get_measure(self, obj):
+        try:
+
+            if Measurement.objects.filter(cycle=obj.id).exists():
+                measured = Measurement.objects.filter(cycle=obj)
+                serializer = MeasurementcycleSerializer(measured, many=True).data
+                return serializer
+            else:
+                return None
+        except Measurement.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Cycle
+        fields = ["id", "description", "measure"]
 
 
 class CycleSerializer(serializers.ModelSerializer):
@@ -251,8 +291,8 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
                 measurement = Measurement.objects.filter(cycle=obj.id)
                 serializer = MeasurementcycleSerializer(measurement, many=True).data
                 data = []
-                print(obj)
-                print(serializer)
+                # print(obj)
+                # print(serializer)
                 for i in serializer:
                     dic = dict(i)                    
                     master_id = (dic['measurement_type'])
@@ -272,3 +312,30 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ["id", 'measurements']
+
+
+class CyclefeedhistorySerializers(serializers.ModelSerializer):
+    feeds = serializers.SerializerMethodField()
+
+    def get_feeds(self, obj):
+        try:
+            if Feeds.objects.filter(cycle=obj).exists():
+                feeds = Feeds.objects.filter(cycle=obj.id).values()
+                #serializer = MeasurementcycleSerializer(measurement, many=True).data
+                print((feeds))
+                for feed_data in feeds:
+                    feed_type_id = feed_data['feed_type_id']
+                    feed_type = FeedType.objects.filter(id= feed_type_id).values()
+                    feed_type =feed_type[0]['type']
+                    
+                    feed_data['feed_type'] = feed_type
+                    return feed_data
+            
+            else:
+                return None
+        except Measurement.DoesNotExist:
+            return None
+
+    class Meta:
+        model = Cycle
+        fields = ["id", 'feeds']

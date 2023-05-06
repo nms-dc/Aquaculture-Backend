@@ -141,5 +141,5 @@ class MeasurementcycleSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Measurement
-        fields = ['id', 'cycle', 'value', 'time', 'lot', 'price_per_kg', 'measurement_type', 'is_probiotic_mixed', 'notes', 'measure_images', 'measurement_unit']
+        fields = ['id', 'cycle', 'value', 'time', 'measurement_type', 'notes', 'measure_images', 'measurement_unit']
 
