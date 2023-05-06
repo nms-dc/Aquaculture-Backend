@@ -12,7 +12,8 @@ from rest_framework.decorators import api_view, permission_classes, authenticati
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
 from cycle.models import Cycle
-from cycle.api.serializers import CycleSerializer, CycleHarvestRelationSerializer, CycleMeasureRelationSerializer, CycleMeasureSerializers
+from cycle.api.serializers import CycleSerializer, CycleHarvestRelationSerializer, CycleMeasureRelationSerializer, \
+    CycleMeasureSerializers, CycleFeedSerializer, CyclefeedhistorySerializers
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -41,4 +42,17 @@ class CyleView(viewsets.ModelViewSet):
     def get_measurement_history(self, request, *args, **kwargs):
         cycle = self.get_object()
         result = CycleMeasureSerializers(instance=cycle, context={'request': request}).data
+        return Response({"result": result})
+    
+    @action(detail=True, methods=['get'], url_path='get-feeds',)
+    @csrf_exempt
+    def get_feeds(self, request, *args, **kwargs):
+        cycle = self.get_object()
+        result = CycleFeedSerializer(instance=cycle, context={'request': request}).data
+        return Response({"result": result})
+    
+    @action(detail=True, methods=['get'], url_path='get-feed-history',)
+    def get_feed_history(self, request, *args, **kwargs):
+        cycle = self.get_object()
+        result = CyclefeedhistorySerializers(instance=cycle, context={'request': request}).data
         return Response({"result": result})
