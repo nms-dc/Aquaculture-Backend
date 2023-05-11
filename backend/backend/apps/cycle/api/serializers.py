@@ -12,7 +12,8 @@ import datetime
 from dateutil import parser
 from measurements.models import Measurement, MeasurementMaster
 from measurements.api.serializers import MeasurementSerializer, MeasurementcycleSerializer, MasterSerializer
-from feeds.models import Feeds, FeedType
+from feeds.models import Feeds, FeedType, FeedPics
+from feeds.api.serializers import Feedsserializers
 #from cycle.single_backup import farmdata
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
@@ -73,12 +74,13 @@ class CycleFeedSerializer(serializers.ModelSerializer):
     def get_feeds(self, obj):
         try:
             if Feeds.objects.filter(cycle=obj.id).exists():
-                feeds = Feeds.objects.filter(cycle=obj.id).values()
-                #serializer = HarvestSummarySerializer(harvests, many=True).data
-                return feeds
+                #while we using 'values()' it will fetch the first record datas
+                feeds = Feeds.objects.filter(cycle=obj.id)
+                serialize = Feedsserializers(feeds, many=True).data
+                return serialize
             else:
                 return None
-        except Harvests.DoesNotExist:
+        except Feeds.DoesNotExist:
             return None
 
     class Meta:
