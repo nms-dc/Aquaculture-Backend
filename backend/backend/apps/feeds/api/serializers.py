@@ -24,7 +24,7 @@ class Feedsserializers(serializers.ModelSerializer):
         feed_type = FeedType.objects.filter(id = obj.feed_type.id).values()
         result = {}
         print(feed_type[0]['type'])
-        result['feed_desc'] = feed_type[0]['type_desc']
+        result['feed_desc'] = feed_type[0]['type']
         result['feed_unit'] = feed_type[0]['feed_unit']
         return result
 
