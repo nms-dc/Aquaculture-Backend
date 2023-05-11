@@ -167,7 +167,7 @@ class CycleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ['id', 'Pond',"seeds", 'pondPrep_cost', 'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
-                  'numbers_of_larva', 'cycle_harvests','pond_transfered_from', 'total_harvested_amt',
+                  'numbers_of_larva', 'cycle_harvests','pond_transfered_from', 'total_harvested_amt', "seed_transfer_date",
                    'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', "species_weight", "created_by"]
 
     def create(self, validated_data):
@@ -191,6 +191,7 @@ class CycleSerializer(serializers.ModelSerializer):
             is_active = True,
             species_weight = validated_data['species_weight'],
             seeds=validated_data['seeds'],
+            seed_transfer_date = validated_data['seed_transfer_date']
             )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True
@@ -257,6 +258,7 @@ class CycleSerializer(serializers.ModelSerializer):
         instance.species_weight = validated_data.get('species_weight', instance.species_weight)
         instance.seeds = validated_data.get('seeds', instance.seeds)
         instance.updated_by = validated_data.get('updated_by', instance.updated_by)
+        instance.seed_transfer_date = validated_data.get('seed_transfer_date', instance.seed_transfer_date)
         instance.save()
 
         pondimage_with_same_profile_instance = CyclePondImage.objects.filter(images=instance.pk).values_list('id', flat=True)

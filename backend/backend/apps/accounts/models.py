@@ -135,15 +135,15 @@ class User(AbstractBaseUser):
         # Simplest possible answer: All admins are staff but not normal user
         return self.is_verified
 
-    def save(self, *args, **kwargs):
-        from django.core.mail import send_mail
-        if self.is_verified == True:
-            send_mail('hi subject maded by deductiveclouds',f'congrats your mail has been verified {self.email}','pugal.m@deductiveclouds.com',[self.email],fail_silently=False)
-            print('mail sent successfully')
-        else:
+    #def save(self, *args, **kwargs):
+        # from django.core.mail import send_mail
+        # if self.is_verified == True:
+        #     send_mail('hi subject maded by deductiveclouds',f'congrats your mail has been verified {self.email}','pugal.m@deductiveclouds.com',[self.email],fail_silently=False)
+        #     print('mail sent successfully')
+        # else:
 
-            send_mail('hi subject maded by deductiveclouds',f'a new user logged in and his mail id is {self.email}','pugal.m@deductiveclouds.com',['narayana.s@deductiveclouds.com'],fail_silently=False)
-            print('mail sent successfully')
+        #     send_mail('hi subject maded by deductiveclouds',f'a new user logged in and his mail id is {self.email}','pugal.m@deductiveclouds.com',['narayana.s@deductiveclouds.com'],fail_silently=False)
+        #     print('mail sent successfully')
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance = None, created=False, **kwargs):
     #if new  user has  been created we want to generate a token
