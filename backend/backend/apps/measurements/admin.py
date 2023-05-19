@@ -14,12 +14,12 @@ class MeasurementAdmin(ExportActionMixin, admin.ModelAdmin):
     list_filter = ('cycle', )
     fieldsets = (
         (None, {'fields': ('cycle', 'value')}),
-        ('Measurement info', {'fields': (('time', 'lot'), 'measurement_type',)}),
+        ('Measurement info', {'fields': (('time',), 'measurement_type',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('measurement_type', 'value', 'lot'),
+            'fields': ('measurement_type', 'value',),
         }),
     )
     search_fields = ('cycle',)
