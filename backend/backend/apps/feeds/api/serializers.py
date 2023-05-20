@@ -14,17 +14,17 @@ class FeedImagessserializers(serializers.ModelSerializer):
 class Feedsserializers(serializers.ModelSerializer):
     #farmdata()
     feed_image = serializers.SerializerMethodField()
-    feed_type = serializers.SerializerMethodField()
+    feed_types = serializers.SerializerMethodField()
     def get_feed_image(self,obj):
         feed_image = FeedPics.objects.filter(images = obj.id)
         serialize = FeedImagessserializers(feed_image, many=True).data
         return serialize
     
-    def get_feed_type(self,obj):
+    def get_feed_types(self,obj):
         feed_type = FeedType.objects.filter(id = obj.feed_type.id).values()
         result = {}
         print(feed_type[0]['type'])
-        result['feed_desc'] = feed_type[0]['type']
+        result['types'] = feed_type[0]['type']
         result['feed_unit'] = feed_type[0]['feed_unit']
         return result
 
