@@ -44,9 +44,14 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
     else :
         instance_value = instance.value
     already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond, farm=instance.cycle.Pond.farm)
+    feed_value = Feeds.objects.filter(cycle=instance.cycle).values()
+    exists_feeds = 0
+    for feed in feed_value:        
+        exists_feeds += feed['value']
+        print(exists_feeds)
     if already_exists_cycle.exists() and feed_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()
-        cycle_analytics_instance.total_feed += instance_value
+        cycle_analytics_instance.total_feed = instance_value+exists_feeds
         cycle_analytics_instance.save()
     elif not already_exists_cycle.exists() and feed_type == default_list[0]:
         CycleAnalytics.objects.create(farm=instance.cycle.Pond.farm,
