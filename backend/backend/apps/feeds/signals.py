@@ -1,4 +1,5 @@
-from django.db.models.signals import post_save
+
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from feeds.models import Feeds
 from ponds.models import PondGraphs, PondAnalytics
@@ -8,50 +9,48 @@ from farms.models import FarmAnalytics
 
 @receiver(post_save, sender=Feeds)
 def compute_graph(sender, instance, created, *args, **kwargs):
-    print("feedgraph siganl executing")
     default_list = ['feeds']
     feed_type = instance.feed_type.type
-    if instance.value is None :
+    if instance.value is None:
         instance_value = 0
-    else :
+    else:
         instance_value = instance.value
     already_exists = None
     if not created:
         already_exists = PondGraphs.objects.filter(extra_info__feed_id=instance.id)
     if created and feed_type in default_list:
         PondGraphs.objects.create(farm=instance.cycle.Pond.farm,
-            pond=instance.cycle.Pond,
-            time=instance.time,
-            abw=None,
-            total_feed=instance_value if feed_type == default_list[0] else None,
-            extra_info={'feed_id': instance.id}
-        )
+                                  pond=instance.cycle.Pond,
+                                  time=instance.time,
+                                  abw=None,
+                                  total_feed=instance_value if feed_type == default_list[0] else None,
+                                  extra_info={'feed_id': instance.id}
+                                  )
     elif feed_type in default_list and not created:
         pond_graph_instance = already_exists.first()
         pond_graph_instance.time = instance.time
         pond_graph_instance.abw = None
-        pond_graph_instance.total_feed =  float(instance_value) if feed_type == default_list[0] else None
+        pond_graph_instance.total_feed = float(instance_value) if feed_type == default_list[0] else None
         pond_graph_instance.save()
 
 
 @receiver(post_save, sender=Feeds)
 def compute_analytics(sender, instance, created, *args, **kwargs):
-    print("measurement siganl executing")
     default_list = ['feeds', 'probiotics']
     feed_type = instance.feed_type.type
-    if instance.value is None :
+    if instance.value is None:
         instance_value = 0
-    else :
+    else:
         instance_value = instance.value
-    already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond, farm=instance.cycle.Pond.farm)
+    already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond,
+                                                         farm=instance.cycle.Pond.farm)
     feed_value = Feeds.objects.filter(cycle=instance.cycle).values()
     exists_feeds = 0
-    for feed in feed_value:        
+    for feed in feed_value:
         exists_feeds += feed['value']
-        print(exists_feeds)
     if already_exists_cycle.exists() and feed_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()
-        cycle_analytics_instance.total_feed = instance_value+exists_feeds
+        cycle_analytics_instance.total_feed = instance_value + exists_feeds
         cycle_analytics_instance.save()
     elif not already_exists_cycle.exists() and feed_type == default_list[0]:
         CycleAnalytics.objects.create(farm=instance.cycle.Pond.farm,
@@ -94,3 +93,34 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
                                      total_feed=instance_value,
                                      harvest_amount=0,
                                      extra_info={'feed_id': instance.id})
+
+
+@receiver(post_delete, sender=Feeds)
+def recalculate_feedtotal(sender, instance, *args, **kwargs):
+    print("measurement delete siganl executing")
+    default_list = ['feeds', 'probiotics']
+    feed_type = instance.feed_type.type
+    if instance.value is None:
+        instance_value = 0
+    else:
+        instance_value = instance.value
+    already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond,
+                                                         farm=instance.cycle.Pond.farm)
+    feed_value = Feeds.objects.filter(cycle=instance.cycle).values()
+    exists_feeds = 0
+    exists_probiotics =0
+    for feed in feed_value:
+        if feed_type == 1:
+            exists_feeds += feed['value']
+        elif feed_type == 4:
+            exists_probiotics += feed['value']
+        print(exists_feeds)
+    if already_exists_cycle.exists() and feed_type == default_list[0]:
+        cycle_analytics_instance = already_exists_cycle.first()
+        cycle_analytics_instance.total_feed = exists_feeds
+        cycle_analytics_instance.save()
+
+    if already_exists_cycle.exists() and feed_type == default_list[1]:
+        cycle_analytics_instance = already_exists_cycle.first()
+        cycle_analytics_instance.total_probiotics = exists_probiotics
+        cycle_analytics_instance.save()
