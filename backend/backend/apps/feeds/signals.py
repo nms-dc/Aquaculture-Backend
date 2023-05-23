@@ -45,14 +45,17 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
     already_exists_cycle = CycleAnalytics.objects.filter(cycle=instance.cycle, pond=instance.cycle.Pond,
                                                          farm=instance.cycle.Pond.farm)
     feed_value = Feeds.objects.filter(cycle=instance.cycle).values()
+    feed_data = list(feed_value)
     exists_feeds = 0
-    for feed in feed_value:
-        if feed_type == 1:
+    exists_probiotics = 0
+    print('feeding value',feed_data)
+    for feed in feed_data:
+        if feed['feed_type_id'] == 1:
             exists_feeds += feed['value']
-            print('feeds', exists_feeds)
-        elif feed_type == 4:
+            print('feeds_value', exists_feeds)
+        elif feed['feed_type_id'] == 4:
             exists_probiotics += feed['value']
-            print('feeds', exists_probiotics)
+            print('probiotics', exists_probiotics)
     if already_exists_cycle.exists() and feed_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()
         cycle_analytics_instance.total_feed = exists_feeds
@@ -116,12 +119,11 @@ def recalculate_feedtotal(sender, instance, *args, **kwargs):
     exists_probiotics =0
     for feed in feed_value:
         print('feed records',feed)
-        if feed_type == 1:
+        if feed['feed_type_id'] == 1:
             exists_feeds += feed['value']
-            print('feeds', exists_feeds)
-        elif feed_type == 4:
+            print('feeds_value', exists_feeds)
+        elif feed['feed_type_id'] == 4:
             exists_probiotics += feed['value']
-            print('feeds', exists_probiotics)
         print(exists_feeds)
     if already_exists_cycle.exists() and feed_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()
