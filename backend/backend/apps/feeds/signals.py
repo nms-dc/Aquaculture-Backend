@@ -110,10 +110,13 @@ def recalculate_feedtotal(sender, instance, *args, **kwargs):
     exists_feeds = 0
     exists_probiotics =0
     for feed in feed_value:
+        print('feed records',feed)
         if feed_type == 1:
             exists_feeds += feed['value']
+            print('feeds', exists_feeds)
         elif feed_type == 4:
             exists_probiotics += feed['value']
+            print('feeds', exists_probiotics)
         print(exists_feeds)
     if already_exists_cycle.exists() and feed_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()
