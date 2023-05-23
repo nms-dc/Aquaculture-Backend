@@ -47,10 +47,15 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
     feed_value = Feeds.objects.filter(cycle=instance.cycle).values()
     exists_feeds = 0
     for feed in feed_value:
-        exists_feeds += feed['value']
+        if feed_type == 1:
+            exists_feeds += feed['value']
+            print('feeds', exists_feeds)
+        elif feed_type == 4:
+            exists_probiotics += feed['value']
+            print('feeds', exists_probiotics)
     if already_exists_cycle.exists() and feed_type == default_list[0]:
         cycle_analytics_instance = already_exists_cycle.first()
-        cycle_analytics_instance.total_feed = instance_value + exists_feeds
+        cycle_analytics_instance.total_feed = exists_feeds
         cycle_analytics_instance.save()
     elif not already_exists_cycle.exists() and feed_type == default_list[0]:
         CycleAnalytics.objects.create(farm=instance.cycle.Pond.farm,
@@ -62,7 +67,7 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
                                       extra_info={'feed_id': instance.id})
     if already_exists_cycle.exists() and feed_type == default_list[1]:
         cycle_analytics_instance = already_exists_cycle.first()
-        cycle_analytics_instance.total_probiotics += instance_value
+        cycle_analytics_instance.total_probiotics = exists_probiotics
         cycle_analytics_instance.save()
     elif not already_exists_cycle.exists() and feed_type == default_list[1]:
         CycleAnalytics.objects.create(farm=instance.cycle.Pond.farm,
