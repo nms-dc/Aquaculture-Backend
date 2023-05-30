@@ -1,9 +1,9 @@
 from django.contrib import admin
 from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGraphs, PondAnalytics
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 
-class PondAdmin(ExportActionMixin, admin.ModelAdmin):
+class PondAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm.farm_name
@@ -27,7 +27,7 @@ class PondAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondAnalyticsAdmin(ExportActionMixin, admin.ModelAdmin):
+class PondAnalyticsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm.farm_name
@@ -51,7 +51,7 @@ class PondAnalyticsAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondGraphsAdmin(ExportActionMixin, admin.ModelAdmin):
+class PondGraphsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def farm_name(self,obj):
         return obj.farm.farm_name
     
@@ -74,7 +74,7 @@ class PondGraphsAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondImageAdmin(ExportActionMixin, admin.ModelAdmin):
+class PondImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def farm_name(self,obj):
         return "farm_id need to assign"#obj.images.farm.farm_name
     
@@ -97,7 +97,7 @@ class PondImageAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondTypeAdmin(ExportActionMixin, admin.ModelAdmin):
+class PondTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('name', 'desc',)
     list_filter = ('pond_construct',)
     fieldsets = (
@@ -114,7 +114,7 @@ class PondTypeAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondConstructTypeAdmin(ExportActionMixin, admin.ModelAdmin):
+class PondConstructTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('construct_type', )
     list_filter = ('construct_type',)
     fieldsets = (

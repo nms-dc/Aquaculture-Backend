@@ -1,9 +1,9 @@
 from django.contrib import admin
 from harvests.models import Harvests, AddAnimal, HarvestAnimalImages,HarvestLogisticImages, HarvestPondImages
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 
-class HarvestAdmin(ExportActionMixin, admin.ModelAdmin):
+class HarvestAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.cycle.Pond.farm.farm_name
@@ -30,7 +30,7 @@ class HarvestAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class AddAnimalAdmin(ExportActionMixin, admin.ModelAdmin):
+class AddAnimalAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.adding_animal.cycle.Pond.farm.farm_name
@@ -56,7 +56,7 @@ class AddAnimalAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class AnimalImagesAdmin(ExportActionMixin, admin.ModelAdmin):
+class AnimalImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     # def farm_name(self, obj):
     #     return obj.images.cycle.farm
@@ -82,7 +82,7 @@ class AnimalImagesAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class PondImagesAdmin(ExportActionMixin, admin.ModelAdmin):
+class PondImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     # def farm_name(self, obj):
     #     return obj.images.cycle.Pond.farm.farm_name
@@ -108,7 +108,7 @@ class PondImagesAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class LogisticImagesAdmin(ExportActionMixin, admin.ModelAdmin):
+class LogisticImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     # def farm_name(self, obj):
     #     return obj.images.cycle.Pond.farm.farm_name
