@@ -13,7 +13,7 @@ class CompanyAdmin(ExportActionMixin, admin.ModelAdmin):
     list_filter = ('company_name', )
     fieldsets = (
         (None, {'fields': ('company_name', 'website')}),
-        ('Company info', {'fields': ('pan_no', 'address_one', 'address_two', 'pincode', 'company_type')}),
+        ('Company info', {'fields': ('pan_no', 'address_one', 'address_two', 'pincode',)}),
         )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
