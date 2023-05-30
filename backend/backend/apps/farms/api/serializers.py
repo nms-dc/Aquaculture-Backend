@@ -214,7 +214,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.save()
 
-        certify_with_same_profile_instance = Farms.objects.filter(farm=instance.pk).values_list('id', flat=True)
+        certify_with_same_profile_instance = Farms.objects.filter(id=instance.pk).values_list('id', flat=True)
         image_with_same_profile_instance = FarmImage.objects.filter(images=instance.pk).values_list('id', flat=True)
 
         # if len(int_certi_id) != 0:
