@@ -1,10 +1,10 @@
 from django.contrib import admin
 from seeds.models import SeedImage, Seeds, SeedPlStage
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 # Register your models here.
 
-class SeedAdmin(ExportActionMixin, admin.ModelAdmin):
+class SeedAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('lot_number', 'number_of_eggs', 'date_sold', 'qr_code_id','quality')
     list_filter = ('lot_number', 'qr_code_id')
     fieldsets = (
@@ -23,7 +23,7 @@ class SeedAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
     
-class SeedImageAdmin(ExportActionMixin, admin.ModelAdmin):
+class SeedImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('image', 'user', )
     list_filter = ('fish_ids', )
     fieldsets = (
@@ -39,6 +39,24 @@ class SeedImageAdmin(ExportActionMixin, admin.ModelAdmin):
     ordering = ('fish_ids',)
     filter_horizontal = ()
 
+class SeedPlStageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ('type', 'type_description', )
+    list_filter = ('type', )
+    fieldsets = (
+        (None, {'fields': ('type', 'type_description', )}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('type_description', 'type', ),
+        }),
+    )
+    search_fields = ('type',)
+    ordering = ('type',)
+    filter_horizontal = ()
+
+
+
 admin.site.register(SeedImage, SeedImageAdmin)
 admin.site.register(Seeds, SeedAdmin)
-admin.site.register(SeedPlStage)
+admin.site.register(SeedPlStage, SeedPlStageAdmin)

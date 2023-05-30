@@ -4,11 +4,11 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.core.exceptions import ValidationError
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 from .models import User, Roles
 
 
-class UserCreationForm(ExportActionMixin, forms.ModelForm):
+class UserCreationForm(ImportExportModelAdmin, forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -35,7 +35,7 @@ class UserCreationForm(ExportActionMixin, forms.ModelForm):
         return user
 
 
-class UserChangeForm(ExportActionMixin,forms.ModelForm):
+class UserChangeForm(ImportExportModelAdmin,forms.ModelForm):
     """A form for updating users. Includes all the fields on
     the user, but replaces the password field with admin's
     disabled password hash display field.
@@ -47,7 +47,7 @@ class UserChangeForm(ExportActionMixin,forms.ModelForm):
         fields = ('email', 'password', 'phone_no', 'is_active', 'is_admin')
 
 
-class UserAdmin(ExportActionMixin,BaseUserAdmin):
+class UserAdmin(ImportExportModelAdmin,BaseUserAdmin):
     # The forms to add and change user instances
     # form = UserChangeForm
     add_form = UserCreationForm

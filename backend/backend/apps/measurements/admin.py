@@ -1,9 +1,9 @@
 from django.contrib import admin
 from measurements.models import Measurement, MeasurementMaster, MeasurementPics
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 
-class MeasurementAdmin(ExportActionMixin, admin.ModelAdmin):
+class MeasurementAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def farm_name(self, obj):
         return obj.cycle.Pond.farm.farm_name
     
@@ -26,7 +26,7 @@ class MeasurementAdmin(ExportActionMixin, admin.ModelAdmin):
     ordering = ('measurement_type',)
 
 
-class MeasurementmasterAdmin(ExportActionMixin, admin.ModelAdmin):
+class MeasurementmasterAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     list_display = ('measurement_type', 'measurement_description', 'measurement_unit' )
     list_filter = ('measurement_type', )
@@ -45,7 +45,7 @@ class MeasurementmasterAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class MeasurementpicsAdmin(ExportActionMixin, admin.ModelAdmin):
+class MeasurementpicsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.images.cycle.Pond.farm.farm_name

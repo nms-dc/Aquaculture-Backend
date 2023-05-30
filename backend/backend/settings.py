@@ -93,7 +93,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'oauth2_provider',
     'social_django',
-    'drf_social_oauth2'
+    'drf_social_oauth2',
+    "import_export",
 ]
 
 MIDDLEWARE = [
