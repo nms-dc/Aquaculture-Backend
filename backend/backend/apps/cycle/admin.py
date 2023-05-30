@@ -1,10 +1,10 @@
 from django.contrib import admin
 from cycle.models import Cycle, CycleAnalytics
 from django.contrib.auth.models import Group
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 
-class CycleAdmin(ExportActionMixin, admin.ModelAdmin):
+class CycleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     
     def farm_name(self, obj):
         return obj.Pond.farm.farm_name
@@ -37,7 +37,7 @@ class CycleAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class CycleAnalyticsAdmin(ExportActionMixin, admin.ModelAdmin):
+class CycleAnalyticsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self, obj):
         return obj.farm.farm_name

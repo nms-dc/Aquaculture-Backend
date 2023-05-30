@@ -1,10 +1,10 @@
 from django.contrib import admin
 from .models import Company, CompanyFeedType
-from import_export.admin import ExportActionMixin
+from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 # Register your models here.
 
 
-class CompanyAdmin(ExportActionMixin, admin.ModelAdmin):
+class CompanyAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
@@ -28,7 +28,7 @@ class CompanyAdmin(ExportActionMixin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class CompanyFeedAdmin(ExportActionMixin, admin.ModelAdmin):
+class CompanyFeedAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     list_display = ('type', 'type_description')
     list_filter = ('type',)
