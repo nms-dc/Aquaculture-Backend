@@ -41,6 +41,9 @@ DEFAULT_FROM_EMAIL = 'BackWater Resources Pvt Ltd <noreply@backwaterglobal.com>'
 if IS_DEV:
     DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'localhost:4000')
     PROTOCOl_NAME = 'http'
+else:
+    DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'localhost:4000')
+    PROTOCOl_NAME = 'https'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if IS_DEV or IS_STAGE:
