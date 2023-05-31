@@ -157,7 +157,8 @@ class FarmSerializer(serializers.ModelSerializer):
                 description=validated_data['description'],
                 zipcode=validated_data['zipcode'],
                 district=validated_data['district'],
-                created_by = validated_data["created_by"]                
+                created_by = validated_data["created_by"],
+                phone = validated_data["phone"],                
             )
 
         for image_data in image_datas.getlist('farm_images'):
@@ -212,6 +213,7 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.district = validated_data.get('district', instance.district)
         instance.created_by = validated_data.get('created_by', instance.created_by)
         instance.updated_by = validated_data.get('updated_by', instance.updated_by)
+        instance.phone = validated_data.get('phone', instance.phone)
         instance.save()
 
         certify_with_same_profile_instance = Farms.objects.filter(id=instance.pk).values_list('id', flat=True)
