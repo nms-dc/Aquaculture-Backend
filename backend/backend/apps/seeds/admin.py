@@ -5,8 +5,8 @@ from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 # Register your models here.
 
 class SeedAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('lot_number', 'number_of_eggs', 'date_sold', 'qr_code_id','quality')
-    list_filter = ('lot_number', 'qr_code_id')
+    list_display = ('lot_number', 'number_of_eggs', 'date_sold', 'qr_code_id','quality',  "species", "species_pl_stage", "farm")
+    list_filter = ('lot_number', 'qr_code_id',  "species", "species_pl_stage", "farm")
     fieldsets = (
         (None, {'fields': ('lot_number', 'date_sold')}),
         ('seed info', {'fields': ('number_of_eggs', 'date_received', 'date_hatched', "species", "species_pl_stage", "farm")}),

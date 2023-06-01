@@ -7,7 +7,8 @@ class PondAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm.farm_name
-    list_display = ('farm_name','pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm')
+    list_display = ('farm_name','pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm', 'pond_construct_type', 'lat', 
+    'lng', 'is_active_pond', 'active_cycle_id', 'pond_breadth', 'pond_area', 'pond_capacity', 'description', 'pond_number')
     list_filter = ('farm', 'pond_name')
     fieldsets = (
         (None, {'fields': ('pond_name', 'pond_length')}),
@@ -35,8 +36,8 @@ class PondAnalyticsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def pond_name(self,obj):
         return obj.pond.pond_name
 
-    list_display = ('farm_name', 'pond_name')
-    list_filter = ('pond',)
+    list_display = ('farm_name', 'pond_name', 'harvest_amount','total_feed','extra_info')
+    list_filter = ('pond', 'farm')
     fieldsets = (
         (None, {'fields': ('pond', 'farm','harvest_amount','total_feed','extra_info')}),
     )
@@ -82,7 +83,7 @@ class PondImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         return "pond_id need to assign"#obj.images.farm.farm_name
 
     list_display = ('farm_name','pond_name','image', 'image_name',)
-    list_filter = ('image_name',)
+    list_filter = ('image_name', 'images')
     fieldsets = (
         (None, {'fields': ('image_name', 'image', 'images')}),
     )
@@ -98,8 +99,8 @@ class PondImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 
 class PondTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('name', 'desc',)
-    list_filter = ('pond_construct',)
+    list_display = ('name', 'desc',  'pond_construct')
+    list_filter = ('pond_construct', 'name',)
     fieldsets = (
         (None, {'fields': ('name', 'desc')}),
     )
