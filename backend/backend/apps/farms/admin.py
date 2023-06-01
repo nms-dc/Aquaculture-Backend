@@ -7,7 +7,7 @@ from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 class FarmsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
-    list_display = ('farm_name', 'farm_area', 'company_id')
+    list_display = ('farm_name', 'farm_area', 'company_id', 'phone', 'town_village', 'zipcode', 'state', "city", "country")
     list_filter = ('company_id', 'farm_name', )
     fieldsets = (
         (None, {'fields': ('company_id', 'farm_name')}),
@@ -59,7 +59,7 @@ class FarmCertificatesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         return obj.farm_id
 
     list_display = ('farm_name','certificate_name', 'certificate_number', )
-    list_filter = ('certificate_name',)
+    list_filter = ('certificate_name', 'farm_id')
     fieldsets = (
         (None, {'fields': ('certificate_name', 'certificate_number')}),
         ('Cerificates info', {'fields': ('add_information', 'image', 'farm_id', )}),
@@ -104,10 +104,10 @@ class FeedLotsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def farm_name(self,obj):
         return obj.farm_id.farm_name
 
-    list_display = ('farm_name', 'lot_number',"feed_lot_type", "company_feed_type")
-    list_filter = ('feed_lot_type', )
+    list_display = ('farm_name', 'lot_number',"feed_lot_type", "company_feed_type", 'company_purchased_from', 'bag_is_used', 'feed_cost', 'currency')
+    list_filter = ('feed_lot_type', 'farm_id', 'company_purchased_from')
     fieldsets = (
-        (None, {'fields': ('farm_id', 'lot_number', 'company_purchased_from', 'date_purchased', 'date_shipped')}),
+        (None, {'fields': ('farm_id', 'lot_number', "company_feed_type", 'company_purchased_from', 'date_purchased', 'date_shipped')}),
         ('FeedLots info', {'fields': ('date_received', 'bag_is_used', 'feed_cost', 'currency', 'feed_lot_type')}),
        )
 
@@ -149,7 +149,7 @@ class FarmUserAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         return obj.farm.farm_name
 
     list_display = ('user_name','farm_name', 'role', )
-    list_filter = ('farm',)
+    list_filter = ('farm', 'user')
     fieldsets = (
         (None, {'fields': ('farm', 'user', 'role')}),)
 

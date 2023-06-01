@@ -54,9 +54,9 @@ class MeasurementpicsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         return obj.images.cycle.Pond.pond_name
 
     list_display = ("farm_name","pond_name",'image_name', )
-    list_filter = ('image_name', )
+    list_filter = ('image_name', 'images')
     fieldsets = (
-        (None, {'fields': ('image_name', 'image', )}),
+        (None, {'fields': ('image_name', 'image', 'images' )}),
         )
     add_fieldsets = (
         (None, {
