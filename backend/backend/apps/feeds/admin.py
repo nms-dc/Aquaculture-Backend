@@ -8,8 +8,8 @@ class FeedTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('type', 'type_desc', 'feed_unit', )
     list_filter = ('type', 'feed_unit')
     fieldsets = (
-        (None, {'fields': ('type', 'product_desc')}),
-        ('species info', {'fields': ('feed_unit', 'type_desc', )})
+        (None, {'fields': ('type', 'type_desc')}),
+        ('species info', {'fields': ('feed_unit',)})
     )
     add_fieldsets = (
         (None, {
@@ -24,10 +24,10 @@ class FeedTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 class FeedsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('cycle', 'feed_type', 'value', "time", 'lot', 'price_per_kg', 'is_probiotic_mixed','created_by', 'updated_by' )
-    list_filter = ('cycle', 'feed_type')
+    list_filter = ('cycle', 'feed_type', 'is_probiotic_mixed', 'value')
     fieldsets = (
         (None, {'fields': ('cycle', 'feed_type', 'value','time')}),
-        ('species info', {'fields': ('lot', 'price_per_kg', 'is_probiotic_mixed', 'updated_by', 'created_at', 'updated_at')})
+        ('species info', {'fields': ('lot', 'price_per_kg', 'is_probiotic_mixed', 'updated_by',)})
     )
     add_fieldsets = (
         (None, {
@@ -46,7 +46,7 @@ class FeedPicsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_filter = ('image_name', 'created_by')
     fieldsets = (
         (None, {'fields': ('image_name', 'created_by', 'updated_by','images')}),
-        ('species info', {'fields': ('created_at', 'updated_at')})
+        
     )
     add_fieldsets = (
         (None, {

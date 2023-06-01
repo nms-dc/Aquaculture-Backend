@@ -39,4 +39,4 @@ class FeedPics(models.Model):
         return self.image_name
 
     class Meta:
-        verbose_name_plural = "MeasurementPics"
+        verbose_name_plural = "Feedpics"

@@ -27,7 +27,7 @@ class CurrencyAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('coutry_id', 'currency', 'fraction_number')
     list_filter = ('coutry_id', )
     fieldsets = (
-        (None, {'fields': ('iso_code', 'fraction_unit')}),
+        (None, {'fields': ('iso_code', 'fraction_unit', 'coutry_id')}),
         ('Company info', {'fields': ('symbol', 'currency', 'fraction_number')}),
         )
     add_fieldsets = (

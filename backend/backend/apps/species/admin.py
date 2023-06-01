@@ -25,8 +25,8 @@ class SpeciesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     
 class SpeciesCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     
-    list_display = ( 'name', 'exp', )
-    list_filter = ('parent_category', )
+    list_display = ( 'name', 'exp', 'slug', 'desc', 'image_url', 'parent_category')
+    list_filter = ('parent_category', 'name', 'exp',)
     fieldsets = (
         (None, {'fields': ('slug', 'desc', 'image_url', 'name', 'exp', 'parent_category')}),
     )

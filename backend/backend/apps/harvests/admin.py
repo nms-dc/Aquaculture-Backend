@@ -12,7 +12,8 @@ class HarvestAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         return obj.cycle.Pond.pond_name
     
 
-    list_display = ("farm_name","pond_name",'cycle', 'harvest_type', 'total_kgs', )
+    list_display = ("farm_name","pond_name",'cycle', 'harvest_type', 'total_kgs', 'harvest_cost', "sold_to", "cycle", "animal_count_1",
+     'temperature_celcius', 'harvest_notes','harvest_quality', "total_kg_1", "price_kg_1" )
     list_filter = ('cycle', 'harvest_type')
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
@@ -40,7 +41,7 @@ class AddAnimalAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     
 
     list_display = ("farm_name","pond_name", 'animal_count', 'total_kg', )
-    list_filter = ('animal_count', 'total_kg')
+    list_filter = ('animal_count', 'total_kg', 'adding_animal')
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
         (None, {'fields': ('animal_count', 'total_kg', "price_kg", "adding_animal")}),
