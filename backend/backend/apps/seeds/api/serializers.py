@@ -17,8 +17,10 @@ class Seedserializers(serializers.ModelSerializer):
 
     def get_company_name(self,obj):
         company_data = Company.objects.filter(company_name = obj.seed_company_id).values()
-        return company_data[0]["company_name"]
-
+        try:
+            return company_data[0]["company_name"]
+        except:
+            return None
     
     class Meta:
         model = Seeds
