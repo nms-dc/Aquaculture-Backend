@@ -89,6 +89,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
             user_image = validated_data["user_image"]
         )
+        return user_instance
 
     def update(self, instance, validated_data):
         image_data = self.context.get('view').request.FILES
