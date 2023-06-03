@@ -117,12 +117,15 @@ class FarmView(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"], url_path="get-seeds")
     @csrf_exempt
     def get_seeds(self, request, *args, **kwargs):
-        seed_data = Seeds.objects.all().values()
+        farm = self.get_object()
+        seed_data = Seeds.objects.filter(farm = farm.id).values()
         company = Company.objects.filter(id =seed_data[0]['seed_company_id_id'] ).values()
         print(type(seed_data[0]))
         seed_dict = seed_data[0]
-        seed_dict['seed_company_name'] = company[0]['company_name']
-        
+        try:
+            seed_dict['seed_company_name'] = company[0]['company_name']
+        except:
+            seed_dict['seed_company_name'] = 'no company name found'
         return Response([seed_dict])
 
 class FeedLotsView(viewsets.ModelViewSet):

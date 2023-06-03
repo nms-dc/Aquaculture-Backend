@@ -48,7 +48,8 @@ else:
 # SECURITY WARNING: don't run with debug turned on in production!
 if IS_DEV or IS_STAGE:
     DEBUG = True
-
+else:
+    DEBUG = True
 WWW_ROOT = f"{PROTOCOl_NAME}://{DOMAIN_NAME}"
 
 ALLOWED_HOSTS = ['*']
