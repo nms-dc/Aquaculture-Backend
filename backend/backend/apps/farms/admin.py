@@ -1,11 +1,10 @@
 from django.contrib import admin
 from farms.models import Farms, FarmImage, FarmCertification, FeedLots, FarmAnalytics, FeedLotTypes, FarmUser
 from import_export.admin import ExportActionMixin, ImportExportModelAdmin
+from mixins.control_mixins import PermissionClass
 
 
-# Register your models here.
-
-class FarmsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FarmsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
     list_display = ('farm_name', 'farm_area', 'company_id', 'phone', 'town_village', 'zipcode', 'state', "city", "country")
     list_filter = ('company_id', 'farm_name', )
@@ -23,11 +22,15 @@ class FarmsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     search_fields = ('farm_name',)
     ordering = ('farm_name',)
     filter_horizontal = ()
+    # def get_form(self, request, obj=None, **kwargs):
+    #     form = super().get_form(request, obj, **kwargs)
+    #     is_superuser = request.user.is_verified
+    #     if not is_superuser:
+    #         form.base_fields['farm_name'].disabled = True
+    #         form.base_fields['farm_area'].disabled = True
+    #     return form
 
-
-
-
-class FarmAnalyticsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FarmAnalyticsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
@@ -54,7 +57,7 @@ class FarmAnalyticsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FarmCertificatesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FarmCertificatesAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     def farm_name(self,obj):
         return obj.farm_id
 
@@ -76,7 +79,7 @@ class FarmCertificatesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FarmImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FarmImagesAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.images.farm_name
@@ -99,7 +102,7 @@ class FarmImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FeedLotsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FeedLotsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm_id.farm_name
@@ -122,7 +125,7 @@ class FeedLotsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FeedLotTypesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FeedLotTypesAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
     list_display = ('lot_type','lot_type_description',)
     list_filter = ('lot_type',)
@@ -141,7 +144,7 @@ class FeedLotTypesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FarmUserAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FarmUserAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     def user_name(self,obj):
         return obj.user.first_name
     

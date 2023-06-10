@@ -1,6 +1,7 @@
 from django.contrib import admin
 from feeds.models  import FeedType, Feeds, FeedPics
 from import_export.admin import ExportActionMixin, ImportExportModelAdmin
+from mixins.control_mixins import PermissionClass
 
 # Register your models here.
 
@@ -22,7 +23,7 @@ class FeedTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     filter_horizontal = ()
 
 
-class FeedsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class FeedsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     list_display = ('cycle', 'feed_type', 'value', "time", 'lot', 'price_per_kg', 'is_probiotic_mixed','created_by', 'updated_by' )
     list_filter = ('cycle', 'feed_type', 'is_probiotic_mixed', 'value')
     fieldsets = (
