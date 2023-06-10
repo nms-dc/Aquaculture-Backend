@@ -2,9 +2,10 @@ from django.contrib import admin
 from cycle.models import Cycle, CycleAnalytics
 from django.contrib.auth.models import Group
 from import_export.admin import ExportActionMixin, ImportExportModelAdmin
+from mixins.control_mixins import PermissionClass
 
 
-class CycleAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class CycleAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     
     def farm_name(self, obj):
         return obj.Pond.farm.farm_name
