@@ -1,9 +1,10 @@
 from django.contrib import admin
 from ponds.models import Ponds, PondType, PondConstructType, PondImage, PondGraphs, PondAnalytics
 from import_export.admin import ExportActionMixin, ImportExportModelAdmin
+from mixins.control_mixins import PermissionClass
 
 
-class PondAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+class PondAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
     def farm_name(self,obj):
         return obj.farm.farm_name
