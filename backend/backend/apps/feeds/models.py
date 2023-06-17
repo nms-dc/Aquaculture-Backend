@@ -10,7 +10,8 @@ class FeedType(models.Model):
     type = models.CharField(max_length=24, default=None, null=True, blank=True)
     type_desc = models.CharField(max_length=24, default=None, null=True, blank=True)
     feed_unit = models.CharField(max_length=100, blank=True, null=True)
-    
+    def __str__(self) -> str:
+        return str(self.type)
 
 class Feeds(models.Model):
     cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, default=None, null=True, blank=True)
@@ -24,6 +25,9 @@ class Feeds(models.Model):
     created_at = models.DateField(auto_now=True, null=True, blank=True)
     updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='feed_user_update', default=None, null=True, blank=True)
     updated_at = models.DateField(null=True, blank=True)
+
+    def __str__(self) -> str:
+        return str(self.id)
 
 
 class FeedPics(models.Model):
