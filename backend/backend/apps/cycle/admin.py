@@ -14,7 +14,7 @@ class CycleAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
         return obj.Pond.pond_name
     
     def seeds_name(self, obj):
-        return obj.seeds.lot_number    
+        return obj.seeds 
     
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
@@ -22,7 +22,7 @@ class CycleAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     list_display = ('farm_name','pond_name', 'seeds_name')
     list_filter = ('Pond', )
     fieldsets = (
-        (None, {'fields': ( 'Pond', "seeding_qty", "seeding_date", "harvest_id", "seed_transfer_date")}),
+        (None, {'fields': ( 'Pond', "seeding_qty", "seeding_date", "harvest_id", "seed_transfer_date", 'seeds')}),
         ('Cycle info', {'fields': ( 'pondPrep_cost', 'description', 'numbers_of_larva', 'is_active', "species_weight")})
         )
     ''' add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
