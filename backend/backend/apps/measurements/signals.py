@@ -27,9 +27,10 @@ def compute_graph(sender, instance, created, *args, **kwargs):
             extra_info={'measurement_id': instance.id}
         )
     elif measure_type in default_list and not created:
-        pond_graph_instance = already_exists.first()
-        pond_graph_instance.time = instance.time
-        pond_graph_instance.abw = float(instance_value) if measure_type == default_list[0] else None
-        pond_graph_instance.total_feed =  None
-        pond_graph_instance.save()
+        if already_exists.exists():
+            pond_graph_instance = already_exists.first()
+            pond_graph_instance.time = instance.time
+            pond_graph_instance.abw = float(instance_value) if measure_type == default_list[0] else None
+            #pond_graph_instance.total_feed =  None
+            pond_graph_instance.save()
 
