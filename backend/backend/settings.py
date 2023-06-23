@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     'social_django',
     'drf_social_oauth2',
     "import_export",
+    "data_science_stuff",
 ]
 
 MIDDLEWARE = [
