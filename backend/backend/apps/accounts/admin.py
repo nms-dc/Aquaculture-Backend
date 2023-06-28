@@ -47,7 +47,7 @@ class UserChangeForm(forms.ModelForm):
         fields = ('email', 'password', 'phone_no', 'is_active', 'is_admin')
 
 
-class UserAdmin(BaseUserAdmin):
+class UserAdmin(ImportExportModelAdmin, BaseUserAdmin):
     # The forms to add and change user instances
     # form = UserChangeForm
     add_form = UserCreationForm
@@ -76,9 +76,29 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
 
+
+class RolesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+
+    list_display = ('role', 'role_description')
+    list_filter = ('role', )
+    fieldsets = (
+        (None, {'fields': ('role', 'role_description')}),
+        )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('role', 'role_description'),
+        }),
+    )
+    search_fields = ('role',)
+    ordering = ('role',)
+    filter_horizontal = ()
+
+
+
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
-admin.site.register(Roles)
+admin.site.register(Roles, RolesAdmin)

@@ -1,6 +1,6 @@
 from itertools import cycle
 from rest_framework import serializers
-from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics, FeedLotImage, FarmUser
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics, FeedLotImage, FarmUser, FeedLotTypes
 from ponds.models import Ponds
 from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSummaryOnlySerializer
 from accounts.models import User, Roles
@@ -9,6 +9,12 @@ from cycle.api.serializers import CycleSerializer
 from company.models import Company, CompanyFeedType
 from company.api.serializers import CompanySerializers, CompanyFeedTypeSerializers
 #from farms.single_backup import farmdata
+
+
+class FeedLotTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedLotTypes
+        fields = '__all__'
 
 
 class ImageSerializer(serializers.ModelSerializer):

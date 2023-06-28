@@ -10,10 +10,10 @@ from accounts.models import User, create_username
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
-from farms.models import Farms, FarmCertification, FarmImage, FeedLots
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FeedLotTypes
 from farms.api.serializers import FarmSerializer, FarmSummarySerializer, FarmPondRelationSerializer,\
     FarmCycleRelationSerializer, FeedLotsSerializer, FeedlotFilterSerializer,  FeedProSerializer, FeedAllSerializer,\
-    FarmCeritificateSerializers
+    FarmCeritificateSerializers, FeedLotTypeSerializer
 from django.views.decorators.csrf import csrf_exempt
 from ponds.api.serializers import PondSummaryOnlySerializer
 from measurements.models import MeasurementMaster, Measurement
@@ -158,3 +158,11 @@ class CertifyView(viewsets.ModelViewSet):
     queryset = FarmCertification.objects.all()
     serializer_class = FarmCeritificateSerializers
     #permission_classes = [IsAuthenticated]
+
+
+class LotTypeView(viewsets.ModelViewSet):
+
+    queryset = FeedLotTypes.objects.all()
+    serializer_class = FeedLotTypeSerializer
+    #permission_classes = [IsAuthenticated]
+
