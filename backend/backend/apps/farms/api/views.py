@@ -111,9 +111,17 @@ class FarmView(viewsets.ModelViewSet):
     def get_feedlots(self, request, *args, **kwargs):
         farm = self.get_object()
         result = FeedAllSerializer(instance=farm, context={'request': request}).data
-        feed_desc = FeedLotTypes.objects.filter(id=result['feeds'][0]['feed_lot_type']).values()
-        print(feed_desc[0]['lot_type_description'])
-        result['feeds'][0]['feed_lot_type']=feed_desc[0]['lot_type_description']
+        index = 0
+        for datas in result['feeds']:
+            feed_lot_data = FeedLotTypes.objects.filter(id=datas['feed_lot_type']).values()
+            feed_desc=feed_lot_data[0]['lot_type_description']
+            print(result['feeds'][index])
+            result['feeds'][index]['feed_lot_type'] = feed_desc
+            index +=1
+        # for feed_data,resulting in zip(feed_desc,result.values()):
+        #     print(feed_data,resulting)
+        #     print(feed_data['lot_type_description'])
+        # result['feeds'][0]['feed_lot_type']=feed_desc[0]['lot_type_description']
         return Response({"result": result})
     
     @action(detail=True, methods=["get"], url_path="get-seeds")
