@@ -110,8 +110,10 @@ class FarmView(viewsets.ModelViewSet):
     @csrf_exempt
     def get_feedlots(self, request, *args, **kwargs):
         farm = self.get_object()
-        print(farm)
         result = FeedAllSerializer(instance=farm, context={'request': request}).data
+        feed_desc = FeedLotTypes.objects.filter(id=result['feeds'][0]['feed_lot_type']).values()
+        print(feed_desc[0]['lot_type_description'])
+        result['feeds'][0]['feed_lot_type']=feed_desc[0]['lot_type_description']
         return Response({"result": result})
     
     @action(detail=True, methods=["get"], url_path="get-seeds")
