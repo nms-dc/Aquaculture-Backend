@@ -118,9 +118,11 @@ def change_password(request):
         dic = request.data
         mail = dic['email']
         user = User.objects.get(email = mail)
-        passwd1=dic['password1']
-        passwd2=dic['password2']
+        passwd1=dic['newpassword']
+        passwd2=dic['confirmpassword']
         if passwd1 == passwd2:
-            user.set_password(dic['password1'])
+            user.set_password(dic['newpassword'])
             user.save()
             return Response('password changed successfully')
+    else:
+        return Response('get method not allowed')    
