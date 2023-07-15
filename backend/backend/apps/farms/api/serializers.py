@@ -144,7 +144,7 @@ class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "city", "user_role",
-                   "state", "country", "town_village", "description", "farm_images", "certificate", 'zipcode', 
+                   "state", "country", "town_village", "description", "farm_images", "certificate", 'zipcode', 'lat', 'lng', 
                   'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt', 'certificates', "created_by"]
 
     def create(self, validated_data):
@@ -220,6 +220,8 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.created_by = validated_data.get('created_by', instance.created_by)
         instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.phone = validated_data.get('phone', instance.phone)
+        instance.lat = validated_data.get('lat', instance.lat)
+        instance.lng = validated_data.get('lng', instance.lng)
         instance.save()
 
         certify_with_same_profile_instance = Farms.objects.filter(id=instance.pk).values_list('id', flat=True)
