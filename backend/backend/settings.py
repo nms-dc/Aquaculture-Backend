@@ -302,9 +302,12 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 50000
 
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_USER = 'ap'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DEFAULT_FROM_EMAIL = "pugal.m@deductiveclouds.com"
+
+
+SITE_ID = 6
