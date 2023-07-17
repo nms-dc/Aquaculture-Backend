@@ -33,3 +33,12 @@ django-rest-auth==0.9.5
 #for aggregating and groupby dates on abw-data and fcr-data need pandas
 pandas
 django-import-export
+django_apscheduler
+numpy
+bs4
+geocoder
+facebook-sdk
+instaloader
+instagrapi
+requests
+geopy

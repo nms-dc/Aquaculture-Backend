@@ -10,8 +10,8 @@ class FarmsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     list_filter = ('company_id', 'farm_name', )
     fieldsets = (
         (None, {'fields': ('company_id', 'farm_name')}),
-        ('Farm info', {'fields': (('farm_area', 'phone'), 'description',)}),
-        ('Address info', {'fields': ('town_village', 'zipcode', 'state', "city", "country")}),
+        ('Farm info', {'fields': (('farm_area', 'phone'), 'description','address_line_one','address_line_two','lat','lng')}),
+        ('Address info', {'fields': ('town_village', 'zipcode', 'state', "city", "country",'district', 'created_by')}),
     )
     add_fieldsets = (
         (None, {

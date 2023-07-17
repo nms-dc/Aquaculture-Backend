@@ -1,6 +1,6 @@
 from itertools import cycle
 from rest_framework import serializers
-from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics, FeedLotImage, FarmUser
+from farms.models import Farms, FarmCertification, FarmImage, FeedLots, FarmAnalytics, FeedLotImage, FarmUser, FeedLotTypes
 from ponds.models import Ponds
 from ponds.api.serializers import PondSummarySerializer, PondsSerializer, PondSummaryOnlySerializer
 from accounts.models import User, Roles
@@ -9,6 +9,12 @@ from cycle.api.serializers import CycleSerializer
 from company.models import Company, CompanyFeedType
 from company.api.serializers import CompanySerializers, CompanyFeedTypeSerializers
 #from farms.single_backup import farmdata
+
+
+class FeedLotTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FeedLotTypes
+        fields = '__all__'
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -138,7 +144,7 @@ class FarmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farms
         fields = ["id", "farm_name", "farm_area", "phone", "address_line_one", "address_line_two", "city", "user_role",
-                   "state", "country", "town_village", "description", "farm_images", "certificate", 'zipcode', 
+                   "state", "country", "town_village", "description", "farm_images", "certificate", 'zipcode', 'lat', 'lng', 
                   'district', 'fcr','feed_data', 'completed_cycle_count', 'total_harvested_amt', 'certificates', "created_by"]
 
     def create(self, validated_data):
@@ -214,6 +220,8 @@ class FarmSerializer(serializers.ModelSerializer):
         instance.created_by = validated_data.get('created_by', instance.created_by)
         instance.updated_by = validated_data.get('updated_by', instance.updated_by)
         instance.phone = validated_data.get('phone', instance.phone)
+        instance.lat = validated_data.get('lat', instance.lat)
+        instance.lng = validated_data.get('lng', instance.lng)
         instance.save()
 
         certify_with_same_profile_instance = Farms.objects.filter(id=instance.pk).values_list('id', flat=True)
