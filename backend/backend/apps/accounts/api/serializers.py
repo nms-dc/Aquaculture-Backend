@@ -48,7 +48,7 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'is_verified', 'farm_id']
+        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'is_verified', 'farm_id', 'is_terms_accepted']
 
 
 class UserProfileInfoSerializer(serializers.ModelSerializer):
