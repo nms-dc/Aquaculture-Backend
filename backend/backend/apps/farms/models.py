@@ -29,7 +29,7 @@ class Farms(models.Model):
     updated_at = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return 'farm_id:'+' '+str(self.id)
+        return str(self.farm_name)
     
     class Meta:
         verbose_name_plural = "Farms"
@@ -70,6 +70,12 @@ class FeedLotTypes(models.Model):
     lot_type = models.CharField(max_length=24, default=None, null=True, blank=True)
     lot_type_description = models.CharField(max_length=24, default=None, null=True, blank=True)
 
+    def __str__(self):
+        return self.lot_type_description
+
+    class Meta:
+        verbose_name_plural = "FeedLotTypes"
+
 
 class FeedLots(models.Model):
     
@@ -92,6 +98,10 @@ class FeedLots(models.Model):
 
     def __str__(self):
         return str(self.feed_lot_type)
+    
+    class Meta:
+        verbose_name_plural = "FeedLots"
+    
 
 def get_default_info():
     return {'measurement_id': None}

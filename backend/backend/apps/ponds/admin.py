@@ -6,9 +6,7 @@ from mixins.control_mixins import PermissionClass
 
 class PondAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
-    def farm_name(self,obj):
-        return obj.farm.farm_name
-    list_display = ('farm_name','pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm', 'pond_construct_type', 'lat', 
+    list_display = ('farm','pond_name', 'pond_length', 'pond_depth', 'pond_breadth','farm', 'pond_construct_type', 'lat', 
     'lng', 'is_active_pond', 'active_cycle_id', 'pond_breadth', 'pond_area', 'pond_capacity', 'description', 'pond_number')
     list_filter = ('farm', 'pond_name')
     fieldsets = (
@@ -25,7 +23,7 @@ class PondAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
         }),
     )
     search_fields = ('pond_name', )
-    ordering = ('pond_name', )
+    ordering = ('pond_name', 'farm')
     filter_horizontal = ()
 
 
@@ -78,10 +76,10 @@ class PondGraphsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 class PondImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def farm_name(self,obj):
-        return "farm_id need to assign"#obj.images.farm.farm_name
+        return obj.images.farm
     
     def pond_name(self,obj):
-        return "pond_id need to assign"#obj.images.farm.farm_name
+        return obj.images.pond_name
 
     list_display = ('farm_name','pond_name','image', 'image_name',)
     list_filter = ('image_name', 'images')

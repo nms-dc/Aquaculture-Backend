@@ -6,7 +6,7 @@ from mixins.control_mixins import PermissionClass
 
 class FarmsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
-    list_display = ('farm_name', 'farm_area', 'company_id', 'phone', 'town_village', 'zipcode', 'state', "city", "country")
+    list_display = ('id','farm_name', 'farm_area', 'company_id', 'phone', 'town_village', 'zipcode', 'state', "city", "country")
     list_filter = ('company_id', 'farm_name', )
     fieldsets = (
         (None, {'fields': ('company_id', 'farm_name')}),
@@ -61,7 +61,7 @@ class FarmCertificatesAdmin(ImportExportModelAdmin, PermissionClass, admin.Model
     def farm_name(self,obj):
         return obj.farm_id
 
-    list_display = ('farm_name','certificate_name', 'certificate_number', )
+    list_display = ('farm_id','certificate_name', 'certificate_number', )
     list_filter = ('certificate_name', 'farm_id')
     fieldsets = (
         (None, {'fields': ('certificate_name', 'certificate_number')}),
@@ -75,17 +75,13 @@ class FarmCertificatesAdmin(ImportExportModelAdmin, PermissionClass, admin.Model
         }),
     )
     search_fields = ('certificate_name',)
-    ordering = ('certificate_name',)
+    ordering = ('farm_id',)
     filter_horizontal = ()
 
 
 class FarmImagesAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
-    def farm_name(self,obj):
-        return obj.images.farm_name
-
-
-    list_display = ('farm_name','image',)
+    list_display = ('images','image',)
     list_filter = ('image_name',)
     fieldsets = (
         (None, {'fields': ('image_name', 'image', 'images', )}),
@@ -94,7 +90,7 @@ class FarmImagesAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin)
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('image_name', 'farm_name',),
+            'fields': ('image_name', 'images',),
         }),
     )
     search_fields = ('image_name',)
@@ -107,7 +103,7 @@ class FeedLotsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     def farm_name(self,obj):
         return obj.farm_id.farm_name
 
-    list_display = ('farm_name', 'lot_number',"feed_lot_type", "company_feed_type", 'company_purchased_from', 'bag_is_used', 'feed_cost', 'currency')
+    list_display = ('farm_id','farm_name', 'lot_number',"feed_lot_type", "company_feed_type", 'company_purchased_from', 'bag_is_used', 'feed_cost', 'currency')
     list_filter = ('feed_lot_type', 'farm_id', 'company_purchased_from')
     fieldsets = (
         (None, {'fields': ('farm_id', 'lot_number', "company_feed_type", 'company_purchased_from', 'date_purchased', 'date_shipped')}),
@@ -121,7 +117,7 @@ class FeedLotsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
         }),
     )
     search_fields = ('lot_number',)
-    ordering = ('lot_number',)
+    ordering = ('farm_id',)
     filter_horizontal = ()
 
 
@@ -145,13 +141,7 @@ class FeedLotTypesAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmi
 
 
 class FarmUserAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
-    def user_name(self,obj):
-        return obj.user.first_name
-    
-    def farm_name(self,obj):
-        return obj.farm.farm_name
-
-    list_display = ('user_name','farm_name', 'role', )
+    list_display = ('user','farm', 'role', )
     list_filter = ('farm', 'user')
     fieldsets = (
         (None, {'fields': ('farm', 'user', 'role')}),)
@@ -163,7 +153,7 @@ class FarmUserAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
         }),
     )
     search_fields = ('farm',)
-    ordering = ('farm',)
+    ordering = ('farm','user')
     filter_horizontal = ()
 
 admin.site.register(Farms, FarmsAdmin)
