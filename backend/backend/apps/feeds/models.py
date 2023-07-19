@@ -29,6 +29,9 @@ class Feeds(models.Model):
     def __str__(self) -> str:
         return str(self.id)
 
+    class Meta:
+        verbose_name_plural = "feeds"
+
 
 class FeedPics(models.Model):
     image_name = models.CharField(max_length=400, null=True, blank=True)

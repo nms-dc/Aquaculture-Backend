@@ -5,7 +5,7 @@ from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 # Register your models here.
 
 class SpeciesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('product_name', 'product_desc', 'image', )
+    list_display = ('species_category','product_name', 'product_desc', 'image', )
     list_filter = ('fish_common_name', 'product_name')
     fieldsets = (
         (None, {'fields': ('product_name', 'product_desc')}),
@@ -25,7 +25,7 @@ class SpeciesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     
 class SpeciesCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     
-    list_display = ( 'name', 'exp', 'slug', 'desc', 'image_url', 'parent_category')
+    list_display = ('name', 'exp', 'slug', 'desc', 'image_url', 'parent_category')
     list_filter = ('parent_category', 'name', 'exp',)
     fieldsets = (
         (None, {'fields': ('slug', 'desc', 'image_url', 'name', 'exp', 'parent_category')}),

@@ -82,7 +82,7 @@ class PondImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         return obj.images.pond_name
 
     list_display = ('farm_name','pond_name','image', 'image_name',)
-    list_filter = ('image_name', 'images')
+    list_filter = ('image_name',)
     fieldsets = (
         (None, {'fields': ('image_name', 'image', 'images')}),
     )

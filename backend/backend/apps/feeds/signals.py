@@ -101,8 +101,12 @@ def compute_analytics(sender, instance, created, *args, **kwargs):
     already_exists_farm = FarmAnalytics.objects.filter(farm=instance.cycle.Pond.farm)
     PondAnalytics_total = PondAnalytics.objects.filter(farm = instance.cycle.Pond.farm).values()
     print(PondAnalytics_total)
-    pondanalytics_df = pd.DataFrame(PondAnalytics_total)
-    total_pondanalytics_feed = pondanalytics_df['total_feed'].sum()
+    
+    if  PondAnalytics_total:
+        pondanalytics_df = pd.DataFrame(PondAnalytics_total)
+        total_pondanalytics_feed = pondanalytics_df['total_feed'].sum()
+    else:
+        total_pondanalytics_feed = 0
     if already_exists_farm.exists() and feed_type == default_list[0]:
         farm_analytics_instance = already_exists_farm.first()
         farm_analytics_instance.total_feed = total_pondanalytics_feed
