@@ -93,7 +93,7 @@ class User(AbstractBaseUser):
     address_one = models.TextField(default='', blank=True)
     address_two = models.TextField(default='', blank=True)
     pincode = models.IntegerField(default=0, blank=True)
-    website = models.URLField(max_length=200, default='', blank=True)
+    website = models.URLField(max_length=200, default='', blank=True, null=True)
     username = models.CharField(
         'username', max_length=30, unique=False, default="",
         validators=[
@@ -168,7 +168,11 @@ class Roles(models.Model):
     role = models.CharField(max_length=400, null=True, blank=True)
     role_description = models.CharField(max_length=400, null=True, blank=True)
 
+    def __str__(self) -> str:
+        return self.role_description
 
+    class Meta:
+        verbose_name_plural = "Roles"
 
 """
 sending the email through the python shell

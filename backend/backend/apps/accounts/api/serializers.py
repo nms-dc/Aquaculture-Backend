@@ -68,7 +68,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', "user_image",
-                  'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'website', 'is_verified', 'is_terms_accepted']
+                  'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'is_verified', 'is_terms_accepted']
         #userdata()
 
     def create(self, validated_data):
@@ -85,7 +85,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
             address_one=validated_data['address_one'],
             address_two=validated_data['address_two'],
             pincode=validated_data['pincode'],
-            website=validated_data['website'],
+            #website=validated_data['website'],
             email=validated_data['email'],
             user_image = validated_data["user_image"]
         )
