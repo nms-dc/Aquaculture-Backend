@@ -10,7 +10,7 @@ class Country(models.Model):
     updatedAt = models.DateField(null=True,  blank=True)
     country_name = models.CharField(max_length=400, null=True,  blank=True)
     def __str__(self):
-        return str(self.id)
+        return str(self.country_name)
 
 
 class Currency(models.Model):
@@ -23,4 +23,4 @@ class Currency(models.Model):
     symbol = models.CharField(max_length=400, null=True,  blank=True)
     currency = models.CharField(max_length=400, null=True, default='ruppes',  blank=True)
     def __str__(self):
-        return str(self.id)
+        return str(self.currency)

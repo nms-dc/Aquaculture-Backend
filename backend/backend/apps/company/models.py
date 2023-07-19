@@ -7,11 +7,15 @@ class CompanyType(models.Model):
     type = models.CharField(max_length=200, default=None, null=True)
     type_description = models.CharField(max_length=200, default=None, null=True)
 
-
+    def __str__(self):
+        return self.type
 
 class CompanyFeedType(models.Model):
     type = models.CharField(max_length=200, default=None, null=True)
     type_description = models.CharField(max_length=200, default=None, null=True)
+
+    def __str__(self):
+        return self.type_description
 
 
 class Company(models.Model):

@@ -46,7 +46,7 @@ class FarmImage(models.Model):
     updated_at = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.image)
+        return 'farms'+str(self.images)
 
 class FarmCertification(models.Model):
 
@@ -120,6 +120,8 @@ class FeedLotImage(models.Model):
     def __str__(self):
         return str(self.id)
 
+    class Meta:
+        verbose_name_plural = "FarmAnalytics"
 
 class FarmAnalytics(models.Model):
     farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='farm_analytics', blank=True)

@@ -5,12 +5,12 @@ from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 class MeasurementAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     def farm_name(self, obj):
-        return obj.cycle.Pond.farm.farm_name
+        return obj.cycle.Pond.farm
     
     def pond_name(self, obj):
-        return obj.cycle.Pond.pond_name
+        return obj.cycle.Pond
 
-    list_display = ('farm_name','pond_name', 'measurement_type','cycle', 'value', 'time',)
+    list_display = ('farm_name','pond_name', 'cycle','measurement_type', 'value', 'time',)
     list_filter = ('cycle', )
     fieldsets = (
         (None, {'fields': ('cycle', 'value')}),
@@ -48,12 +48,16 @@ class MeasurementmasterAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class MeasurementpicsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self, obj):
-        return obj.images.cycle.Pond.farm.farm_name
+        return obj.images.cycle.Pond.farm
     
     def pond_name(self, obj):
-        return obj.images.cycle.Pond.pond_name
+        return obj.images.cycle.Pond
+    
+    def cycle_id(self, obj):
+        return obj.images.cycle
+    
 
-    list_display = ("farm_name","pond_name",'image_name', )
+    list_display = ("farm_name","pond_name",'cycle_id','image_name', )
     list_filter = ('image_name', 'images')
     fieldsets = (
         (None, {'fields': ('image_name', 'image', 'images' )}),

@@ -81,7 +81,7 @@ class FarmCertificatesAdmin(ImportExportModelAdmin, PermissionClass, admin.Model
 
 class FarmImagesAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
-    list_display = ('images','image',)
+    list_display = ('images','image', 'image_name')
     list_filter = ('image_name',)
     fieldsets = (
         (None, {'fields': ('image_name', 'image', 'images', )}),
