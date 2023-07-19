@@ -35,9 +35,6 @@ IS_DEV = ENV == "dev"
 IS_STAGE = ENV == "stage"
 IS_PROD = ENV == "prod"
 
-# Email
-DEFAULT_FROM_EMAIL = 'BackWater Resources Pvt Ltd <noreply@backwaterglobal.com>'
-
 if IS_DEV:
     DOMAIN_NAME = os.getenv('DOMAIN_NAME', 'localhost:4000')
     PROTOCOl_NAME = 'http'
@@ -292,7 +289,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
-SITE_ID = 5
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
@@ -302,12 +298,16 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 50000
 
 
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'ap'
+EMAIL_HOST_USER = 'apikey'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-DEFAULT_FROM_EMAIL = "pugal.m@deductiveclouds.com"
+DEFAULT_FROM_EMAIL = "narayana.s@deductiveclouds.com"
+ADMIN_EMAIL_1 = "jose.mekkalath@backwaterglobal.com"
+ADMIN_EMAIL_2 = "faheem@backwaterglobal.com"
+ADMIN_EMAIL_3 = "Rajendran.ps@bwcapital.in"
+ADMIN_EMAIL_4 = "narayana.s@deductiveclouds.com"
 
 
 SITE_ID = 6
