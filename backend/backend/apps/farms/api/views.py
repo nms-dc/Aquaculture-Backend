@@ -118,10 +118,6 @@ class FarmView(viewsets.ModelViewSet):
             print(result['feeds'][index])
             result['feeds'][index]['feed_lot_type'] = feed_desc
             index +=1
-        # for feed_data,resulting in zip(feed_desc,result.values()):
-        #     print(feed_data,resulting)
-        #     print(feed_data['lot_type_description'])
-        # result['feeds'][0]['feed_lot_type']=feed_desc[0]['lot_type_description']
         return Response({"result": result})
     
     @action(detail=True, methods=["get"], url_path="get-seeds")

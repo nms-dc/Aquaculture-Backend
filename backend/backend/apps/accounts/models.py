@@ -16,6 +16,10 @@ from sendgrid import SendGridAPIClient
 #from typing import List, Dict
 from django.conf import settings
 
+from accounts.services.emails import (
+    AdminVerifiedEmailTemplate, SignUpAcceptedEmailTemplate
+)
+
 
 
 
@@ -136,8 +140,21 @@ class User(AbstractBaseUser):
         return self.is_verified
 
     def save(self, *args, **kwargs):
-        print('saving the user record')
         super(User, self).save(*args, **kwargs)
+        if self.is_verified == True:
+            AdminVerifiedEmailTemplate.send_email(
+            subject="Success! Your Account has been verified.",
+            email_receivers=[self.email],
+            instance=self,
+            )
+        else:
+            SignUpAcceptedEmailTemplate.send_email(
+            subject="Success! New User account has been created",
+            email_receivers=[settings.ADMIN_EMAIL_1, settings.ADMIN_EMAIL_2, settings.ADMIN_EMAIL_3, settings.ADMIN_EMAIL_4],
+            instance=self,
+            )
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance = None, created=False, **kwargs):
     #if new  user has  been created we want to generate a token

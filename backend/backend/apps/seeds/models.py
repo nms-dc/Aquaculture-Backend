@@ -11,6 +11,9 @@ class SeedPlStage(models.Model):
     type = models.CharField(max_length=250, null=True)
     type_description = models.CharField(max_length=250, null=True)
 
+    def __str__(self):
+        return str(self.type)
+
 
 class Seeds(models.Model):
 
@@ -34,6 +37,9 @@ class Seeds(models.Model):
 
     def __str__(self):
         return str(self.id)
+    
+    class Meta:
+        verbose_name_plural = 'Seeds'
 
 
 class SeedImage(models.Model):

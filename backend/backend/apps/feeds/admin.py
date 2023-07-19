@@ -24,7 +24,17 @@ class FeedTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 
 class FeedsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
-    list_display = ('cycle', 'feed_type', 'value', "time", 'lot', 'price_per_kg', 'is_probiotic_mixed','created_by', 'updated_by' )
+    def cycle_name(self, obj):
+        return obj.cycle
+    
+    def pond_name(self, obj):
+        return obj.cycle.Pond
+    
+    def farm_name(self, obj):
+        return obj.cycle.Pond.farm
+    
+    
+    list_display = ('farm_name','pond_name','cycle_name','cycle', 'feed_type', 'value', "time", 'lot', 'price_per_kg', 'is_probiotic_mixed','created_by', 'updated_by' )
     list_filter = ('cycle', 'feed_type', 'is_probiotic_mixed', 'value')
     fieldsets = (
         (None, {'fields': ('cycle', 'feed_type', 'value','time')}),
@@ -43,10 +53,18 @@ class FeedsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
 
 
 class FeedPicsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('image_name', 'image', 'images', "created_by", 'updated_by' )
+    def cycle_name(self, obj):
+        return obj.images.cycle
+    
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond
+    
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm
+    list_display = ('farm_name', 'pond_name', 'cycle_name','image_name', 'image', 'images', "created_by", 'updated_by' )
     list_filter = ('image_name', 'created_by')
     fieldsets = (
-        (None, {'fields': ('image_name', 'created_by', 'updated_by','images')}),
+        (None, {'fields': ('image_name', 'created_by', 'updated_by','images', 'image')}),
         
     )
     add_fieldsets = (

@@ -15,7 +15,6 @@ from django.conf import settings
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 
-
 @csrf_exempt
 def logout_View(request):
     logout(request)
