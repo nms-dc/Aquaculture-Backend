@@ -39,8 +39,12 @@ class UserBasicInfoSerializer(serializers.ModelSerializer):
     def get_farm_id(self, obj):
         try:
             if Farms.objects.filter(created_by=obj).exists():
-                farm = Farms.objects.filter(created_by=obj).first()
-                return farm.id
+                farm = Farms.objects.filter(created_by=obj).values()
+                related_farm_ids = []
+                for data in farm:
+                    print(data['id'])
+                    related_farm_ids.append(data['id'])
+                return related_farm_ids
             else:
                 return None
         except Farms.DoesNotExist:
@@ -67,7 +71,7 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', "user_image",
+        fields = ['id', 'email', 'phone_no', 'first_name', 'last_name', 'username', 'company_name', "user_image", "website",
                   'sic_gst_code', 'pan_no', 'address_one', 'address_two', 'pincode', 'is_verified', 'is_terms_accepted']
         #userdata()
 
@@ -85,9 +89,16 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
             address_one=validated_data['address_one'],
             address_two=validated_data['address_two'],
             pincode=validated_data['pincode'],
-            #website=validated_data['website'],
+            website=validated_data['website'],
             email=validated_data['email'],
-            user_image = validated_data["user_image"]
+            user_image = validated_data["user_image"],
+            username = validated_data['username'],
+            date_joined = validated_data['date_joined'],
+            updated_at = validated_data['updated_at'],
+            is_active = validated_data['is_active'],
+            is_verified = validated_data['is_verified'],
+            is_terms_accepted = validated_data['is_terms_accepted'],
+
         )
         return user_instance
 
@@ -107,6 +118,12 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
         instance.website = validated_data.get('website', instance.website)
         instance.email = validated_data.get('email', instance.email)
         instance.user_image = validated_data.get('user_image', instance.user_image)
+        instance.username = validated_data.get('username', instance.username)
+        instance.date_joined = validated_data.get('date_joined', instance.date_joined)
+        instance.updated_at = validated_data.get('updated_at', instance.updated_at)
+        instance.is_active = validated_data.get('is_active', instance.is_active)
+        instance.is_verified = validated_data.get('is_verified', instance.is_verified)
+        instance.is_terms_accepted = validated_data.get('is_terms_accepted', instance.is_terms_accepted)
         instance.save()
 
         return instance
