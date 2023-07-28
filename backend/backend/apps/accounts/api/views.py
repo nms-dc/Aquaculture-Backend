@@ -15,7 +15,6 @@ from django.conf import settings
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 
-
 @csrf_exempt
 def logout_View(request):
     logout(request)
@@ -77,12 +76,12 @@ def user_terms_accept(request):
         mail = dic['email']
         filtering = User.objects.filter(email = mail)
         filtering.update(is_terms_accepted = True)
-        user = UserProfileInfoSerializer(filtering, many=True).data
+        user = UserBasicInfoSerializer(filtering, many=True).data
         return Response(user)
     elif request.method == 'GET':
         email = request.META['HTTP_AQUA_AUTH_TOKEN']
         data = User.objects.filter(email = email)
-        serialize = UserProfileInfoSerializer(data, many=True).data
+        serialize = UserBasicInfoSerializer(data, many=True).data
         return Response(serialize)
 
 

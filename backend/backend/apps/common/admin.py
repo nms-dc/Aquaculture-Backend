@@ -5,7 +5,7 @@ from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 
 class CountryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
-    list_display = ('alpha_2_code', 'alpha_3_code', 'country_name')
+    list_display = ('country_name', 'alpha_2_code', 'alpha_3_code')
     list_filter = ('country_name', )
     fieldsets = (
         (None, {'fields': ('country_name', 'alpha_3_code')}),
@@ -37,7 +37,7 @@ class CurrencyAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         }),
     )
     search_fields = ('currency',)
-    ordering = ('currency',)
+    ordering = ('currency', 'coutry_id')
     filter_horizontal = ()
 
 

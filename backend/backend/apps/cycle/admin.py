@@ -8,19 +8,13 @@ from mixins.control_mixins import PermissionClass
 class CycleAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     
     def farm_name(self, obj):
-        return obj.Pond.farm.farm_name
-    
-    def pond_name(self, obj):
-        return obj.Pond.pond_name
-    
-    def seeds_name(self, obj):
-        return obj.seeds 
+        return obj.Pond.farm
     
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('farm_name','pond_name', 'seeds_name')
-    list_filter = ('Pond', )
+    list_display = ('farm_name','Pond', 'seeds', 'numbers_of_larva', 'seeding_qty', 'species_weight', 'harvest_id')
+    list_filter = ('Pond', 'seeds')
     fieldsets = (
         (None, {'fields': ( 'Pond', "seeding_qty", "seeding_date", "harvest_id", "seed_transfer_date", 'seeds')}),
         ('Cycle info', {'fields': ( 'pondPrep_cost', 'description', 'numbers_of_larva', 'is_active', "species_weight")})
@@ -34,23 +28,16 @@ class CycleAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
         }),
     )
     search_fields = ('seeds',)
-    ordering = ('seeds',)
+    ordering = ('Pond', 'seeds')
     filter_horizontal = ()
 
 
 class CycleAnalyticsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
-    def farm_name(self, obj):
-        return obj.farm.farm_name
-    
-    def pond_name(self, obj):
-        return obj.pond.pond_name
-
-
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
-    list_display = ('farm_name', 'pond_name', 'cycle','harvest_amount', 'total_feed', 'total_probiotics')
+    list_display = ('farm', 'pond', 'cycle','harvest_amount', 'total_feed', 'total_probiotics')
     list_filter = ('farm', 'pond')
     fieldsets = (
         (None, {'fields': ('farm', 'pond')}),
@@ -65,7 +52,7 @@ class CycleAnalyticsAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         }),
     )
     search_fields = ('cycle', )
-    ordering = ('cycle', )
+    ordering = ('cycle', 'farm', 'pond')
     filter_horizontal = ()
 
 

@@ -48,7 +48,7 @@ class Ponds(models.Model):
     updated_at = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return 'pond_id:'+str(self.id)
+        return self.pond_name
     
     class Meta:
         verbose_name_plural = "Ponds"

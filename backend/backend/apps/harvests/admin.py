@@ -6,10 +6,10 @@ from import_export.admin import ExportActionMixin, ImportExportModelAdmin
 class HarvestAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self, obj):
-        return obj.cycle.Pond.farm.farm_name
+        return obj.cycle.Pond.farm
     
     def pond_name(self, obj):
-        return obj.cycle.Pond.pond_name
+        return obj.cycle.Pond
     
 
     list_display = ("farm_name","pond_name",'cycle', 'harvest_type', 'total_kgs', 'harvest_cost', "sold_to", "cycle", "animal_count_1",
@@ -34,13 +34,15 @@ class HarvestAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class AddAnimalAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     def farm_name(self, obj):
-        return obj.adding_animal.cycle.Pond.farm.farm_name
+        return obj.adding_animal.cycle.Pond.farm
     
     def pond_name(self, obj):
-        return obj.adding_animal.cycle.Pond.pond_name
+        return obj.adding_animal.cycle.Pond
     
+    def harvest_name(self, obj):
+        return obj.adding_animal
 
-    list_display = ("farm_name","pond_name", 'animal_count', 'total_kg', )
+    list_display = ("farm_name","pond_name", 'harvest_name', 'animal_count', 'total_kg', )
     list_filter = ('animal_count', 'total_kg', 'adding_animal')
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
@@ -59,18 +61,24 @@ class AddAnimalAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 class AnimalImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
-    # def farm_name(self, obj):
-    #     return obj.images.cycle.farm
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm
     
-    # def pond_name(self, obj):
-    #     return obj.images.cycle.Pond.pond_name
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond
     
+    def cycle_id(self, obj):
+        return obj.images.cycle
+   
+    def harvest_name(self, obj):
+        return obj.images
+   
 
-    list_display = ( 'image_name', 'image', )
+    list_display = ('farm_name','pond_name','cycle_id', 'harvest_name', 'image_name', 'image', 'images' )
     list_filter = ('image_name',)
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
+        (None, {'fields': ('image_name', 'image', 'images')}),
     )
     add_fieldsets = (
         (None, {
@@ -85,23 +93,29 @@ class AnimalImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 class PondImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
-    # def farm_name(self, obj):
-    #     return obj.images.cycle.Pond.farm.farm_name
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm
     
-    # def pond_name(self, obj):
-    #     return obj.images.cycle.Pond.pond_name
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond
     
+    def cycle_id(self, obj):
+        return obj.images.cycle
+   
+    def harvest_name(self, obj):
+        return obj.images
+   
 
-    list_display = ('image_name', 'image', )
+    list_display = ('farm_name','pond_name','cycle_id','harvest_name','image_name', 'image', 'images' )
     list_filter = ('image_name',)
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
+        (None, {'fields': ('image_name', 'image', 'images')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields':('image_name', 'image'),
+            'fields':('image_name', 'image', 'images'),
         }),
     )
     search_fields = ('image_name',)
@@ -110,19 +124,23 @@ class PondImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 
 class LogisticImagesAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-
-    # def farm_name(self, obj):
-    #     return obj.images.cycle.Pond.farm.farm_name
+    def farm_name(self, obj):
+        return obj.images.cycle.Pond.farm
     
-    # def pond_name(self, obj):
-    #     return obj.images.cycle.Pond.pond_name
+    def pond_name(self, obj):
+        return obj.images.cycle.Pond
     
+    def cycle_id(self, obj):
+        return obj.images.cycle
+   
+    def harvest_name(self, obj):
+        return obj.images
 
-    list_display = ('image_name', 'image', )
+    list_display = ('farm_name','pond_name','cycle_id','harvest_name','image_name', 'image', 'images')
     list_filter = ('image_name',)
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
-        (None, {'fields': ('image_name', 'image')}),
+        (None, {'fields': ('image_name', 'image', 'images')}),
     )
     add_fieldsets = (
         (None, {
