@@ -139,20 +139,20 @@ class User(AbstractBaseUser):
         # Simplest possible answer: All admins are staff but not normal user
         return self.is_verified
 
-    def save(self, *args, **kwargs):
-        super(User, self).save(*args, **kwargs)
-        if self.is_verified == True:
-            AdminVerifiedEmailTemplate.send_email(
-            subject="Success! Your Account has been verified.",
-            email_receivers=[self.email],
-            instance=self,
-            )
-        else:
-            SignUpAcceptedEmailTemplate.send_email(
-            subject="Success! New User account has been created",
-            email_receivers=[settings.ADMIN_EMAIL_1, settings.ADMIN_EMAIL_2, settings.ADMIN_EMAIL_3, settings.ADMIN_EMAIL_4],
-            instance=self,
-            )
+    # def save(self, *args, **kwargs):
+    #     super(User, self).save(*args, **kwargs)
+    #     if self.is_verified == True:
+    #         AdminVerifiedEmailTemplate.send_email(
+    #         subject="Success! Your Account has been verified.",
+    #         email_receivers=[self.email],
+    #         instance=self,
+    #         )
+    #     else:
+    #         SignUpAcceptedEmailTemplate.send_email(
+    #         subject="Success! New User account has been created",
+    #         email_receivers=[settings.ADMIN_EMAIL_1, settings.ADMIN_EMAIL_2, settings.ADMIN_EMAIL_3, settings.ADMIN_EMAIL_4],
+    #         instance=self,
+    #         )
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
