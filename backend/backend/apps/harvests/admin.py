@@ -14,7 +14,7 @@ class HarvestAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     list_display = ("farm_name","pond_name",'cycle', 'harvest_type', 'total_kgs', 'harvest_cost', "sold_to", "cycle", "animal_count_1",
      'temperature_celcius', 'harvest_notes','harvest_quality', "total_kg_1", "price_kg_1" )
-    list_filter = ('cycle', 'harvest_type')
+    list_filter = ('cycle', 'harvest_type','cycle__Pond__farm__farm_name','cycle__Pond__pond_name')
     '''while trying to add fieldsets dont add the fields whih are all 'FK'    '''
     fieldsets = (
         (None, {'fields': ('harvest_type', 'harvest_cost', "sold_to", "cycle", "animal_count_1")}),
@@ -27,6 +27,10 @@ class HarvestAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         }),
     )
     search_fields = ('harvest_type',)
+
+    farm_name.admin_order_field = 'cycle__Pond__farm__farm_name' 
+    pond_name.admin_order_field = 'cycle__Pond__pond_name'
+
     ordering = ('harvest_type',)
     filter_horizontal = ()
 
