@@ -9,12 +9,12 @@ class CycleAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     
     def farm_name(self, obj):
         return obj.Pond.farm
-    
+
     '''The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.'''
     list_display = ('farm_name','Pond', 'seeds', 'numbers_of_larva', 'seeding_qty', 'species_weight', 'harvest_id')
-    list_filter = ('Pond', 'seeds')
+    list_filter = ('Pond', 'seeds','Pond__farm__farm_name')
     fieldsets = (
         (None, {'fields': ( 'Pond', "seeding_qty", "seeding_date", "harvest_id", "seed_transfer_date", 'seeds')}),
         ('Cycle info', {'fields': ( 'pondPrep_cost', 'description', 'numbers_of_larva', 'is_active', "species_weight")})
@@ -28,7 +28,8 @@ class CycleAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
         }),
     )
     search_fields = ('seeds',)
-    ordering = ('Pond', 'seeds')
+    farm_name.admin_order_field = 'Pond__farm__farm_name'  # Allow sorting on this field
+    ordering = ('Pond', 'seeds',)
     filter_horizontal = ()
 
 
