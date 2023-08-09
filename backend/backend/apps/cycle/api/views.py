@@ -11,9 +11,9 @@ from rest_framework.decorators import action
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import AllowAny
-from cycle.models import Cycle
+from cycle.models import Cycle, PondPreparationMaster,PondPreparation
 from cycle.api.serializers import CycleSerializer, CycleHarvestRelationSerializer, CycleMeasureRelationSerializer, \
-    CycleMeasureSerializers, CycleFeedSerializer, CyclefeedhistorySerializers
+    CycleMeasureSerializers, CycleFeedSerializer, CyclefeedhistorySerializers, PondPreparationMasterSerializer,PondPreparationSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -28,31 +28,46 @@ class CyleView(viewsets.ModelViewSet):
     @csrf_exempt
     def get_harvest_summary(self, request, *args, **kwargs):
         cycle = self.get_object()
-        result = CycleHarvestRelationSerializer(instance=cycle, context={'request': request}).data
+        result = CycleHarvestRelationSerializer(
+            instance=cycle, context={'request': request}).data
         return Response({"result": result})
 
     @action(detail=True, methods=['get'], url_path='get-measurement',)
     @csrf_exempt
     def get_measurement(self, request, *args, **kwargs):
         cycle = self.get_object()
-        result = CycleMeasureRelationSerializer(instance=cycle, context={'request': request}).data
+        result = CycleMeasureRelationSerializer(
+            instance=cycle, context={'request': request}).data
         return Response({"result": result})
 
     @action(detail=True, methods=['get'], url_path='get-measurement-history',)
     def get_measurement_history(self, request, *args, **kwargs):
         cycle = self.get_object()
-        result = CycleMeasureSerializers(instance=cycle, context={'request': request}).data
+        result = CycleMeasureSerializers(instance=cycle, context={
+                                         'request': request}).data
         return Response({"result": result})
-    
+
     @action(detail=True, methods=['get'], url_path='get-feeds',)
     @csrf_exempt
     def get_feeds(self, request, *args, **kwargs):
         cycle = self.get_object()
-        result = CycleFeedSerializer(instance=cycle, context={'request': request}).data
+        result = CycleFeedSerializer(instance=cycle, context={
+                                     'request': request}).data
         return Response({"result": result})
-    
+
     @action(detail=True, methods=['get'], url_path='get-feed-history',)
     def get_feed_history(self, request, *args, **kwargs):
         cycle = self.get_object()
-        result = CyclefeedhistorySerializers(instance=cycle, context={'request': request}).data
+        result = CyclefeedhistorySerializers(
+            instance=cycle, context={'request': request}).data
         return Response({"result": result})
+
+
+class PondPreparationMasterView(viewsets.ModelViewSet):
+    queryset = PondPreparationMaster.objects.all()
+    serializer_class = PondPreparationMasterSerializer
+    http_method_names = ['get']
+
+class PondPreparationView(viewsets.ModelViewSet):
+    queryset = PondPreparation.objects.all()
+    serializer_class = PondPreparationSerializer

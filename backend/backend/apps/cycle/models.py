@@ -14,8 +14,10 @@ from seeds.models import SeedPlStage
 
 
 class Cycle(models.Model):
-    Pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='pond_description', default=None, null=True,  blank=True)
-    seeds = models.ForeignKey(Seeds, on_delete=models.CASCADE, related_name='seed_description', default=None, null=True,  blank=True)
+    Pond = models.ForeignKey(Ponds, on_delete=models.CASCADE,
+                             related_name='pond_description', default=None, null=True,  blank=True)
+    seeds = models.ForeignKey(Seeds, on_delete=models.CASCADE,
+                              related_name='seed_description', default=None, null=True,  blank=True)
     pondPrep_cost = models.IntegerField(null=True, default=0, blank=True)
     description = models.CharField(max_length=400, null=True, blank=True)
     lastupdatedt = models.DateField(auto_now=True, blank=True)
@@ -25,11 +27,14 @@ class Cycle(models.Model):
     harvest_id = models.IntegerField(null=True, blank=True)
     seed_transfer_date = models.DateField(default=None, null=True)
     is_active = models.BooleanField(default=True, blank=True)
-    pond_transfered_from = models.ForeignKey(Ponds, on_delete=models.CASCADE,related_name='pond_availability', default=None, null=True, blank=True)
+    pond_transfered_from = models.ForeignKey(
+        Ponds, on_delete=models.CASCADE, related_name='pond_availability', default=None, null=True, blank=True)
     species_weight = models.FloatField(null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cycle_user_create', default=None, null=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='cycle_user_create', default=None, null=True)
     created_at = models.DateField(auto_now=True, null=True, blank=True)
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cycle_user_update', default=None, null=True)
+    updated_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='cycle_user_update', default=None, null=True)
     updated_at = models.DateField(blank=True, null=True)
 
     def __str__(self):
@@ -38,23 +43,30 @@ class Cycle(models.Model):
 
 class CyclePondImage(models.Model):
     image_name = models.CharField(max_length=400, null=True, blank=True)
-    image = models.FileField(upload_to='cycle_pond_images', null=True, blank=True)
-    images = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='cycle_pond_images', default=None, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cpimage_user_create', default=None, null=True, blank=True)
+    image = models.FileField(
+        upload_to='cycle_pond_images', null=True, blank=True)
+    images = models.ForeignKey(Cycle, on_delete=models.CASCADE,
+                               related_name='cycle_pond_images', default=None, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE,
+                                   related_name='cpimage_user_create', default=None, null=True, blank=True)
     created_at = models.DateField(auto_now=True, null=True, blank=True)
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cpimage_user_update', default=None, null=True, blank=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE,
+                                   related_name='cpimage_user_update', default=None, null=True, blank=True)
     updated_at = models.DateField(null=True, blank=True)
 
 
 class CycleSeedImage(models.Model):
     image_name = models.CharField(max_length=400, null=True, blank=True)
-    image = models.FileField(upload_to='cycle_seed_images', null=True, blank=True)
-    images = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='seed_images', default=None, null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='csimage_user_create', default=None, null=True, blank=True)
+    image = models.FileField(
+        upload_to='cycle_seed_images', null=True, blank=True)
+    images = models.ForeignKey(Cycle, on_delete=models.CASCADE,
+                               related_name='seed_images', default=None, null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE,
+                                   related_name='csimage_user_create', default=None, null=True, blank=True)
     created_at = models.DateField(auto_now=True, null=True, blank=True)
-    updated_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='csimage_user_update', default=None, null=True, blank=True)
+    updated_by = models.ForeignKey(User, on_delete=models.CASCADE,
+                                   related_name='csimage_user_update', default=None, null=True, blank=True)
     updated_at = models.DateField(null=True, blank=True)
-
 
 
 def get_default_info():
@@ -62,16 +74,48 @@ def get_default_info():
 
 
 class CycleAnalytics(models.Model):
-    farm = models.ForeignKey(Farms, on_delete=models.CASCADE, null=True, related_name='cycle_farm_analytics', blank=True)
-    pond = models.ForeignKey(Ponds, on_delete=models.CASCADE, related_name='cycle_pond_analytics', null=True, blank=True)
-    cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE, related_name='cycle_analytics', default=None, null=True, blank=True)
+    farm = models.ForeignKey(Farms, on_delete=models.CASCADE,
+                             null=True, related_name='cycle_farm_analytics', blank=True)
+    pond = models.ForeignKey(Ponds, on_delete=models.CASCADE,
+                             related_name='cycle_pond_analytics', null=True, blank=True)
+    cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE,
+                              related_name='cycle_analytics', default=None, null=True, blank=True)
     harvest_amount = models.FloatField(null=True, blank=True)
     total_feed = models.FloatField(null=True, blank=True)
     total_probiotics = models.FloatField(null=True, blank=True)
-    extra_info = models.JSONField(null=True, blank=True, default=get_default_info)
+    extra_info = models.JSONField(
+        null=True, blank=True, default=get_default_info)
 
     def __str__(self):
         return str(self.extra_info)
-    
+
     class Meta:
-        verbose_name_plural = "CycleAnalytics"    
+        verbose_name_plural = "CycleAnalytics"
+
+
+class PondPreparationMaster(models.Model):
+    attribute = models.CharField(
+        max_length=256, default=None, null=True, blank=True)
+
+    def __str__(self):
+        return self.attribute
+
+
+class PondPreparation(models.Model):
+    farm = models.ForeignKey('farms.Farms', on_delete=models.CASCADE,default=None, null=True, blank=True)
+    pond = models.ForeignKey('ponds.Ponds', on_delete=models.CASCADE,default=None, null=True, blank=True)
+    cycle = models.ForeignKey(Cycle, on_delete=models.CASCADE,default=None, null=True, blank=True)
+
+    def __str__(self):
+        return f"PondPreparation {self.id}"
+
+
+class PondPreparationCriteria(models.Model):
+    pond_preparation = models.ForeignKey(
+        PondPreparation, related_name='pond_preparation_criteria', on_delete=models.CASCADE)
+    attribute = models.ForeignKey(
+        PondPreparationMaster, on_delete=models.CASCADE, default=None, null=True, blank=True)
+    state = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"PondPreparationCriteria {self.id}"

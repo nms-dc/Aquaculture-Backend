@@ -2,7 +2,7 @@
 import datetime
 from itertools import cycle
 from rest_framework import serializers
-from cycle.models import Cycle, CyclePondImage, CycleSeedImage, CycleAnalytics
+from cycle.models import Cycle, CyclePondImage, CycleSeedImage, CycleAnalytics, PondPreparationMaster, PondPreparationCriteria, PondPreparation
 from accounts.models import User
 from harvests.models import Harvests
 from harvests.api.serializers import HarvestSummarySerializer
@@ -15,6 +15,7 @@ from measurements.api.serializers import MeasurementSerializer, Measurementcycle
 from feeds.models import Feeds, FeedType, FeedPics
 from feeds.api.serializers import Feedsserializers
 #from cycle.single_backup import farmdata
+
 
 class PrepPondImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -56,7 +57,8 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
             if Measurement.objects.filter(cycle=obj.id).exists():
                 measured = Measurement.objects.filter(cycle=obj)
-                serializer = MeasurementcycleSerializer(measured, many=True).data
+                serializer = MeasurementcycleSerializer(
+                    measured, many=True).data
                 return serializer
             else:
                 return None
@@ -74,7 +76,7 @@ class CycleFeedSerializer(serializers.ModelSerializer):
     def get_feeds(self, obj):
         try:
             if Feeds.objects.filter(cycle=obj.id).exists():
-                #while we using 'values()' it will fetch the first record datas
+                # while we using 'values()' it will fetch the first record datas
                 feeds = Feeds.objects.filter(cycle=obj.id)
                 serialize = Feedsserializers(feeds, many=True).data
                 return serialize
@@ -96,7 +98,8 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
             if Measurement.objects.filter(cycle=obj.id).exists():
                 measured = Measurement.objects.filter(cycle=obj)
-                serializer = MeasurementcycleSerializer(measured, many=True).data
+                serializer = MeasurementcycleSerializer(
+                    measured, many=True).data
                 return serializer
             else:
                 return None
@@ -109,7 +112,7 @@ class CycleMeasureRelationSerializer(serializers.ModelSerializer):
 
 
 class CycleSerializer(serializers.ModelSerializer):
-    #farmdata()
+    # farmdata()
     cycle_pond_images = PrepPondImageSerializer(many=True, read_only=True)
     seed_images = SeedImageSerializer(many=True, read_only=True)
     cycle_harvests = serializers.SerializerMethodField(read_only=True)
@@ -130,23 +133,26 @@ class CycleSerializer(serializers.ModelSerializer):
             return None
 
     def get_total_harvested_amt(self, obj):
-        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
+        already_exists_cycle = CycleAnalytics.objects.filter(
+            cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
             return cycle_analytics_instance.harvest_amount
         else:
             return 0.0
-        
+
     def get_total_feed(self, obj):
-        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
+        already_exists_cycle = CycleAnalytics.objects.filter(
+            cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
             return cycle_analytics_instance.total_feed
         else:
             return 0.0
-        
+
     def get_total_probiotics(self, obj):
-        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
+        already_exists_cycle = CycleAnalytics.objects.filter(
+            cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
             return cycle_analytics_instance.total_probiotics
@@ -154,7 +160,8 @@ class CycleSerializer(serializers.ModelSerializer):
             return 0.0
 
     def get_total_avg_fcr(self, obj):
-        already_exists_cycle = CycleAnalytics.objects.filter(cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
+        already_exists_cycle = CycleAnalytics.objects.filter(
+            cycle=obj, pond=obj.Pond, farm=obj.Pond.farm)
         if already_exists_cycle.exists():
             cycle_analytics_instance = already_exists_cycle.first()
             if cycle_analytics_instance.total_feed > 0:
@@ -166,13 +173,14 @@ class CycleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cycle
-        fields = ['id', 'Pond',"seeds", 'pondPrep_cost', 'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
-                  'numbers_of_larva', 'cycle_harvests','pond_transfered_from', 'total_harvested_amt', "seed_transfer_date",
-                   'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', "species_weight", "created_by"]
+        fields = ['id', 'Pond', "seeds", 'pondPrep_cost', 'description', 'lastupdatedt', 'seeding_qty', 'seeding_date', 'cycle_pond_images', 'seed_images',
+                  'numbers_of_larva', 'cycle_harvests', 'pond_transfered_from', 'total_harvested_amt', "seed_transfer_date",
+                  'total_avg_fcr', 'total_feed', 'total_probiotics', 'is_active', "species_weight", "created_by"]
 
     def create(self, validated_data):
         image_data = self.context.get('view').request.FILES
-        cycle = Cycle.objects.filter(Pond = validated_data['pond_transfered_from'], is_active = True)
+        cycle = Cycle.objects.filter(
+            Pond=validated_data['pond_transfered_from'], is_active=True)
         cycle_data = CycleSerializer(cycle, many=True).data
         if cycle_data:
             seeding_date = cycle_data[0]['seeding_date']
@@ -187,38 +195,41 @@ class CycleSerializer(serializers.ModelSerializer):
             seeding_qty=validated_data['seeding_qty'],
             seeding_date=seeding_date,
             pond_transfered_from=validated_data['pond_transfered_from'],
-            created_by = validated_data['created_by'],
-            is_active = True,
-            species_weight = validated_data['species_weight'],
+            created_by=validated_data['created_by'],
+            is_active=True,
+            species_weight=validated_data['species_weight'],
             seeds=validated_data['seeds'],
-            seed_transfer_date = validated_data['seed_transfer_date']
-            )
+            seed_transfer_date=validated_data['seed_transfer_date']
+        )
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.is_active_pond = True
         obj.active_cycle_date = cycle_instance.seeding_date
         obj.active_cycle_id = cycle_instance.id
-        obj.save()  
+        obj.save()
 
         if cycle_data:
-            larva_count = cycle_data[0]['numbers_of_larva'] - validated_data['numbers_of_larva']
-            data = Ponds.objects.filter(id = validated_data['pond_transfered_from'].id)
+            larva_count = cycle_data[0]['numbers_of_larva'] - \
+                validated_data['numbers_of_larva']
+            data = Ponds.objects.filter(
+                id=validated_data['pond_transfered_from'].id)
             if larva_count <= 0:
-                cycle.update(numbers_of_larva = 0)
-                cycle.update(is_active = False)
-                data.update(is_active_pond = False)
-                data.update(active_cycle_date = None)
-                data.update(active_cycle_id = None)
+                cycle.update(numbers_of_larva=0)
+                cycle.update(is_active=False)
+                data.update(is_active_pond=False)
+                data.update(active_cycle_date=None)
+                data.update(active_cycle_id=None)
             else:
-                cycle.update(numbers_of_larva = larva_count)
-     
-                      
+                cycle.update(numbers_of_larva=larva_count)
+
         for data in image_data.getlist('cycle_pond_images'):
             name = data.name
-            CyclePondImage.objects.create(images=cycle_instance, image_name=name, image=data, created_by = validated_data['created_by'])
+            CyclePondImage.objects.create(
+                images=cycle_instance, image_name=name, image=data, created_by=validated_data['created_by'])
 
         for data in image_data.getlist('seed_images'):
             name = data.name
-            CycleSeedImage.objects.create(images=cycle_instance, image_name=name, image=data, created_by = validated_data['created_by'])
+            CycleSeedImage.objects.create(
+                images=cycle_instance, image_name=name, image=data, created_by=validated_data['created_by'])
 
         return cycle_instance
 
@@ -228,7 +239,8 @@ class CycleSerializer(serializers.ModelSerializer):
         '''#filtering 'pond_image_id' and converting it into an integer list'''
         int_Pimage_id = []
         if data:
-            trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
+            trim_image_id = data.replace('[', '').replace(
+                ']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_Pimage_id.append(int(id))
 
@@ -236,10 +248,12 @@ class CycleSerializer(serializers.ModelSerializer):
         '''#filtering 'seed_images_id' and converting it into an integer list'''
         int_Simage_id = []
         if data:
-            trim_image_id = data.replace('[', '').replace(']', '').replace(" ", "").split(',')
+            trim_image_id = data.replace('[', '').replace(
+                ']', '').replace(" ", "").split(',')
             for id in trim_image_id:
                 int_Simage_id.append(int(id))
-        str_created_date = self.context['request'].data.get('seeding_date', None)
+        str_created_date = self.context['request'].data.get(
+            'seeding_date', None)
         created_date = parser.parse(str_created_date)
         current_date = datetime.datetime.now()
 
@@ -247,22 +261,35 @@ class CycleSerializer(serializers.ModelSerializer):
             return (date2 - date1).days
         doc = numOfDays(created_date, current_date)
         instance.Pond = validated_data.get('Pond', instance.Pond)
-        instance.pondPrep_cost = validated_data.get('pondPrep_cost', instance.pondPrep_cost)
-        instance.description = validated_data.get('description', instance.description)
-        instance.numbers_of_larva = validated_data.get('numbers_of_larva', instance.numbers_of_larva)
-        instance.seeding_qty = validated_data.get('seeding_qty', instance.seeding_qty)
-        instance.seeding_date = validated_data.get('seeding_date', instance.seeding_date)
-        instance.is_active = validated_data.get('is_active', instance.is_active)
-        instance.created_by = validated_data.get('created_by', instance.created_by)
-        instance.pond_transfered_from = validated_data.get('pond_transfered_from', instance.pond_transfered_from)
-        instance.species_weight = validated_data.get('species_weight', instance.species_weight)
+        instance.pondPrep_cost = validated_data.get(
+            'pondPrep_cost', instance.pondPrep_cost)
+        instance.description = validated_data.get(
+            'description', instance.description)
+        instance.numbers_of_larva = validated_data.get(
+            'numbers_of_larva', instance.numbers_of_larva)
+        instance.seeding_qty = validated_data.get(
+            'seeding_qty', instance.seeding_qty)
+        instance.seeding_date = validated_data.get(
+            'seeding_date', instance.seeding_date)
+        instance.is_active = validated_data.get(
+            'is_active', instance.is_active)
+        instance.created_by = validated_data.get(
+            'created_by', instance.created_by)
+        instance.pond_transfered_from = validated_data.get(
+            'pond_transfered_from', instance.pond_transfered_from)
+        instance.species_weight = validated_data.get(
+            'species_weight', instance.species_weight)
         instance.seeds = validated_data.get('seeds', instance.seeds)
-        instance.updated_by = validated_data.get('updated_by', instance.updated_by)
-        instance.seed_transfer_date = validated_data.get('seed_transfer_date', instance.seed_transfer_date)
+        instance.updated_by = validated_data.get(
+            'updated_by', instance.updated_by)
+        instance.seed_transfer_date = validated_data.get(
+            'seed_transfer_date', instance.seed_transfer_date)
         instance.save()
 
-        pondimage_with_same_profile_instance = CyclePondImage.objects.filter(images=instance.pk).values_list('id', flat=True)
-        seedimage_with_same_profile_instance = CycleSeedImage.objects.filter(images=instance.pk).values_list('id', flat=True)
+        pondimage_with_same_profile_instance = CyclePondImage.objects.filter(
+            images=instance.pk).values_list('id', flat=True)
+        seedimage_with_same_profile_instance = CycleSeedImage.objects.filter(
+            images=instance.pk).values_list('id', flat=True)
 
         if len(int_Pimage_id) != 0:
             for delete_id in pondimage_with_same_profile_instance:
@@ -271,7 +298,8 @@ class CycleSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('cycle_pond_images')) != 0:
             for image_data in image_datas.getlist('cycle_pond_images'):
                 name = image_data.name
-                CyclePondImage.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
+                CyclePondImage.objects.create(images=instance, image_name=name, image=image_data, updated_by=validated_data.get(
+                    'updated_by', instance.updated_by))
         if len(int_Simage_id) != 0:
             for delete_id in seedimage_with_same_profile_instance:
                 if delete_id in int_Simage_id:
@@ -279,10 +307,11 @@ class CycleSerializer(serializers.ModelSerializer):
         if len(image_datas.getlist('seed_images')) != 0:
             for image_data in image_datas.getlist('seed_images'):
                 name = image_data.name
-                CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data, updated_by = validated_data.get('updated_by', instance.updated_by))
+                CycleSeedImage.objects.create(images=instance, image_name=name, image=image_data, updated_by=validated_data.get(
+                    'updated_by', instance.updated_by))
         obj = Ponds.objects.get(pk=validated_data['Pond'].id)
         obj.active_cycle_date = validated_data.get('seeding_date')
-        obj.save()  
+        obj.save()
         return instance
 
 
@@ -293,18 +322,21 @@ class CycleMeasureSerializers(serializers.ModelSerializer):
         try:
             if Measurement.objects.filter(cycle=obj).exists():
                 measurement = Measurement.objects.filter(cycle=obj.id)
-                serializer = MeasurementcycleSerializer(measurement, many=True).data
+                serializer = MeasurementcycleSerializer(
+                    measurement, many=True).data
                 data = []
                 # print(obj)
                 # print(serializer)
                 for i in serializer:
-                    dic = dict(i)                    
+                    dic = dict(i)
                     master_id = (dic['measurement_type'])
-                    measure_data = MeasurementMaster.objects.filter(id = master_id)
-                    measure_serialize = MasterSerializer(measure_data, many=True).data
-                    measurment_type=measure_serialize[0]['measurement_type']
+                    measure_data = MeasurementMaster.objects.filter(
+                        id=master_id)
+                    measure_serialize = MasterSerializer(
+                        measure_data, many=True).data
+                    measurment_type = measure_serialize[0]['measurement_type']
                     dic['measurement_type'] = measurment_type
-                    data.append(dic)            
+                    data.append(dic)
                 data = sorted(data, key=lambda d: d['time'])
                 data.reverse()
                 return data
@@ -329,12 +361,13 @@ class CyclefeedhistorySerializers(serializers.ModelSerializer):
                 print((feeds))
                 for feed_data in feeds:
                     feed_type_id = feed_data['feed_type_id']
-                    feed_type = FeedType.objects.filter(id= feed_type_id).values()
-                    feed_type =feed_type[0]['type']
-                    
+                    feed_type = FeedType.objects.filter(
+                        id=feed_type_id).values()
+                    feed_type = feed_type[0]['type']
+
                     feed_data['feed_type'] = feed_type
                     return feed_data
-            
+
             else:
                 return None
         except Measurement.DoesNotExist:
@@ -343,3 +376,69 @@ class CyclefeedhistorySerializers(serializers.ModelSerializer):
     class Meta:
         model = Cycle
         fields = ["id", 'feeds']
+
+
+class PondPreparationMasterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PondPreparationMaster
+        fields = '__all__'
+
+
+class PondPreparationCriteriaSerializer(serializers.Serializer):
+    attribute = serializers.CharField()
+    state = serializers.BooleanField()
+
+    def create(self, validated_data):
+        attribute_text = validated_data.pop('attribute')
+        try:
+            attribute_id = PondPreparationMaster.objects.get(
+                attribute=attribute_text).id
+            return PondPreparationCriteria.objects.create(attribute_id=attribute_id, **validated_data)
+        except PondPreparationMaster.DoesNotExist:
+            raise serializers.ValidationError(
+                f"Attribute '{attribute_text}' does not exist in the master table.")
+
+
+class PondPreparationSerializer(serializers.Serializer):
+    id = serializers.IntegerField(read_only=True)
+    farm_id = serializers.IntegerField()
+    pond_id = serializers.IntegerField()
+    cycle_id = serializers.IntegerField()
+    pond_preparation_criteria = PondPreparationCriteriaSerializer(many=True)
+
+    def create(self, validated_data):
+        criteria_data = validated_data.pop('pond_preparation_criteria')
+        pond_preparation = PondPreparation.objects.create(**validated_data)
+
+        for criteria in criteria_data:
+            attribute_text = criteria['attribute']
+            attribute_id = PondPreparationMaster.objects.get(
+                attribute__iexact=attribute_text).id
+            PondPreparationCriteria.objects.create(
+                pond_preparation=pond_preparation, attribute_id=attribute_id, state=criteria['state'])
+
+        return pond_preparation
+
+    def update(self, instance, validated_data):
+
+        PondPreparationCriteria.objects.filter(
+            pond_preparation=instance).delete()
+
+        criteria_data = validated_data.pop('pond_preparation_criteria')
+        for criteria in criteria_data:
+            attribute_text = criteria['attribute']
+            try:
+                attribute_id = PondPreparationMaster.objects.get(
+                    attribute__iexact=attribute_text).id
+                PondPreparationCriteria.objects.create(
+                    pond_preparation=instance, attribute_id=attribute_id, state=criteria['state'])
+            except PondPreparationMaster.DoesNotExist:
+                raise serializers.ValidationError(
+                    f"Attribute '{attribute_text}' does not exist in the master table.")
+
+        instance.farm_id = validated_data['farm_id']
+        instance.pond_id = validated_data['pond_id']
+        instance.cycle_id = validated_data['cycle_id']
+        instance.save()
+
+        return instance
