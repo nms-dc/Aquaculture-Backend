@@ -10,7 +10,7 @@ class PondAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     'lng', 'is_active_pond', 'active_cycle_id', 'pond_breadth', 'pond_area', 'pond_capacity', 'description', 'pond_number')
     list_filter = ('farm', 'pond_name')
     fieldsets = (
-        (None, {'fields': ('pond_name', 'pond_length')}),
+        (None, {'fields': ('pond_name', 'pond_length','farm')}),
         ('pond info', {'fields': ('pond_depth', 'pond_construct_type', 'lat', 'lng', 'is_active_pond', 'active_cycle_id',
                                       'active_cycle_date')}),
         ('moreinfoAboutPond', {'fields': ('pond_breadth', 'pond_area', 'pond_capacity', 'description', 'pond_number',

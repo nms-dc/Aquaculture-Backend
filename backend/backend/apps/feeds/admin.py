@@ -35,7 +35,7 @@ class FeedsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
     
     
     list_display = ('farm_name','pond_name','cycle_name','cycle', 'feed_type', 'value', "time", 'lot', 'price_per_kg', 'is_probiotic_mixed','created_by', 'updated_by' )
-    list_filter = ('cycle', 'feed_type', 'is_probiotic_mixed', 'value')
+    list_filter = ('cycle', 'feed_type', 'is_probiotic_mixed', 'value','cycle__Pond__farm__farm_name', 'cycle__Pond__pond_name')
     fieldsets = (
         (None, {'fields': ('cycle', 'feed_type', 'value','time')}),
         ('species info', {'fields': ('lot', 'price_per_kg', 'is_probiotic_mixed', 'updated_by',)})
@@ -47,7 +47,9 @@ class FeedsAdmin(ImportExportModelAdmin, PermissionClass, admin.ModelAdmin):
         }),
     )
     search_fields = ('cycle', )
-    ordering = ('cycle', )
+    farm_name.admin_order_field = 'cycle__Pond__farm__farm_name'
+    pond_name.admin_order_field = 'cycle__Pond__pond_name'
+    ordering = ('cycle',)
     filter_horizontal = ()
 
 

@@ -23,6 +23,10 @@ class MeasurementAdmin(ImportExportModelAdmin, admin.ModelAdmin):
         }),
     )
     search_fields = ('cycle',)
+    
+    farm_name.admin_order_field = 'cycle__Pond__farm__farm_name' 
+    pond_name.admin_order_field = 'cycle__Pond__pond_name'
+
     ordering = ('measurement_type',)
 
 
